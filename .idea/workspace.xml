@@ -4,26 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6833bd8d-9908-4483-be1f-72bf658c6a71" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/prefixer.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/__main__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/cli.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/core/steam.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/core/tweaks.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/data/tweaks/d3dcompiler.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/data/tweaks/dotnet48.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/data/tweaks/vcrun2022.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prefixer/gui.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+    <list default="true" id="6833bd8d-9908-4483-be1f-72bf658c6a71" name="Changes" comment="Push requirements">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prefixer/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/prefixer/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prefixer/core/steam.py" beforeDir="false" afterPath="$PROJECT_DIR$/prefixer/core/steam.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +24,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "wojtmic"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/wojtmic/prefixer.git",
+    "accountId": "abf102e7-8f23-40be-bdb6-5244996a0b98"
+  }
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -109,6 +105,28 @@
       <option name="presentableId" value="Default" />
       <updated>1756547026607</updated>
     </task>
+    <task id="LOCAL-00001" summary="Commit with all the code">
+      <option name="closed" value="true" />
+      <created>1757166386368</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1757166386368</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Push requirements">
+      <option name="closed" value="true" />
+      <created>1757166431482</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1757166431482</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Commit with all the code" />
+    <MESSAGE value="Push requirements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Push requirements" />
   </component>
 </project>

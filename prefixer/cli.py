@@ -13,10 +13,6 @@ import tempfile
 def prefixer(ctx, game_id: str):
     """
     Modern tool to manage Proton prefixes.
-
-    :param ctx:
-    :param game_id:
-    :return:
     """
     ctx.obj = {'GAME_ID': game_id}
 
@@ -25,8 +21,17 @@ def prefixer(ctx, game_id: str):
     click.echo(f'Targeting => {game_id_styled}')
     pfx_path = steam.get_prefix_path(game_id)
     if pfx_path is None:
-        click.echo('ERROR: Unable to find the wineprefix')
-        sys.exit(1)
+        games = steam.build_game_manifest()
+        index = next((i for i, item in enumerate(games) if item['name'] == game_id), None)
+        if not index is None:
+            # This means the game WAS found by name!
+            ctx.obj['GAME_ID'] = games[index]['appid'] # Correct the game ID to the actual number
+            game_id = ctx.obj['GAME_ID']
+            pfx_path = steam.get_prefix_path(game_id)  # Find the PFX path again
+        else:
+            click.echo('ERROR: Unable to find the wineprefix')
+            sys.exit(1)
+
 
     ctx.obj['PFX_PATH'] = pfx_path
     ctx.obj['PFX_CONFIG_INFO'] = f'{pfx_path}/../config_info'
@@ -46,9 +51,6 @@ def prefixer(ctx, game_id: str):
 def winecfg(ctx):
     """
     Opens a winecfg window for the prefix
-
-    :param ctx:
-    :return:
     """
     pfx_path = ctx.obj['PFX_PATH']
     bin_path = ctx.obj['BINARY_PATH']
@@ -63,6 +65,9 @@ def winecfg(ctx):
 @click.argument('exe_path')
 @click.pass_context
 def run(ctx, exe_path: str):
+    """
+    Runs a .exe within the target prefix
+    """
     if not os.path.exists(exe_path):
         click.echo('The file could not be found')
         sys.exit(1)
@@ -80,6 +85,9 @@ def run(ctx, exe_path: str):
 @click.argument('tweak_name')
 @click.pass_context
 def tweak(ctx, tweak_name: str):
+    """
+    Apply a tweak
+    """
     # First, we obtain the essential information: binary & prefix paths
     pfxPath = ctx.obj['PFX_PATH']
     binaryPath = ctx.obj['BINARY_PATH']

@@ -68,3 +68,15 @@ def get_installdir(targetId):
         return None
 
     return f'{libPaths[index]}/steamapps/common/{manifest['AppState']['installdir']}'
+
+def build_game_manifest():
+    games = []
+
+    libs = get_libraries()[0]
+    for lib in libs:
+        for file in os.listdir(os.path.join(lib, 'steamapps')):
+            if file.endswith('.acf'):
+                with open(os.path.join(lib, 'steamapps', file)) as f:
+                    games.append(vdf.loads(f.read())['AppState'])
+
+    return games
