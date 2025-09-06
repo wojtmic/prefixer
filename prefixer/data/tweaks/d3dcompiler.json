@@ -1,0 +1,19 @@
+{
+  "description": "MS DirectX End-User Runtime",
+  "tasks": [
+    {
+      "description": "Download installer",
+      "type": "download",
+      "url": "https://download.microsoft.com/download/1/7/1/1718ccc4-6315-4d8e-9543-8e28a4e18c4c/dxwebsetup.exe",
+      "checksum": "2cf71d098c608c56e07f4655855a886c3102553f648df88458df616b26fd612f"
+    },
+    {
+      "description": "Install package",
+      "type": "runexe",
+      "filename": "dxwebsetup.exe",
+      "args": [
+        "/Q"
+      ]
+    }
+  ]
+}
