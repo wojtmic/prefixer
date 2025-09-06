@@ -68,9 +68,9 @@ def run(ctx, exe_path: str):
     """
     Runs a .exe within the target prefix
     """
-    if not os.path.exists(exe_path):
-        click.echo('The file could not be found')
-        sys.exit(1)
+    # if not os.path.exists(exe_path):
+    #     click.echo('The file could not be found')
+    #     sys.exit(1)
 
     pfx_path = ctx.obj['PFX_PATH']
     bin_path = ctx.obj['BINARY_PATH']

@@ -81,6 +81,30 @@ def task_runexe(task, pfx, binary, opPath):
     click.secho('Possible error message spam from external program!', color='bright_black')
     subprocess.run([binary, filePath, *task['args']], env=env)
 
+def task_regedit(task, pfx, binary, opPath):
+    path = task['path']
+    values = task['contents']
+
+    # Construct the string
+    formatted_values = '\n'.join(
+        [f'"{key}"="{value}"' for key, value in values.items()]
+    )
+
+    reg_content = f"""Windows Registry Editor Version 5.00
+    
+[{path}]
+{formatted_values}"""
+
+    # Prepare temporary file
+    with open(os.path.join(opPath, 'edit.reg'), 'w') as f:
+        f.write(reg_content)
+
+    env = os.environ.copy()
+    env['WINEPREFIX'] = pfx
+
+    # Edit the registry
+    subprocess.run([binary, 'regedit', f'Z:{os.path.join(opPath, 'edit.reg')}'], env=env)
+
 def run_task(task, pfx, binary, opPath):
     desc = task['description']
     type = task['type']
@@ -95,6 +119,9 @@ def run_task(task, pfx, binary, opPath):
 
     elif type == 'runexe':
         task_runexe(task, pfx, binary, opPath)
+
+    elif type == 'regedit':
+        task_regedit(task, pfx, binary, opPath)
 
     else:
         click.echo(f'Unrecognized task {click.style(type, bold=True)}. Check if the task name is written correctly or update Prefixer.')
