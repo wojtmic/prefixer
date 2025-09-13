@@ -5,12 +5,13 @@
       "description": "Download installer",
       "type": "download",
       "url": "https://go.microsoft.com/fwlink/?LinkId=2085155",
-      "checksum": "0bba3094588c4bfec301939985222a20b340bf03431563dec8b2b4478b06fffa"
+      "checksum": "0bba3094588c4bfec301939985222a20b340bf03431563dec8b2b4478b06fffa",
+      "filename": "dotnet_installer.exe"
     },
     {
       "description": "Install package",
       "type": "runexe",
-      "filename": "ndp48-web.exe",
+      "filename": "dotnet_installer.exe",
       "args": [
         "/q",
         "/norestart"

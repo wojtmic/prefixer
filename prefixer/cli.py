@@ -82,6 +82,14 @@ def run(ctx, exe_path: str):
     subprocess.run([bin_path, exe_path], env=env)
 
 @prefixer.command()
+@click.pass_context
+def openpfx(ctx):
+    """
+    Opens the wineprefix folder in your file manager
+    """
+    subprocess.run(['dolphin', ctx.obj['PFX_PATH']])
+
+@prefixer.command()
 @click.argument('tweak_name')
 @click.pass_context
 def tweak(ctx, tweak_name: str):

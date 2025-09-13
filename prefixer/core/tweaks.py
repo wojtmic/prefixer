@@ -31,7 +31,7 @@ def get_tweaks():
 def task_download(task, opPath):
     url: str = task['url']
     checksum: str = task['checksum']
-    filename: str = os.path.basename(urlparse(url).path)
+    filename: str = task['filename']
 
     try:
         with requests.get(url, stream=True) as response:
