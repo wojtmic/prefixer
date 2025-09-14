@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+import zipfile
 import json5
 import subprocess
 import os
@@ -78,7 +78,7 @@ def task_runexe(task, pfx, binary, opPath):
     filePath = os.path.join(opPath, task['filename'])
 
     click.echo(f'Running {click.style(task['filename'],fg='bright_blue')} with args {click.style(task['args'], fg='bright_blue')}')
-    click.secho('Possible error message spam from external program!', color='bright_black')
+    click.secho('Possible error message spam from external program!', fg='bright_black')
     subprocess.run([binary, filePath, *task['args']], env=env)
 
 def task_regedit(task, pfx, binary, opPath):
@@ -105,7 +105,32 @@ def task_regedit(task, pfx, binary, opPath):
     # Edit the registry
     subprocess.run([binary, 'regedit', f'Z:{os.path.join(opPath, 'edit.reg')}'], env=env)
 
-def run_task(task, pfx, binary, opPath):
+def task_extract(task, pfx, gamePath, opPath):
+    filename = task['filename']
+    filePath: str = os.path.join(opPath, filename)
+
+    path: str = task['path']
+    path = path.replace('<gamedir>', gamePath)
+    path = path.replace("<pfxdir>", pfx)
+
+    if not os.path.exists(path):
+        click.echo("Target path non-existent, creating")
+        os.makedirs(path)
+
+    try:
+        with zipfile.ZipFile(filePath, "r") as zip_ref:
+            zip_ref.extractall(path)
+        click.echo('Extracted!')
+
+    except zipfile.BadZipFile:
+        click.secho('ERROR: Zip file invalid', fg='bright_red')
+        sys.exit(1)
+
+    except FileNotFoundError:
+        click.secho('Unable to find file', fg='bright_red')
+        sys.exit(1)
+
+def run_task(task, pfx, gamePath, binary, opPath):
     desc = task['description']
     type = task['type']
 
@@ -122,6 +147,9 @@ def run_task(task, pfx, binary, opPath):
 
     elif type == 'regedit':
         task_regedit(task, pfx, binary, opPath)
+
+    elif type == 'extract':
+        task_extract(task, pfx, gamePath, opPath)
 
     else:
         click.echo(f'Unrecognized task {click.style(type, bold=True)}. Check if the task name is written correctly or update Prefixer.')

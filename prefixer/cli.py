@@ -14,6 +14,8 @@ def prefixer(ctx, game_id: str):
     """
     Modern tool to manage Proton prefixes.
     """
+    games = steam.build_game_manifest()
+
     ctx.obj = {'GAME_ID': game_id}
 
     game_id_styled = click.style(game_id, fg='bright_blue')
@@ -21,7 +23,6 @@ def prefixer(ctx, game_id: str):
     click.echo(f'Targeting => {game_id_styled}')
     pfx_path = steam.get_prefix_path(game_id)
     if pfx_path is None:
-        games = steam.build_game_manifest()
         index = next((i for i, item in enumerate(games) if item['name'] == game_id), None)
         if not index is None:
             # This means the game WAS found by name!
@@ -36,6 +37,10 @@ def prefixer(ctx, game_id: str):
     ctx.obj['PFX_PATH'] = pfx_path
     ctx.obj['PFX_CONFIG_INFO'] = f'{pfx_path}/../config_info'
 
+    # Find the game gamedir
+    game_path = steam.get_installdir(game_id)
+    ctx.obj['GAME_PATH'] = game_path
+
     # Find binary path
     with open(ctx.obj['PFX_CONFIG_INFO'], 'r') as f:
         configInfo = f.readlines()
@@ -44,6 +49,7 @@ def prefixer(ctx, game_id: str):
     ctx.obj['BINARY_PATH'] = binaryPath
 
     click.echo(f'Prefix Path => {click.style(pfx_path, fg='bright_blue')}')
+    click.echo(f'Game Path => {click.style(game_path, fg='bright_blue')}')
     click.echo(f'Binary Location => {click.style(binaryPath, fg='bright_blue')}')
 
 @prefixer.command()
@@ -99,6 +105,7 @@ def tweak(ctx, tweak_name: str):
     # First, we obtain the essential information: binary & prefix paths
     pfxPath = ctx.obj['PFX_PATH']
     binaryPath = ctx.obj['BINARY_PATH']
+    gamePath = ctx.obj['GAME_PATH']
 
     # Load the tweak
     allTweaks = tweaks.get_tweaks()
@@ -119,7 +126,7 @@ def tweak(ctx, tweak_name: str):
 
     with tempfile.TemporaryDirectory(prefix='prefixer-') as tempPath:
         for task in tasks:
-            tweaks.run_task(task, pfxPath, binaryPath, tempPath)
+            tweaks.run_task(task, pfxPath, gamePath, binaryPath, tempPath)
 
     click.secho('All tasks completed successfully!', fg='bright_green')
 
