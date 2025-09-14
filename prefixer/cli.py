@@ -1,8 +1,8 @@
 import os
 import subprocess
 import click
-import core.steam as steam
-import core.tweaks as tweaks
+import prefixer.core as steam
+import prefixer.core as tweaks
 import sys
 from pathlib import Path
 import tempfile
