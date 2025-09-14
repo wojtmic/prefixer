@@ -7,24 +7,31 @@ import hashlib
 import click
 import sys
 
-TWEAKS_DIR = os.path.expanduser('~/.config/prefixer/tweaks')
+TWEAKS_DIR_USER = os.path.expanduser('~/.config/prefixer/tweaks')
+TWEAKS_DIR_SYSTEM = os.path.expanduser('/usr/share/prefixer/tweaks')
+
+TWEAKS_PATHS = [TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
 
 def get_tweaks():
-    tweakFiles = os.listdir(TWEAKS_DIR)
     tweaks = {}
+    for tweakpath in TWEAKS_PATHS:
+        if not os.path.exists(tweakpath):
+            os.makedirs(tweakpath)
 
-    for tweak in tweakFiles:
-        with open(os.path.join(TWEAKS_DIR, tweak), 'r') as f:
-            obj = json5.loads(f.read())
+        tweakFiles = os.listdir(tweakpath)
 
-        tasks = obj['tasks']
-        desc = obj['description']
-        tweakName = tweak.split('.')[0]
+        for tweak in tweakFiles:
+            with open(os.path.join(tweakpath, tweak), 'r') as f:
+                obj = json5.loads(f.read())
 
-        tweaks[tweakName] = {
-            "description": desc,
-            "tasks": tasks
-        }
+            tasks = obj['tasks']
+            desc = obj['description']
+            tweakName = tweak.split('.')[0]
+
+            tweaks[tweakName] = {
+                "description": desc,
+                "tasks": tasks
+            }
 
     return tweaks
 

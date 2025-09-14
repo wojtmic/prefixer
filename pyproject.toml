@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prefixer"
+description = "Modern Proton Prefix management tool"
+version = "1.0.0"
+authors = [ {name='Wojtmic', email='mail@wojtmic.dev'} ]
+
+requires-python = ">=3.13"
+
+dependencies = [
+    "vdf~=3.4", "json5~=0.12.1", "requests~=2.32.5", "click~=8.2.1"
+]
+
+[project.scripts]
+prefixer = "prefixer.cli:prefixer"
+
+[project.urls]
+Homepage = "https://github.com/wojtmic/prefixer"
+Issues = "https://github.com/wojtmic/prefixer/issues"
