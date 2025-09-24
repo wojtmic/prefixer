@@ -12,11 +12,11 @@ prefixer "Undertale" run ~/Downloads/mod-installer.exe # Runs a .exe file with t
 ```
 <br>
 Full built-in tweak list:<br>
-- `bepinex`: Installs BepInEx 5.4.23.3
-- `d3dcompiler`: Installs the Microsoft DirectX End-User Runtime
-- `dotnet48`: Installs the Microsoft .NET Framework 4.8
-- `vcrun2022`: Installs the Microsoft Visual C++ 2022 Redistributable
-- `winhttp`: Adds a `winhttp` library override to the prefix.
+bepinex      - BepInEx 5.4.23.3<br>
+d3dcompiler  - MS DirectX End-User Runtime<br>
+dotnet48     - MS .NET Framework 4.8<br>
+vcrun2022    - MS Visual C++ 2022 Redistributable<br>
+winhttp      - Windows HTTP components library override<br>
 
 # Installation
 The official way of downloading Prefixer is from the AUR under the package name `prefixer`. This approach only works on Arch Linux. If you use another distro, you are free to build the Python wheel yourself, but Arch is the primary distribution for Prefixer and is prioritized.
