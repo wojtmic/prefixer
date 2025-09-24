@@ -1,8 +1,8 @@
 import os
 import subprocess
 import click
-import prefixer.core as steam
-import prefixer.core as tweaks
+from prefixer.core import steam
+from prefixer.core import tweaks
 import sys
 from pathlib import Path
 import tempfile
@@ -93,7 +93,15 @@ def openpfx(ctx):
     """
     Opens the wineprefix folder in your file manager
     """
-    subprocess.run(['dolphin', ctx.obj['PFX_PATH']])
+    subprocess.run(['xdg-open', ctx.obj['PFX_PATH']])
+
+@prefixer.command()
+@click.pass_context
+def opengamedir(ctx):
+    """
+    Opens the gamedir folder in your file manager
+    """
+    subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
 @prefixer.command()
 @click.argument('tweak_name')

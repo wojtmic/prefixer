@@ -17,8 +17,12 @@ dependencies = [
 [project.scripts]
 prefixer = "prefixer.cli:prefixer"
 
-[tool.setuptools]
-packages = ["prefixer", "prefixer.core"]
+#[tool.setuptools]
+#packages = ["prefixer", "prefixer.core"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["prefixer*"]
 
 [project.urls]
 Homepage = "https://github.com/wojtmic/prefixer"
