@@ -134,7 +134,7 @@ def tweak(ctx, tweak_name: str):
 
     with tempfile.TemporaryDirectory(prefix='prefixer-') as tempPath:
         for task in tasks:
-            tweaks.run_task(task, pfxPath, gamePath, binaryPath, tempPath)
+            tweaks.run_task(task, pfxPath, gamePath, binaryPath, tempPath, allTweaks)
 
     click.secho('All tasks completed successfully!', fg='bright_green')
 

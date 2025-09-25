@@ -6,6 +6,7 @@ import requests
 import hashlib
 import click
 import sys
+import shutil
 
 TWEAKS_DIR_USER = os.path.expanduser('~/.config/prefixer/tweaks')
 TWEAKS_DIR_SYSTEM = os.path.expanduser('/usr/share/prefixer/tweaks')
@@ -119,6 +120,7 @@ def task_extract(task, pfx, gamePath, opPath):
     path: str = task['path']
     path = path.replace('<gamedir>', gamePath)
     path = path.replace("<pfxdir>", pfx)
+    path = path.replace("<tempdir>", opPath)
 
     if not os.path.exists(path):
         click.echo("Target path non-existent, creating")
@@ -137,7 +139,54 @@ def task_extract(task, pfx, gamePath, opPath):
         click.secho('Unable to find file', fg='bright_red')
         sys.exit(1)
 
-def run_task(task, pfx, gamePath, binary, opPath):
+def task_fileop(task, pfx, gamePath, opPath):
+    op = task['operation']
+
+    filePath: str = task['path']
+    filePath = filePath.replace('<gamedir>', gamePath)
+    filePath = filePath.replace("<pfxdir>", pfx)
+    filePath = filePath.replace("<tempdir>", opPath)
+
+    if op == 'copy':
+        newPath: str = task['newPath']
+        newPath = newPath.replace('<gamedir>', gamePath)
+        newPath = newPath.replace("<pfxdir>", pfx)
+        newPath = newPath.replace("<tempdir>", opPath)
+
+        click.echo(f'Copying {click.style(filePath, fg='bright_blue')} to {click.style(newPath, fg='bright_blue')}...')
+
+        if os.path.isfile(filePath):
+            shutil.copy(filePath, newPath)
+        else:
+            shutil.copytree(filePath, newPath)
+
+    elif op == 'rename':
+        newPath: str = task['newPath']
+        newPath = newPath.replace('<gamedir>', gamePath)
+        newPath = newPath.replace("<pfxdir>", pfx)
+        newPath = newPath.replace("<tempdir>", opPath)
+
+        click.echo(f'Renaming {click.style(filePath, fg='bright_blue')} to {click.style(newPath, fg='bright_blue')}...')
+        os.rename(filePath, newPath)
+
+    elif op == 'delete':
+        click.echo(f'Deleting {click.style(filePath, fg='bright_blue')}...')
+
+        if os.path.isfile(filePath):
+            os.remove(filePath)
+        else:
+            shutil.rmtree(filePath)
+
+    elif op == 'create':
+        click.echo(f'Creating {click.style(filePath, fg='bright_blue')}...')
+
+        with open(filePath, 'w') as f:
+            f.write(task['contents'])
+
+    else:
+        click.secho('INCORRECT TASK OPERATION', fg='bright red')
+
+def run_task(task, pfx, gamePath, binary, opPath, tweakList):
     desc = task['description']
     type = task['type']
 
@@ -157,6 +206,25 @@ def run_task(task, pfx, gamePath, binary, opPath):
 
     elif type == 'extract':
         task_extract(task, pfx, gamePath, opPath)
+
+    elif type == 'fileop':
+        task_fileop(task, pfx, gamePath, opPath)
+
+    elif type == 'tweak':
+        name = task['name']
+
+        # Throw if tweak not found
+        if not name in tweakList:
+            click.echo('ERROR: Unable to find the requested tweak')
+            sys.exit(1)
+
+        # Get tweak data
+        targetTweak = tweakList[name]
+        tasks = targetTweak['tasks']
+
+        # and run it
+        for t in tasks:
+            run_task(t, pfx, gamePath, binary, opPath, tweakList)
 
     else:
         click.echo(f'Unrecognized task {click.style(type, bold=True)}. Check if the task name is written correctly or update Prefixer.')

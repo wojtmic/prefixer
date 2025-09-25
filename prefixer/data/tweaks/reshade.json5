@@ -1,0 +1,92 @@
+{
+  "description": "ReShade 6.5.1",
+  "tasks": [
+    // First step, we download
+    {
+      "description": "Download ReShade",
+      "type": "download",
+      "url": "https://reshade.me/downloads/ReShade_Setup_6.5.1.exe",
+      "checksum": "c384e89427865e119db4daf18c2c225b951a4cd07dbff92b65caf68c2a95ace0",
+      "filename": "reshade.zip"
+    },
+    {
+      "description": "Download Shaders",
+      "type": "download",
+      "url": "https://github.com/crosire/reshade-shaders/archive/refs/heads/slim.zip",
+      "checksum": "c195ba236955cd7b0767a79c1e6420d90b23692a0ee810848aa1ccbf86879ed3",
+      "filename": "shaders.zip"
+    },
+
+    // ReShade needs d3dcompiler to work
+    {
+      "description": "Set up d3dcompiler",
+      "type": "tweak",
+      "name": "d3dcompiler"
+    },
+
+    // Extracting the files is necessary to use them
+    {
+      "description": "Extract ReShade",
+      "type": "extract",
+      "filename": "reshade.zip",
+      "path": "<tempdir>/reshade",
+      "method": "zip"
+    },
+    {
+      "description": "Extract Shaders",
+      "type": "extract",
+      "filename": "shaders.zip",
+      "path": "<tempdir>/shaders",
+      "method": "zip"
+    },
+
+    // ReShade first
+    {
+      "description": "Copy ReShade DLL",
+      "type": "fileop",
+      "operation": "copy",
+      "path": "<tempdir>/reshade/ReShade64.dll",
+      "newPath": "<gamedir>/dxgi.dll"
+    },
+    {
+      "description": "Copy ReShade JSON",
+      "type": "fileop",
+      "operation": "copy",
+      "path": "<tempdir>/reshade/ReShade64.json",
+      "newPath": "<gamedir>/ReShade64.json"
+    },
+    {
+      "description": "Override dxgi",
+      "type": "regedit",
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "contents": {
+        "dxgi": "native,builtin"
+      }
+    },
+
+    // Then the shaders
+    {
+      "description": "Copy Shaders",
+      "type": "fileop",
+      "operation": "copy",
+      "path": "<tempdir>/shaders/reshade-shaders-slim/Shaders",
+      "newPath": "<gamedir>/Shaders"
+    },
+    {
+      "description": "Copy Textures",
+      "type": "fileop",
+      "operation": "copy",
+      "path": "<tempdir>/shaders/reshade-shaders-slim/Textures",
+      "newPath": "<gamedir>/Textures"
+    },
+
+    // Finally, make the config file
+    {
+      "description": "Create ReShade config file",
+      "type": "fileop",
+      "operation": "create",
+      "path": "<gamedir>/ReShade.ini",
+      "contents": "[GENERAL]\\nEffectSearchPaths=.\\Shaders\\nTextureSearchPaths=.\\Textures"
+    }
+  ]
+}
