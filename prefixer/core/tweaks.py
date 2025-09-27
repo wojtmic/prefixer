@@ -158,7 +158,7 @@ def task_fileop(task, pfx, gamePath, opPath):
         if os.path.isfile(filePath):
             shutil.copy(filePath, newPath)
         else:
-            shutil.copytree(filePath, newPath)
+            shutil.copytree(filePath, newPath, dirs_exist_ok=True)
 
     elif op == 'rename':
         newPath: str = task['newPath']

@@ -10,11 +10,18 @@
       "filename": "reshade.zip"
     },
     {
-      "description": "Download Shaders",
+      "description": "Download Official Shaders",
       "type": "download",
       "url": "https://github.com/crosire/reshade-shaders/archive/refs/heads/slim.zip",
       "checksum": "c195ba236955cd7b0767a79c1e6420d90b23692a0ee810848aa1ccbf86879ed3",
       "filename": "shaders.zip"
+    },
+    {
+      "description": "Download qUINT Shaders",
+      "type": "download",
+      "url": "https://github.com/martymcmodding/qUINT/archive/refs/heads/master.zip",
+      "checksum": "02ad59c10985d6deb0a113010c74d2c9ec086f55c5477f4bd7684d2e2f4752be",
+      "filename": "quint.zip"
     },
 
     // ReShade needs d3dcompiler to work
@@ -33,10 +40,17 @@
       "method": "zip"
     },
     {
-      "description": "Extract Shaders",
+      "description": "Extract Official Shaders",
       "type": "extract",
       "filename": "shaders.zip",
       "path": "<tempdir>/shaders",
+      "method": "zip"
+    },
+    {
+      "description": "Extract qUINT Shaders",
+      "type": "extract",
+      "filename": "quint.zip",
+      "path": "<tempdir>/quint",
       "method": "zip"
     },
 
@@ -66,18 +80,25 @@
 
     // Then the shaders
     {
-      "description": "Copy Shaders",
+      "description": "Copy Official Shaders",
       "type": "fileop",
       "operation": "copy",
       "path": "<tempdir>/shaders/reshade-shaders-slim/Shaders",
       "newPath": "<gamedir>/Shaders"
     },
     {
-      "description": "Copy Textures",
+      "description": "Copy Official Textures",
       "type": "fileop",
       "operation": "copy",
       "path": "<tempdir>/shaders/reshade-shaders-slim/Textures",
       "newPath": "<gamedir>/Textures"
+    },
+    {
+      "description": "Copy qUINT Shaders",
+      "type": "fileop",
+      "operation": "copy",
+      "path": "<tempdir>/quint/qUINT-master/Shaders",
+      "newPath": "<gamedir>/Shaders"
     },
 
     // Finally, make the config file
@@ -86,7 +107,7 @@
       "type": "fileop",
       "operation": "create",
       "path": "<gamedir>/ReShade.ini",
-      "contents": "[GENERAL]\\nEffectSearchPaths=.\\Shaders\\nTextureSearchPaths=.\\Textures"
+      "contents": "[GENERAL]\nEffectSearchPaths=.\\Shaders\nTextureSearchPaths=.\\Textures"
     }
   ]
 }

@@ -104,6 +104,11 @@ def opengamedir(ctx):
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
 @prefixer.command()
+@click.pass_context
+def debug(ctx):
+    print(steam.get_manifest(ctx.obj['GAME_ID']))
+
+@prefixer.command()
 @click.argument('tweak_name')
 @click.pass_context
 def tweak(ctx, tweak_name: str):
