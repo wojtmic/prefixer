@@ -1,4 +1,0 @@
-vdf~=3.4
-json5~=0.12.1
-requests~=2.32.5
-click~=8.2.1
