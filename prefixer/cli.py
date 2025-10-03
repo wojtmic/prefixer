@@ -3,6 +3,7 @@ import subprocess
 import click
 from prefixer.core import steam
 from prefixer.core import tweaks
+from prefixer.core import exceptions as excs
 import sys
 from pathlib import Path
 import tempfile
@@ -30,8 +31,7 @@ def prefixer(ctx, game_id: str):
             game_id = ctx.obj['GAME_ID']
             pfx_path = steam.get_prefix_path(game_id)  # Find the PFX path again
         else:
-            click.echo('ERROR: Unable to find the wineprefix')
-            sys.exit(1)
+            raise excs.NoPrefixError
 
 
     ctx.obj['PFX_PATH'] = pfx_path
@@ -74,9 +74,6 @@ def run(ctx, exe_path: str):
     """
     Runs a .exe within the target prefix
     """
-    # if not os.path.exists(exe_path):
-    #     click.echo('The file could not be found')
-    #     sys.exit(1)
 
     pfx_path = ctx.obj['PFX_PATH']
     bin_path = ctx.obj['BINARY_PATH']
@@ -104,11 +101,6 @@ def opengamedir(ctx):
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
 @prefixer.command()
-@click.pass_context
-def debug(ctx):
-    print(steam.get_manifest(ctx.obj['GAME_ID']))
-
-@prefixer.command()
 @click.argument('tweak_name')
 @click.pass_context
 def tweak(ctx, tweak_name: str):
@@ -125,14 +117,14 @@ def tweak(ctx, tweak_name: str):
 
     if not tweak_name in allTweaks:
         click.echo('ERROR: Unable to find the requested tweak')
-        sys.exit(1)
+        raise excs.NoTweakError
 
     targetTweak = allTweaks[tweak_name]
     tasks = targetTweak['tasks']
 
     if len(tasks) <= 0:
         click.echo('ERROR: This tweak contains no tasks to run')
-        sys.exit(1)
+        raise excs.BadTweakError
 
     # Execute the tasks
     click.echo(f'Target Tweak => {click.style(targetTweak['description'])}')
@@ -144,4 +136,27 @@ def tweak(ctx, tweak_name: str):
     click.secho('All tasks completed successfully!', fg='bright_green')
 
 if __name__ == '__main__':
-    prefixer()
+    try:
+        prefixer()
+
+    except excs.NoTweakError:
+        click.secho('ERROR: The specified tweak wasn\'t found!', fg='bright_red')
+    except excs.NoSteamError:
+        click.secho('ERROR: Prefixer was unable to find Steam!', fg='bright_red')
+    except excs.NoTaskError:
+        click.secho('ERROR: The task specified in the tweak wasn\'t found!', fg='bright_red')
+    except excs.NoPrefixError:
+        click.secho('ERROR: The specified Prefix couldn\'t be found!', fg='bright_red')
+
+    except excs.BadFileError:
+        click.secho('ERROR: Prefixer encountered an error with a file while executing the tweak!', fg='bright_red')
+    except excs.BadDownloadError:
+        click.secho('ERROR: Prefixer wasn\'t able to download a file!', fg='bright_red')
+    except excs.BadTweakError:
+        click.secho('ERROR: The tweak is malformed or requires a newer version of Prefixer!', fg='bright_red')
+
+    except excs.InternalExeError:
+        click.secho('ERROR: There was an error while running an external exe within the tweak!', fg='bright_red')
+
+    except Exception as e:
+        click.secho(f'ERROR: An unknown exception has occurred: {e}')

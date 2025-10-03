@@ -7,6 +7,7 @@ import hashlib
 import click
 import sys
 import shutil
+from . import exceptions as excs
 
 TWEAKS_DIR_USER = os.path.expanduser('~/.config/prefixer/tweaks')
 TWEAKS_DIR_SYSTEM = os.path.expanduser('/usr/share/prefixer/tweaks')
@@ -132,12 +133,7 @@ def task_extract(task, pfx, gamePath, opPath):
         click.echo('Extracted!')
 
     except zipfile.BadZipFile:
-        click.secho('ERROR: Zip file invalid', fg='bright_red')
-        sys.exit(1)
-
-    except FileNotFoundError:
-        click.secho('Unable to find file', fg='bright_red')
-        sys.exit(1)
+        raise excs.BadFileError
 
 def task_fileop(task, pfx, gamePath, opPath):
     op = task['operation']
@@ -196,7 +192,7 @@ def run_task(task, pfx, gamePath, binary, opPath, tweakList):
         filename = task_download(task, opPath)
         if filename is None:
             click.secho('Error while downloading file, aborting.', fg='red')
-            sys.exit(1)
+            raise excs.BadDownloadError
 
     elif type == 'runexe':
         task_runexe(task, pfx, binary, opPath)
@@ -215,8 +211,8 @@ def run_task(task, pfx, gamePath, binary, opPath, tweakList):
 
         # Throw if tweak not found
         if not name in tweakList:
-            click.echo('ERROR: Unable to find the requested tweak')
-            sys.exit(1)
+            # click.echo('ERROR: Unable to find the requested tweak')
+            raise excs.NoTweakError
 
         # Get tweak data
         targetTweak = tweakList[name]
@@ -227,7 +223,7 @@ def run_task(task, pfx, gamePath, binary, opPath, tweakList):
             run_task(t, pfx, gamePath, binary, opPath, tweakList)
 
     else:
-        click.echo(f'Unrecognized task {click.style(type, bold=True)}. Check if the task name is written correctly or update Prefixer.')
-        sys.exit(1)
+        # click.echo(f'Unrecognized task {click.style(type, bold=True)}. Check if the task name is written correctly or update Prefixer.')
+        raise excs.NoTaskError
 
     click.secho(f'Completed task {desc} successfully!', fg='bright_blue')

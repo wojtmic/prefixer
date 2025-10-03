@@ -1,13 +1,14 @@
 import vdf
 import os
 import sys
+from .exceptions import NoSteamError
 
 LIBMANIFEST_LOCATION = os.path.expanduser('~/.steam/steam/steamapps/libraryfolders.vdf')
 
 def get_libraries():
     if not os.path.exists(LIBMANIFEST_LOCATION):
-        print('ERROR: You do not have a Steam library manifest file in your home directory and Prefixer is unable to continue. Please add a Steam library or install Steam.')
-        sys.exit(1)
+        # print('ERROR: You do not have a Steam library manifest file in your home directory and Prefixer is unable to continue. Please add a Steam library or install Steam.')
+        raise NoSteamError
 
     with open(LIBMANIFEST_LOCATION, 'r') as f:
         libmanifest = vdf.loads(f.read())
@@ -80,3 +81,6 @@ def build_game_manifest():
                     games.append(vdf.loads(f.read())['AppState'])
 
     return games
+
+def get_games_dict():
+    return {f"{game['name']} ({game['appid']})": game for game in build_game_manifest()}
