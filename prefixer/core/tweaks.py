@@ -42,24 +42,37 @@ def task_download(task, opPath):
     checksum: str = task['checksum']
     filename: str = task['filename']
 
-    try:
-        with requests.get(url, stream=True) as response:
-            response.raise_for_status()
+    if os.environ.get('NO_DOWNLOAD', 'false') != 'true':
+        try:
+            with requests.get(url, stream=True) as response:
+                response.raise_for_status()
 
-            total_size = int(response.headers.get('content-length', 0))
-            click.echo(f'Downloading {click.style(filename, 'bright_blue', bold=True)}')
+                total_size = int(response.headers.get('content-length', 0))
+                click.echo(f'Downloading {click.style(filename, 'bright_blue', bold=True)}')
 
-            with click.progressbar(
-                iterable=response.iter_content(chunk_size=8192),
-                length=total_size,
-                label='Download Progress'
-            ) as bar:
-                with open(os.path.join(opPath, filename), 'wb') as f:
-                    for chunk in bar:
-                        f.write(chunk)
-    except Exception as e:
-        click.echo('ERROR: Unable to download file')
-        click.echo(f'Exception triggered: {e}')
+                with click.progressbar(
+                    iterable=response.iter_content(chunk_size=8192),
+                    length=total_size,
+                    label='Download Progress'
+                ) as bar:
+                    with open(os.path.join(opPath, filename), 'wb') as f:
+                        for chunk in bar:
+                            f.write(chunk)
+        except Exception as e:
+            click.echo('ERROR: Unable to download file')
+            click.echo(f'Exception triggered: {e}')
+
+    # Handle NO_DOWNLOAD
+    else:
+        if os.path.exists(os.path.expanduser(f'~/Downloads/{filename}')):
+            filename = os.path.expanduser(f'~/Downloads/{filename}')
+        else:
+            raise excs.BadDownloadError
+
+    # Skip if variable set
+    if os.environ.get('SKIP_CHECKSUM_VALIDATION', 'false') == 'true':
+        click.secho('WARNING: Skipping checksum validation as config value was set')
+        return filename
 
     click.echo(f'Finished download, verifying checksum...')
     downloadedChecksum = hashlib.sha256()
@@ -88,7 +101,12 @@ def task_runexe(task, pfx, binary, opPath):
 
     click.echo(f'Running {click.style(task['filename'],fg='bright_blue')} with args {click.style(task['args'], fg='bright_blue')}')
     click.secho('Possible error message spam from external program!', fg='bright_black')
-    subprocess.run([binary, filePath, *task['args']], env=env)
+
+    # SILENCE_EXTERNAL handling
+    if os.environ.get('SILENCE_EXTERNAL', 'false') != 'true':
+        subprocess.run([binary, filePath, *task['args']], env=env)
+    else:
+        subprocess.run([binary, filePath, *task['args']], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def task_regedit(task, pfx, binary, opPath):
     path = task['path']
@@ -221,6 +239,8 @@ def run_task(task, pfx, gamePath, binary, opPath, tweakList):
         # and run it
         for t in tasks:
             run_task(t, pfx, gamePath, binary, opPath, tweakList)
+            if os.environ.get('PAUSE_AFTER_TASK', 'false') == 'true':
+                click.pause('Press any key to continue...')
 
     else:
         # click.echo(f'Unrecognized task {click.style(type, bold=True)}. Check if the task name is written correctly or update Prefixer.')
