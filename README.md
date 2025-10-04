@@ -1,5 +1,5 @@
 # Prefixer
-Prefixer is a modern tool for managing [Steam](https://store.steampowered.com/) [Proton](https://github.com/ValveSoftware/Proton) prefixes, seeking to replace [protontricks](https://github.com/Matoking/protontricks) with a friendlier interface, faster responses and modular approach.
+Prefixer is a tool for managing [Steam](https://store.steampowered.com/) [Proton](https://github.com/ValveSoftware/Proton) prefixes, seeking to replace [protontricks](https://github.com/Matoking/protontricks) with a friendlier interface, faster responses and modular approach. (not there yet, but working on it!)
 
 # Usage
 Prefixer was designed to be as user-friendly as possible, so it should be easy to get started.<br>
