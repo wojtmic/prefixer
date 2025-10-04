@@ -57,7 +57,7 @@ def prefixer(ctx, game_id: str):
         with open(ctx.obj['PFX_CONFIG_INFO'], 'r') as f:
             configInfo = f.readlines()
 
-        binaryPath= Path(f'{configInfo[2]}/../../bin/wine').resolve()
+        binaryPath= Path(f'{configInfo[2]}/../../../proton').resolve()
         ctx.obj['BINARY_PATH'] = binaryPath
 
     # NO_STEAM handling
@@ -97,9 +97,11 @@ def winecfg(ctx):
     click.echo('Opening winecfg...')
 
     env = os.environ.copy()
-
+    env['STEAM_COMPAT_DATA_PATH'] = os.path.dirname(pfx_path)
     env['WINEPREFIX'] = pfx_path
-    subprocess.run([bin_path, 'winecfg'], env=env)
+    env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = os.path.expanduser('~/.steam/steam')
+
+    subprocess.run([bin_path, 'run', 'winecfg'], env=env)
 
 @prefixer.command()
 @click.argument('exe_path')
@@ -114,9 +116,11 @@ def run(ctx, exe_path: str):
 
     env = os.environ.copy()
     env['WINEPREFIX'] = pfx_path
+    env['STEAM_COMPAT_DATA_PATH'] = os.path.dirname(pfx_path)
+    env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = os.path.expanduser('~/.steam/steam')
 
     click.echo(f'Running {exe_path}...')
-    subprocess.run([bin_path, exe_path], env=env)
+    subprocess.run([bin_path, 'run', exe_path], env=env)
 
 @prefixer.command()
 @click.pass_context

@@ -96,6 +96,8 @@ def task_download(task, opPath):
 def task_runexe(task, pfx, binary, opPath):
     env = os.environ.copy()
     env['WINEPREFIX'] = pfx
+    env['STEAM_COMPAT_DATA_PATH'] = os.path.dirname(pfx)
+    env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = os.path.expanduser('~/.steam/steam')
 
     filePath = os.path.join(opPath, task['filename'])
 
@@ -104,9 +106,9 @@ def task_runexe(task, pfx, binary, opPath):
 
     # SILENCE_EXTERNAL handling
     if os.environ.get('SILENCE_EXTERNAL', 'false') != 'true':
-        subprocess.run([binary, filePath, *task['args']], env=env)
+        subprocess.run([binary, 'run', filePath, *task['args']], env=env)
     else:
-        subprocess.run([binary, filePath, *task['args']], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run([binary, 'run', filePath, *task['args']], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def task_regedit(task, pfx, binary, opPath):
     path = task['path']
