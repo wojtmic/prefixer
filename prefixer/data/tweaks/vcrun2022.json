@@ -10,7 +10,7 @@
     },
     {
       "description": "Install package",
-      "type": "runexe",
+      "type": "run_exe",
       "filename": "vcrun_installer.exe",
       "args": [
         "/install",
