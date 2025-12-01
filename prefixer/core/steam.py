@@ -96,7 +96,11 @@ def get_compat_tool_mapping():
     return config['InstallConfigStore']['Software']['Valve']['Steam']['CompatToolMapping']
 
 def get_compat_tool(target_id: str):
-    return get_compat_tool_mapping()[target_id]['name']
+    override = get_compat_tool_mapping().get(target_id)
+    global_tool = get_compat_tool_mapping().get(0)
+    if override: return override['name']
+    elif global_tool: return global_tool['name']
+    else: return 'proton_experimental'
 
 def get_proton_path(name: str):
     custom_path = os.path.join(os.path.expanduser('~/.steam/steam/compatibilitytools.d/'), name)
