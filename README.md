@@ -1,5 +1,5 @@
 # Prefixer
-Prefixer is a modern tool for managing [Steam](https://store.steampowered.com/) [Proton](https://github.com/ValveSoftware/Proton) prefixes, seeking to replace [protontricks](https://github.com/Matoking/protontricks) with a friendlier interface, faster responses and modular approach.
+Prefixer is a tool for managing [Steam](https://store.steampowered.com/) [Proton](https://github.com/ValveSoftware/Proton) prefixes, seeking to replace [protontricks](https://github.com/Matoking/protontricks) with a friendlier interface, faster responses and modular approach. (not there yet, but working on it!)
 
 # Usage
 Prefixer was designed to be as user-friendly as possible, so it should be easy to get started.<br>
@@ -17,6 +17,7 @@ d3dcompiler  - MS DirectX End-User Runtime<br>
 dotnet48     - MS .NET Framework 4.8<br>
 vcrun2022    - MS Visual C++ 2022 Redistributable<br>
 winhttp      - Windows HTTP components library override<br>
+reshade      - ReShade 6.5.1 (Tested in Unity games)<br>
 
 # Installation
 The official way of downloading Prefixer is from the [AUR](https://aur.archlinux.org/packages/prefixer) under the package name `prefixer`. This approach only works on Arch Linux. If you use another distro, you are free to build the Python wheel yourself, but Arch is the primary distribution for Prefixer and is prioritized.
