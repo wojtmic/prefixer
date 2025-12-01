@@ -1,30 +1,26 @@
 import vdf
 import os
 import sys
-from .exceptions import NoSteamError
+from .exceptions import NoSteamError, NoProtonError
 
 LIBMANIFEST_LOCATION = os.path.expanduser('~/.steam/steam/steamapps/libraryfolders.vdf')
 
 def get_libraries():
     if not os.path.exists(LIBMANIFEST_LOCATION):
-        # print('ERROR: You do not have a Steam library manifest file in your home directory and Prefixer is unable to continue. Please add a Steam library or install Steam.')
         raise NoSteamError
 
     with open(LIBMANIFEST_LOCATION, 'r') as f:
         libmanifest = vdf.loads(f.read())
 
-    # Get lib IDs
     libs = []
     for lib in libmanifest['libraryfolders']:
         if not os.path.exists(libmanifest['libraryfolders'][lib]['path']): continue
         libs.append(lib)
 
-    # Get paths to libs
     libPaths = []
     for lib in libs:
         libPaths.append(libmanifest['libraryfolders'][lib]['path'])
 
-    # Get apps/IDs of games in said libs
     libApps = []
     for lib in libs:
         libApps.append(libmanifest['libraryfolders'][lib]['apps'])
@@ -84,3 +80,32 @@ def build_game_manifest():
 
 def get_games_dict():
     return {f"{game['name']} ({game['appid']})": game for game in build_game_manifest()}
+
+def get_machine_games_dict():
+    return {game['name'].replace(' ', '_').lower(): game for game in build_game_manifest()}
+
+def get_steam_config():
+    with open(os.path.expanduser('~/.steam/steam/config/config.vdf'), 'r') as f:
+        content = f.read()
+        data = vdf.loads(content)
+
+    return data
+
+def get_compat_tool_mapping():
+    config = get_steam_config()
+    return config['InstallConfigStore']['Software']['Valve']['Steam']['CompatToolMapping']
+
+def get_compat_tool(target_id: str):
+    return get_compat_tool_mapping()[target_id]['name']
+
+def get_proton_path(name: str):
+    custom_path = os.path.join(os.path.expanduser('~/.steam/steam/compatibilitytools.d/'), name)
+    official = get_machine_games_dict().get(name)
+    if os.path.exists(custom_path):
+        return custom_path
+    elif official:
+        dir = get_installdir(official['appid'])
+        if os.path.exists(dir): return dir
+        raise NoProtonError
+    else:
+        raise NoProtonError

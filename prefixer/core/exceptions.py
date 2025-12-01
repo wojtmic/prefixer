@@ -27,3 +27,6 @@ class InternalExeError(PrefixerError):
 
 class MalformedTaskError(PrefixerError):
     pass
+
+class NoProtonError(PrefixerError):
+    pass

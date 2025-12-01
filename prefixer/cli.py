@@ -5,13 +5,12 @@ import click
 from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
-from pathlib import Path
 import tempfile
 import sys
 from prefixer.core.models import RuntimeContext
 from prefixer.core.registry import task_registry
 from prefixer.core.tweaks import Tweak
-import prefixer.core.tasks
+import prefixer.core.tasks # Import necessary to actually load tasks!
 
 @click.group()
 @click.argument('game_id')
@@ -49,17 +48,19 @@ def prefixer(ctx, game_id: str):
                 raise excs.NoPrefixError
 
 
+        proton_ver = steam.get_compat_tool(game_id)
+        if 'steamlinuxruntime' in proton_ver:
+            click.secho('This app runs natively under the Steam Linux Runtime!', fg='bright_red')
+            return
+
+        proton_path = steam.get_proton_path(proton_ver)
+
         ctx.obj['PFX_PATH'] = pfx_path
-        ctx.obj['PFX_CONFIG_INFO'] = Path(f'{pfx_path}/../config_info').resolve()
 
         game_path = steam.get_installdir(game_id)
         ctx.obj['GAME_PATH'] = game_path
 
-        with open(ctx.obj['PFX_CONFIG_INFO'], 'r') as f:
-            configInfo = f.readlines()
-
-        binaryPath= Path(f'{configInfo[2]}/../../../proton').resolve()
-        ctx.obj['BINARY_PATH'] = binaryPath
+        ctx.obj['BINARY_PATH'] = os.path.join(proton_path, 'proton')
 
     else:
         click.secho('WARNING: NO_STEAM specified. Defaulting to global wine installation.', fg='bright_yellow')
