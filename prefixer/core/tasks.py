@@ -94,7 +94,7 @@ def regedit(ctx: TaskContext, runtime: RuntimeContext):
     with open(reg_file_path, 'w') as f:
         f.write(reg_content)
 
-    subprocess.run([runtime.runnable_path, 'regedit', f'Z:{reg_file_path}'], env=env)
+    subprocess.run([runtime.runnable_path, 'run', 'regedit', f'Z:{reg_file_path}'], env=env)
 
 @task
 @required_context('path', 'filename')

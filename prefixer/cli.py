@@ -142,8 +142,6 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
     for task in tasks:
         click.echo(f'{click.style('==>', bold=True)} {task.description} {click.style(task.type, fg='bright_black')}')
         task.resolve_paths(runtime)
-        print(task_registry)
-        print(task_registry[task.type])
         task_registry[task.type](ctx=task, runtime=runtime)
 
 @prefixer.command()
