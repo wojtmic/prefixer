@@ -24,3 +24,6 @@ class BadTweakError(PrefixerError):
 
 class InternalExeError(PrefixerError):
     pass
+
+class MalformedTaskError(PrefixerError):
+    pass

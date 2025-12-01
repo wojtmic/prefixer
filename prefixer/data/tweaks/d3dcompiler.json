@@ -10,8 +10,8 @@
     },
     {
       "description": "Install package",
-      "type": "runexe",
-      "filename": "d3dcompiler_installer.exe",
+      "type": "run_exe",
+      "path": "d3dcompiler_installer.exe",
       "args": [
         "/Q"
       ]

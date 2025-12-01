@@ -8,6 +8,10 @@ from prefixer.core import exceptions as excs
 from pathlib import Path
 import tempfile
 import sys
+from prefixer.core.models import RuntimeContext
+from prefixer.core.registry import task_registry
+from prefixer.core.tweaks import Tweak
+import prefixer.core.tasks
 
 @click.group()
 @click.argument('game_id')
@@ -38,29 +42,25 @@ def prefixer(ctx, game_id: str):
         if pfx_path is None:
             index = next((i for i, item in enumerate(games) if item['name'] == game_id), None)
             if not index is None:
-                # This means the game WAS found by name!
-                ctx.obj['GAME_ID'] = games[index]['appid'] # Correct the game ID to the actual number
+                ctx.obj['GAME_ID'] = games[index]['appid']
                 game_id = ctx.obj['GAME_ID']
-                pfx_path = steam.get_prefix_path(game_id)  # Find the PFX path again
+                pfx_path = steam.get_prefix_path(game_id)
             else:
                 raise excs.NoPrefixError
 
 
         ctx.obj['PFX_PATH'] = pfx_path
-        ctx.obj['PFX_CONFIG_INFO'] = f'{pfx_path}/../config_info'
+        ctx.obj['PFX_CONFIG_INFO'] = Path(f'{pfx_path}/../config_info').resolve()
 
-        # Find the game gamedir
         game_path = steam.get_installdir(game_id)
         ctx.obj['GAME_PATH'] = game_path
 
-        # Find binary path
         with open(ctx.obj['PFX_CONFIG_INFO'], 'r') as f:
             configInfo = f.readlines()
 
         binaryPath= Path(f'{configInfo[2]}/../../../proton').resolve()
         ctx.obj['BINARY_PATH'] = binaryPath
 
-    # NO_STEAM handling
     else:
         click.secho('WARNING: NO_STEAM specified. Defaulting to global wine installation.', fg='bright_yellow')
 
@@ -68,13 +68,10 @@ def prefixer(ctx, game_id: str):
         ctx.obj['GAME_PATH'] = os.getcwd()
         ctx.obj['BINARY_PATH'] = shutil.which('wine')
 
-    # Overrides
-    ## Values
     pfxOverride = os.environ.get('PREFIX_PATH', '')
     gamePathOverride = os.environ.get('PROGRAM_PATH', '')
     binaryOverride = os.environ.get('WINE_BINARY', '')
 
-    ## Changes
     if pfxOverride != '':
         ctx.obj['PFX_PATH'] = pfxOverride
     if gamePathOverride != '':
@@ -138,6 +135,16 @@ def opengamedir(ctx):
     """
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
+def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
+    tasks = target_tweak.tasks
+
+    for task in tasks:
+        click.echo(f'{click.style('==>', bold=True)} {task.description} {click.style(task.type, fg='bright_black')}')
+        task.resolve_paths(runtime)
+        print(task_registry)
+        print(task_registry[task.type])
+        task_registry[task.type](ctx=task, runtime=runtime)
+
 @prefixer.command()
 @click.argument('tweak_name')
 @click.pass_context
@@ -145,44 +152,18 @@ def tweak(ctx, tweak_name: str):
     """
     Apply a tweak
     """
-    # First, we obtain the essential information: binary & prefix paths
-    pfxPath = ctx.obj['PFX_PATH']
-    binaryPath = ctx.obj['BINARY_PATH']
-    gamePath = ctx.obj['GAME_PATH']
+    pfx_path = ctx.obj['PFX_PATH']
+    runnable_path = ctx.obj['BINARY_PATH']
+    game_path = ctx.obj['GAME_PATH']
+    game_id = ctx.obj['GAME_ID']
 
-    # Load the tweak
-    allTweaks = tweaks.get_tweaks()
+    target_tweak = tweaks.build_tweak(tweak_name)
 
-    if not tweak_name in allTweaks:
-        click.echo('ERROR: Unable to find the requested tweak')
-        raise excs.NoTweakError
+    click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
 
-    targetTweak = allTweaks[tweak_name]
-    tasks = targetTweak['tasks']
-
-    if len(tasks) <= 0:
-        click.echo('ERROR: This tweak contains no tasks to run')
-        raise excs.BadTweakError
-
-    # Execute the tasks
-    click.echo(f'Target Tweak => {click.style(targetTweak['description'])}')
-
-    if os.environ.get('NO_REMOVE_TEMP', 'false') != 'true':
-        with tempfile.TemporaryDirectory(prefix='prefixer-') as tempPath:
-            for task in tasks:
-                tweaks.run_task(task, pfxPath, gamePath, binaryPath, tempPath, allTweaks)
-                if os.environ.get('PAUSE_AFTER_TASK', 'false') == 'true':
-                    click.pause('Press any key to continue...')
-
-    # Handle NO_REMOVE_TEMP
-    else:
-        tempPath = tempfile.mkdtemp(prefix='prefixer-')
-        click.secho(f'Temporary files will be kept in: {tempPath}')
-
-        for task in tasks:
-            tweaks.run_task(task, pfxPath, gamePath, binaryPath, tempPath, allTweaks)
-            if os.environ.get('PAUSE_AFTER_TASK', 'false') == 'true':
-                click.pause('Press any key to continue...')
+    with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
+        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path)
+        run_tweak(runtime, target_tweak)
 
     click.secho('All tasks completed successfully!', fg='bright_green')
 
@@ -209,5 +190,5 @@ if __name__ == '__main__':
     except excs.InternalExeError:
         click.secho('ERROR: There was an error while running an external exe within the tweak!', fg='bright_red')
 
-    except Exception as e:
-        click.secho(f'ERROR: An unknown exception has occurred: {e}')
+    # except Exception as e:
+    #     click.secho(f'ERROR: An unknown exception has occurred: {e}', fg='bright_red')

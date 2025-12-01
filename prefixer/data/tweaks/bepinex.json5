@@ -19,7 +19,7 @@
       "description": "Add winhttp override",
       "type": "regedit",
       "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
-      "contents": {
+      "values": {
         "winhttp": "native,builtin"
       }
     }
