@@ -5,18 +5,18 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "prefixer"
 description = "Modern Proton Prefix management tool"
-version = "1.0.0"
+version = "1.2.0"
 authors = [ {name='Wojtmic', email='mail@wojtmic.dev'} ]
 
 requires-python = ">=3.13"
 
 dependencies = [
-    "vdf~=3.4", "json5~=0.12.1", "requests~=2.32.5", "click~=8.2.1", "PyQt6~=6.9.1"
+    "vdf~=3.4", "json5~=0.12.1", "requests~=2.32.5", "click~=8.2.1"
 ]
 
 [project.scripts]
 prefixer = "prefixer.cli:prefixer"
-prefixerrun = "prefixer.dialog:runDialog"
+#prefixerrun = "prefixer.dialog:runDialog"
 
 [tool.setuptools.packages.find]
 where = ["."]
