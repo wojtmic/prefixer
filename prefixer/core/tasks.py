@@ -1,8 +1,9 @@
-from prefixer.core.helpers import setup_env
+from prefixer.core.helpers import setup_env, run_tweak
 from prefixer.core.models import TaskContext, RuntimeContext, required_context
 from prefixer.core.registry import task
 from prefixer.core.settings import NO_DOWNLOAD, SILENCE_EXTERNAL
 from prefixer.core.exceptions import BadFileError, BadDownloadError
+from prefixer.core.tweaks import get_tweak
 import click
 import subprocess
 import zipfile
@@ -144,3 +145,8 @@ def create(ctx: TaskContext, runtime: RuntimeContext):
 
     with open(ctx.path, 'w') as f:
         f.write(ctx.content)
+
+@task
+@required_context('name')
+def tweak(ctx: TaskContext, runtime: RuntimeContext):
+    run_tweak(runtime, get_tweak(ctx.name))

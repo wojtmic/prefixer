@@ -8,8 +8,7 @@ from prefixer.core import exceptions as excs
 import tempfile
 import sys
 from prefixer.core.models import RuntimeContext
-from prefixer.core.registry import task_registry
-from prefixer.core.tweaks import Tweak
+from prefixer.core.helpers import run_tweak
 import prefixer.core.tasks # Import necessary to actually load tasks!
 
 @click.group()
@@ -135,14 +134,6 @@ def opengamedir(ctx):
     Opens the gamedir folder in your file manager
     """
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
-
-def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
-    tasks = target_tweak.tasks
-
-    for task in tasks:
-        click.echo(f'{click.style('==>', bold=True)} {task.description} {click.style(task.type, fg='bright_black')}')
-        task.resolve_paths(runtime)
-        task_registry[task.type](ctx=task, runtime=runtime)
 
 @prefixer.command()
 @click.argument('tweak_name')
