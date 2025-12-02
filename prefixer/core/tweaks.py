@@ -22,7 +22,7 @@ def index_tweak_folder(folder: str, layer: str = ''):
             tweaks |= index_tweak_folder(path, os.path.join(layer, tweak) + '.')
             continue
 
-        if not tweak.endswith('.json5') or not tweak.endswith('.json'): continue
+        if not (tweak.endswith('.json5') or tweak.endswith('.json')): continue
 
         with open(path, 'r') as f:
             obj = json5.loads(f.read())
@@ -41,9 +41,10 @@ def get_tweaks():
         if not os.path.exists(tweakpath):
             os.makedirs(tweakpath)
 
-        all_tweaks |= index_tweak_folder(tweakpath)
+        tweaks = index_tweak_folder(tweakpath)
+        all_tweaks |= tweaks
 
-    return tweaks
+    return all_tweaks
 
 tweaks = get_tweaks()
 
