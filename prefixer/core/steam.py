@@ -74,7 +74,8 @@ def build_game_manifest():
         for file in os.listdir(os.path.join(lib, 'steamapps')):
             if file.endswith('.acf'):
                 with open(os.path.join(lib, 'steamapps', file)) as f:
-                    games.append(vdf.loads(f.read())['AppState'])
+                    data = vdf.loads(f.read())
+                    games.append(data['AppState'])
 
     return games
 

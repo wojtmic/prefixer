@@ -33,12 +33,9 @@ def prefixer(ctx, game_id: str):
 
         ctx.obj = {'GAME_ID': game_id}
 
-        game_id_styled = click.style(game_id, fg='bright_blue')
-
-        click.echo(f'Targeting => {game_id_styled}')
         pfx_path = steam.get_prefix_path(game_id)
         if pfx_path is None:
-            index = next((i for i, item in enumerate(games) if item['name'] == game_id), None)
+            index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
             if not index is None:
                 ctx.obj['GAME_ID'] = games[index]['appid']
                 game_id = ctx.obj['GAME_ID']
@@ -79,6 +76,9 @@ def prefixer(ctx, game_id: str):
     if binaryOverride != '':
         ctx.obj['BINARY_PATH'] = binaryOverride
 
+    game_id_styled = click.style(ctx.obj['GAME_ID'], fg='bright_blue')
+
+    click.echo(f'Targeting => {game_id_styled}')
     click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
     click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
     click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')

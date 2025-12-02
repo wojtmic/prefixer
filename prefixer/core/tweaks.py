@@ -12,23 +12,36 @@ class Tweak:
 
 TWEAKS_PATHS = [TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
 
-def get_tweaks():
+def index_tweak_folder(folder: str, layer: str = ''):
+    tweak_files = os.listdir(folder)
     tweaks = {}
+
+    for tweak in tweak_files:
+        path = os.path.join(folder, tweak)
+        if os.path.isdir(path):
+            tweaks |= index_tweak_folder(path, os.path.join(layer, tweak) + '.')
+            continue
+
+        if not tweak.endswith('.json5') or not tweak.endswith('.json'): continue
+
+        with open(path, 'r') as f:
+            obj = json5.loads(f.read())
+
+        tasks = obj['tasks']
+        desc = obj['description']
+        tweakName = tweak.split('.')[0]
+
+        tweaks[f'{layer}{tweakName}'] = TweakData(tweakName, desc, tasks)
+
+    return tweaks
+
+def get_tweaks():
+    all_tweaks = {}
     for tweakpath in TWEAKS_PATHS:
         if not os.path.exists(tweakpath):
             os.makedirs(tweakpath)
 
-        tweakFiles = os.listdir(tweakpath)
-
-        for tweak in tweakFiles:
-            with open(os.path.join(tweakpath, tweak), 'r') as f:
-                obj = json5.loads(f.read())
-
-            tasks = obj['tasks']
-            desc = obj['description']
-            tweakName = tweak.split('.')[0]
-
-            tweaks[tweakName] = TweakData(tweakName, desc, tasks)
+        all_tweaks |= index_tweak_folder(tweakpath)
 
     return tweaks
 
