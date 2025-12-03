@@ -19,7 +19,7 @@ def index_tweak_folder(folder: str, layer: str = ''):
     for tweak in tweak_files:
         path = os.path.join(folder, tweak)
         if os.path.isdir(path):
-            tweaks |= index_tweak_folder(path, os.path.join(layer, tweak) + '.')
+            tweaks |= index_tweak_folder(path, f'{layer}{tweak}.')
             continue
 
         if not (tweak.endswith('.json5') or tweak.endswith('.json')): continue

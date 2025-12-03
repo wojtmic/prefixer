@@ -2,6 +2,8 @@ import os
 import shutil
 import subprocess
 import click
+from click.shell_completion import shell_complete
+
 from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
@@ -9,6 +11,7 @@ import tempfile
 import sys
 from prefixer.core.models import RuntimeContext
 from prefixer.core.helpers import run_tweak
+from prefixer.core.tweaks import get_tweaks
 import prefixer.core.tasks # Import necessary to actually load tasks!
 
 @click.group()
@@ -135,8 +138,19 @@ def opengamedir(ctx):
     """
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
+
+def complete_tweaks(ctx, param, incomplete):
+    try:
+        available_tweaks = get_tweaks().keys()
+    except Exception:
+        return []
+
+    suggestions = [k for k in available_tweaks if k.startswith(incomplete)]
+
+    return suggestions
+
 @prefixer.command()
-@click.argument('tweak_name')
+@click.argument('tweak_name', shell_complete=complete_tweaks)
 @click.pass_context
 def tweak(ctx, tweak_name: str):
     """

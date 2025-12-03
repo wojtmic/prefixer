@@ -47,7 +47,7 @@ def download(ctx: TaskContext, runtime: RuntimeContext):
         sha256_hash = hashlib.sha256()
 
         try:
-            with open(ctx.filename, "rb") as f:
+            with open(os.path.join(runtime.operation_path, ctx.filename), "rb") as f:
                 for byte_block in iter(lambda: f.read(4096), b""):
                     sha256_hash.update(byte_block)
 
