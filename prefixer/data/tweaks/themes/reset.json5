@@ -1,0 +1,42 @@
+{
+  description: "Reset theme colors to default",
+  tasks: [
+    {
+      description: "Remove custom theme colors",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Control Panel\\Colors",
+      values: {
+        ActiveBorder: null,
+        ActiveTitle: null,
+        AppWorkSpace: null,
+        Background: null,
+        ButtonAlternativeFace: null,
+        ButtonDkShadow: null,
+        ButtonFace: null,
+        ButtonHilight: null,
+        ButtonLight: null,
+        ButtonShadow: null,
+        ButtonText: null,
+        GradientActiveTitle: null,
+        GradientInactiveTitle: null,
+        GrayText: null,
+        Hilight: null,
+        HilightText: null,
+        InactiveBorder: null,
+        InactiveTitle: null,
+        InactiveTitleText: null,
+        InfoText: null,
+        InfoWindow: null,
+        Menu: null,
+        MenuBar: null,
+        MenuHilight: null,
+        MenuText: null,
+        Scrollbar: null,
+        TitleText: null,
+        Window: null,
+        WindowFrame: null,
+        WindowText: null
+      }
+    }
+  ]
+}
