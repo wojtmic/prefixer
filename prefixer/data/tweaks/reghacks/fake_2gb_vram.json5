@@ -1,0 +1,13 @@
+{
+  description: "Set VRAM override to 2GB",
+  tasks: [
+    {
+      description: "Override VRAM",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      values: {
+        VideoMemorySize: "2048"
+      }
+    }
+  ]
+}

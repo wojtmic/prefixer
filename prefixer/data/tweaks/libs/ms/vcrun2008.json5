@@ -1,0 +1,34 @@
+{
+  "description": "Visual C++ 2008 Redistributable (x86 & x64)",
+  "tasks": [
+    {
+      "type": "download",
+      "url": "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe",
+      "checksum": "c5e273a4a16ab4d5471e91c7477719a2f45ddadb76c7f98a38fa5074a6838654",
+      "filename": "vc_redist.x64.exe"
+    },
+    {
+      "type": "download",
+      "url": "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe",
+      "checksum": "8742bcbf24ef328a72d2a27b693cc7071e38d3bb4b9b44dec42aa3d2c8d61d92",
+      "filename": "vc_redist.x86.exe"
+    },
+    {
+      "description": "Install x64 Runtime",
+      "type": "run_exe",
+      "path": "vc_redist.x64.exe",
+      "args": ["/q"]
+    },
+    {
+      "description": "Install x86 Runtime",
+      "type": "run_exe",
+      "path": "vc_redist.x86.exe",
+      "args": ["/q"]
+    },
+    {
+      "description": "Restart wineserver",
+      "type": "wineserver",
+      "action": "kill"
+    }
+  ]
+}

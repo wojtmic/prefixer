@@ -1,0 +1,13 @@
+{
+  description: "Fix Mouse Spinning (mouse warp)",
+  tasks: [
+    {
+      description: "Override registry",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DirectInput",
+      values: {
+        MouseWarpOverride: "force"
+      }
+    }
+  ]
+}

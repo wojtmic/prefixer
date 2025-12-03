@@ -1,0 +1,13 @@
+{
+  description: "Set Windows version to Win10",
+  tasks: [
+    {
+      description: "Override version",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine",
+      values: {
+        Version: "win10"
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "description": "Visual C++ 2010 Redistributable (x86 & x64)",
+  "tasks": [
+    {
+      "type": "download",
+      "url": "https://download.microsoft.com/download/E/E/0/EE05C9EF-A661-4D9E-BCE2-6961ECDF087F/vcredist_x64.exe",
+      "checksum": "7ba40e8c2dbcec6d0b83b94e719ea9291c2ebc4fd9d4f34dce6f852739841ed7",
+      "filename": "vc_redist.x64.exe"
+    },
+    {
+      "type": "download",
+      "url": "https://download.microsoft.com/download/E/E/0/EE05C9EF-A661-4D9E-BCE2-6961ECDF087F/vcredist_x86.exe",
+      "checksum": "1df24320ae1b974a42fc37f852d962c0e2f0e62bb339585fc862bb15d5a5d216",
+      "filename": "vc_redist.x86.exe"
+    },
+    {
+      "description": "Install x64 Runtime",
+      "type": "run_exe",
+      "path": "vc_redist.x64.exe",
+      "args": ["/q", "/norestart"]
+    },
+    {
+      "description": "Install x86 Runtime",
+      "type": "run_exe",
+      "path": "vc_redist.x86.exe",
+      "args": ["/q", "/norestart"]
+    },
+    {
+      "description": "Register changes",
+      "type": "wineserver",
+      "action": "wait"
+    }
+  ]
+}

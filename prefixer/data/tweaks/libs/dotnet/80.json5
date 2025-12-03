@@ -1,11 +1,11 @@
 {
-  "description": "MS .NET Framework 4.8",
+  "description": "MS .NET Framework 8.0.22",
   "tasks": [
     {
       "description": "Download installer",
       "type": "download",
-      "url": "https://go.microsoft.com/fwlink/?LinkId=2085155",
-      "checksum": "0bba3094588c4bfec301939985222a20b340bf03431563dec8b2b4478b06fffa",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.22/dotnet-runtime-8.0.22-win-x64.exe",
+      "checksum": "df98de9c6476e4aefc772fb6d8616bfa9e2998e3056b5c01992b97745443e1a0",
       "filename": "dotnet_installer.exe"
     },
     {
@@ -13,7 +13,8 @@
       "type": "run_exe",
       "filename": "dotnet_installer.exe",
       "args": [
-        "/q",
+        "/install",
+        "/quiet",
         "/norestart"
       ]
     }

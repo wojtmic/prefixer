@@ -1,0 +1,42 @@
+{
+  "description": "Multiple tweaks to optimize Fallout 4 for Linux gameplay",
+  "tasks": [
+    {
+      "description": "Limit FPS to 60 (physics fix)",
+      "type": "create",
+      "path": "<gamedir>/dxvk.conf",
+      "content": "dxgi.maxFrameRate = 60"
+    },
+    {
+      "description": "Disable VSync (fallout4.ini)",
+      "type": "edit_ini",
+      "filename": "<pfxdir>/drive_c/users/steamuser/Documents/My Games/Fallout4/fallout4.ini",
+      "path": "Display",
+      "values": {
+        "iPresentInterval": "0"
+      }
+    },
+    {
+      "description": "Disable VSync and enable borderless (fallout4pref.ini)",
+      "type": "edit_ini",
+      "filename": "<pfxdir>/drive_c/users/steamuser/Documents/My Games/Fallout4/fallout4pref.ini",
+      "path": "Display",
+      "values": {
+        "iPresentInterval": "0",
+        "bFull Screen": "0",
+        "bBorderless": "1",
+        "bTopMostWindow": "1",
+        "bMaximizeWindow": "1"
+      }
+    },
+    {
+      "description": "Enable multithreading",
+      "type": "edit_ini",
+      "filename": "<pfxdir>/drive_c/users/steamuser/Documents/My Games/Fallout4/fallout4Custom.ini",
+      "path": "General",
+      "values": {
+        "iNumHWThreads": "6"
+      }
+    }
+  ]
+}

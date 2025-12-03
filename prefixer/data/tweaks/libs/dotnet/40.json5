@@ -1,0 +1,26 @@
+{
+  "description": "MS .NET Framework 4.0",
+  "tasks": [
+    {
+      "description": "Download installer",
+      "type": "download",
+      "url": "https://download.microsoft.com/download/1/B/E/1BE39E79-7E39-46A3-96FF-047F95396215/dotNetFx40_Full_setup.exe",
+      "checksum": "fa1afff978325f8818ce3a559d67a58297d9154674de7fd8eb03656d93104425",
+      "filename": "dotnet_installer.exe"
+    },
+    {
+      "description": "Install package",
+      "type": "run_exe",
+      "filename": "dotnet_installer.exe",
+      "args": [
+        "/q",
+        "/norestart"
+      ]
+    },
+    {
+      "description": "Kill wineserver",
+      "type": "winserver",
+      "action": "kill"
+    }
+  ]
+}
