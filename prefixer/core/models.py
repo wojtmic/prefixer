@@ -68,6 +68,8 @@ class TaskContext:
         self.path = _apply_replacements(self.path)
         self.new_path = _apply_replacements(self.new_path)
 
+        if self.args: self.args = [_apply_replacements(arg) for arg in self.args]
+
 @dataclass
 class TaskData:
     """Task-representative data"""
