@@ -1,9 +1,9 @@
 from prefixer.core.helpers import setup_env, run_tweak
 from prefixer.core.models import TaskContext, RuntimeContext, required_context
 from prefixer.core.registry import task
-from prefixer.core.settings import NO_DOWNLOAD, SILENCE_EXTERNAL
-from prefixer.core.exceptions import BadFileError, BadDownloadError
-from prefixer.core.tweaks import get_tweak, build_tweak
+from prefixer.core.settings import NO_DOWNLOAD, SILENCE_EXTERNAL, ALLOW_SHELL
+from prefixer.core.exceptions import BadFileError, BadDownloadError, MalformedTaskError
+from prefixer.core.tweaks import build_tweak
 import click
 import subprocess
 import zipfile
@@ -11,6 +11,7 @@ import shutil
 import hashlib
 import os.path
 import requests
+import sys
 
 @task
 @required_context('filename', 'url', 'checksum')
@@ -150,3 +151,137 @@ def create(ctx: TaskContext, runtime: RuntimeContext):
 @required_context('name')
 def tweak(ctx: TaskContext, runtime: RuntimeContext):
     run_tweak(runtime, build_tweak(ctx.name))
+
+@task
+@required_context('filename', 'name')
+def install_font(ctx: TaskContext, runtime: RuntimeContext):
+    source_path = os.path.join(runtime.operation_path, ctx.filename)
+    fonts_dir = os.path.join(runtime.pfx_path, 'drive_c', 'windows', 'Fonts')
+    dest_path = os.path.join(fonts_dir, ctx.filename)
+
+    click.echo(f'Installing font {click.style(ctx.name, fg='bright_blue')} {click.style(f'({ctx.filename})', fg='bright_black')}...')
+    if not os.path.exists(fonts_dir):
+        os.makedirs(fonts_dir)
+    shutil.copy(source_path, dest_path)
+
+    regedit_ctx = TaskContext('Apply registry edit for font', 'regedit',
+                              path='HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts',
+                              values={ctx.name: ctx.filename})
+    regedit(regedit_ctx, runtime)
+
+@task
+@required_context('content')
+def message(ctx: TaskContext, runtime: RuntimeContext):
+    click.echo(ctx.content)
+
+@task
+@required_context()
+def pause(ctx: TaskContext, runtime: RuntimeContext):
+    click.pause()
+
+@task
+@required_context('action')
+def wineserver(ctx: TaskContext, runtime: RuntimeContext):
+    env = setup_env(runtime)
+
+    flags = {'kill': '-k', 'wait': '-w'}
+
+    if ctx.action not in flags:
+        raise MalformedTaskError(f'Invalid wineserver action {ctx.action}')
+
+    if ctx.action == 'wait':
+        click.echo("Waiting for prefix processes to exit... (this might take a while)")
+    elif ctx.action == 'kill':
+        click.echo(f"Forcibly terminating prefix {click.style(runtime.pfx_path, fg='bright_blue')}...")
+
+    subprocess.run([runtime.runnable_path, 'run', 'wineserver', flags[ctx.action]], env=env)
+    click.secho('Done!', fg='bright_blue')
+
+
+@task
+@required_context('values', 'path', 'filename')
+def edit_ini(ctx: TaskContext, runtime: RuntimeContext):
+    filepath = ctx.filename
+    section = ctx.path
+
+    click.echo(f'Editing INI {click.style(filepath, fg="bright_blue")} [{section}]')
+
+    if not os.path.exists(filepath):
+        with open(filepath, 'w') as f:
+            f.write(f"[{section}]\n")
+            for k, v in ctx.values.items():
+                f.write(f"{k}={v}\n")
+        return
+
+    with open(filepath, 'r') as f:
+        lines = f.readlines()
+
+    target_header = f"[{section}]"
+    section_idx = next((i for i, line in enumerate(lines) if line.strip() == target_header), -1)
+
+    if section_idx == -1:
+        if lines and not lines[-1].endswith('\n'):
+            lines.append('\n')
+        lines.append(f"\n{target_header}\n")
+        for k, v in ctx.values.items():
+            lines.append(f"{k}={v}\n")
+    else:
+        keys_written = []
+
+        for i in range(section_idx + 1, len(lines)):
+            line = lines[i]
+            if line.strip().startswith('['):
+                break
+
+            for k, v in ctx.values.items():
+                if line.strip().lower().startswith(f"{k.lower()}="):
+                    lines[i] = f"{k}={v}\n"
+                    keys_written.append(k)
+
+        for k, v in reversed(list(ctx.values.items())):
+            if k not in keys_written:
+                lines.insert(section_idx + 1, f"{k}={v}\n")
+
+    with open(filepath, 'w') as f:
+        f.writelines(lines)
+
+@task
+@required_context('path', 'values')
+def text_replace(ctx: TaskContext, runtime: RuntimeContext):
+    with open(ctx.path, 'r') as f:
+        content = f.read()
+
+    for old, new in ctx.values:
+        content = content.replace(old, new)
+
+    with open(ctx.path, 'w') as f:
+        f.write(content)
+
+@task
+@required_context('path', 'args')
+def shell(ctx: TaskContext, runtime: RuntimeContext):
+    if not ALLOW_SHELL:
+        click.secho('This tweak uses the `shell` task,', fg='bright_red')
+        click.secho(f'which allows execution of {click.style('ANY LINUX COMMAND', bold=True, fg='bright_red')} {click.style('on', fg='bright_red')} {click.style('YOUR COMPUTER', bold=True, fg='bright_red')}', fg='bright_red')
+        click.secho('Make sure you trust this tweak fully!', fg='bright_red')
+        click.secho('This message can be suppressed/skipped by setting the PF_ALLOW_SHELL environment variable to true!', fg='bright_black')
+
+        if not click.confirm('Do you want to execute the shell task?'): sys.exit(1)
+
+    subprocess.run([ctx.path, *ctx.args])
+
+
+@task
+@required_context('path')
+def register_dll(ctx: TaskContext, runtime: RuntimeContext):
+    env = setup_env(runtime)
+
+    if not os.path.exists(ctx.path):
+        click.secho(f"ERROR: DLL not found at {ctx.path}", fg='red')
+        return
+
+    click.echo(f"Registering DLL: {click.style(ctx.path, fg='bright_blue')}")
+
+    subprocess.run([runtime.runnable_path, 'run', 'regsvr32', '/s', ctx.path], env=env)
+
+    click.secho('Registered!', fg='bright_blue')

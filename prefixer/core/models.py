@@ -45,6 +45,8 @@ class TaskContext:
     """Key-value values; depends on task type"""
     content: Optional[str] = None
     """Contents; depends on task type"""
+    action: Optional[str] = None
+    """Task-specific action; depends on task type"""
 
     def resolve_paths(self, runtime: RuntimeContext) -> None:
         replacers = {
@@ -92,7 +94,7 @@ def required_context(*keys: str):
             extra   = [k for k, v in vars(ctx).items() if v and k not in keys and k not in {'type', 'description'}]
 
             if len(missing) > 0: raise MalformedTaskError(f'Too little fields! Should contain {keys}')
-            if len(extra) > 0:   raise MalformedTaskError(F'Too many fields! Should contain {keys}')
+            if len(extra) > 0:   raise MalformedTaskError(f'Too many fields! Should contain {keys}')
 
             return func(*args, **kwargs)
         return wrapper

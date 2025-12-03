@@ -176,9 +176,8 @@ if __name__ == '__main__':
         click.secho('ERROR: Prefixer wasn\'t able to download a file!', fg='bright_red')
     except excs.BadTweakError:
         click.secho('ERROR: The tweak is malformed or requires a newer version of Prefixer!', fg='bright_red')
+    except excs.MalformedTaskError as e:
+        click.secho(f'Malformed tweak! {e}', fg='bright_red')
 
     except excs.InternalExeError:
         click.secho('ERROR: There was an error while running an external exe within the tweak!', fg='bright_red')
-
-    # except Exception as e:
-    #     click.secho(f'ERROR: An unknown exception has occurred: {e}', fg='bright_red')
