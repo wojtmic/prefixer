@@ -1,0 +1,24 @@
+{
+  "description": "Cyberpunk 2077 tweaks for Wine/Proton",
+  "tasks": [
+    {
+      "description": "Install d3dcompiler_47",
+      "type": "tweak",
+      "name": "libs.d3dx9.47"
+    },
+    {
+      "description": "Install Visual C++ 2022 Runtime",
+      "type": "tweak",
+      "name": "libs.ms.vcrun2022"
+    },
+    {
+      "description": "Set winmm and version overrides",
+      "type": "regedit",
+      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      "values": {
+        "winmm": "native,builtin",
+        "version": "native,builtin"
+      }
+    }
+  ]
+}
