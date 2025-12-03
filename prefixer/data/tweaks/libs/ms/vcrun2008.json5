@@ -2,6 +2,7 @@
   "description": "Visual C++ 2008 Redistributable (x86 & x64)",
   "tasks": [
     {
+      "description": "Download x64 Runtime",
       "type": "download",
       "url": "https://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe",
       "checksum": "c5e273a4a16ab4d5471e91c7477719a2f45ddadb76c7f98a38fa5074a6838654",

@@ -2,12 +2,14 @@
   "description": "Visual C++ 2013 Redistributable (x86 & x64)",
   "tasks": [
     {
+      "description": "Download x64 Runtime",
       "type": "download",
       "url": "https://aka.ms/highdpimfc2013x64enu",
       "checksum": "a4bba7701e355ae29c403431f871a537897c363e215cafe706615e270984f17c",
       "filename": "vc_redist.x64.exe"
     },
     {
+      "description": "Download x86 Runtime",
       "type": "download",
       "url": "https://aka.ms/highdpimfc2013x86enu",
       "checksum": "53b605d1100ab0a88b867447bbf9274b5938125024ba01f5105a9e178a3dcdbd",
