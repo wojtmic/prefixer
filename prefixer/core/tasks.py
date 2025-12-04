@@ -206,6 +206,8 @@ def edit_ini(ctx: TaskContext, runtime: RuntimeContext):
 
     click.echo(f'Editing INI {click.style(filepath, fg="bright_blue")} [{section}]')
 
+    # For any possible contributors: We aren't using configparser to avoid stripping comments or janky formats (like some Bethesda games use)
+    # Any pull requests that replace this implementation with configparser will be rejected
     if not os.path.exists(filepath):
         with open(filepath, 'w') as f:
             f.write(f"[{section}]\n")

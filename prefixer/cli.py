@@ -54,6 +54,7 @@ def prefixer(ctx, game_id: str):
 
         proton_path = steam.get_proton_path(proton_ver)
 
+        ctx.obj['PROTON_VER'] = proton_ver
         ctx.obj['PFX_PATH'] = pfx_path
 
         game_path = steam.get_installdir(game_id)
@@ -170,6 +171,88 @@ def tweak(ctx, tweak_name: str):
         run_tweak(runtime, target_tweak)
 
     click.secho('All tasks completed successfully!', fg='bright_green')
+
+@prefixer.command()
+@click.pass_context
+def debuginfo(ctx):
+    """
+    Dump debug information about the selected prefix
+    """
+    # Info for possible contributors: this part of the code is very messy. If someone would like to clean it up, I would be glad to accept a pull request.
+    pfx_path = ctx.obj['PFX_PATH']
+    ran_tweak_file = os.path.join(pfx_path, 'tweaks.prefixer.txt')
+
+    if os.path.exists(ran_tweak_file):
+        with open(ran_tweak_file, 'r') as f:
+            ran_tweaks = f.readlines()
+    else:
+        ran_tweaks = []
+
+    reg_section = "[Software\\Wine\\DllOverrides]"
+
+    reg_path = os.path.join(pfx_path, 'user.reg')
+    registry_data = {}
+
+    if os.path.exists(reg_path):
+        with open(reg_path, 'r', encoding='utf-8', errors='replace') as f:
+            in_section = False
+            for line in f:
+                line = line.strip()
+
+                if not line or line.startswith(';') or line.startswith('#'):
+                    continue
+
+                if line.startswith('['):
+                    if line == reg_section:
+                        in_section = True
+                        continue
+                    elif in_section: break
+                    continue
+
+                if in_section and '=' in line:
+                    key_raw, val_raw = line.split('=', 1)
+
+                    key = key_raw.strip('"')
+                    val = val_raw
+                    if val_raw.startswith('"') and val_raw.endswith('"'):
+                        val = val_raw[1:-1]
+                    elif val_raw.lower().startswith('dword:'):
+                        val = val_raw.split(':', 1)[1]
+
+                    registry_data[key] = val
+
+    system32 = os.path.join(pfx_path, 'drive_c', 'windows', 'system32')
+
+    checks = {
+        "64bit": os.path.exists(os.path.join(pfx_path, 'drive_c', 'windows', 'syswow64'))
+    }
+
+    click.echo('[ PREFIXER DEBUG REPORT ]')
+    click.echo(f'{click.style('TARGET', fg='bright_blue')} : {ctx.obj['GAME_ID']}')
+    click.echo(f'{click.style('PROTON VERSION', fg='bright_blue')} : {ctx.obj['PROTON_VER']}')
+    click.echo(f'{click.style('64-BIT', fg='bright_blue')} : {checks["64bit"]}')
+    click.echo()
+
+    click.echo('DLL Overrides')
+    click.echo("="*20)
+    if not registry_data:
+        click.echo("(None)")
+    else:
+        width = max(len(k) for k in registry_data)
+
+        for dll, mode in registry_data.items():
+            click.echo(f"{dll:<{width}} : {mode}")
+
+    click.echo()
+
+    click.echo('Tweak History')
+    click.echo('='*20)
+    if not ran_tweaks:
+        click.echo('(None)')
+        return
+
+    for tweak in ran_tweaks:
+        click.echo(tweak)
 
 if __name__ == '__main__':
     try:
