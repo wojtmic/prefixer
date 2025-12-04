@@ -39,7 +39,8 @@ def get_tweaks():
     all_tweaks = {}
     for tweakpath in TWEAKS_PATHS:
         if not os.path.exists(tweakpath):
-            os.makedirs(tweakpath)
+            try: os.makedirs(tweakpath)
+            except PermissionError: continue
 
         tweaks = index_tweak_folder(tweakpath)
         all_tweaks |= tweaks
