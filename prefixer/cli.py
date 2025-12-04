@@ -174,6 +174,20 @@ def tweak(ctx, tweak_name: str):
 
 @prefixer.command()
 @click.pass_context
+def wipe(ctx):
+    """
+    Completely wipes a prefix
+    """
+    click.secho('WARNING!', fg='bright_red')
+    click.secho('This action is IRREVERSIBLE and will remove ALL files in the prefix!', fg='bright_red')
+    click.secho('This may include: configuration, save files and tweaks', fg='bright_red')
+
+    if not click.confirm('Are you sure you want to wipe the prefix?'): return
+
+    shutil.rmtree(ctx.obj['PFX_PATH'])
+
+@prefixer.command()
+@click.pass_context
 def debuginfo(ctx):
     """
     Dump debug information about the selected prefix
