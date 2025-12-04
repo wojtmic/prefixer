@@ -14,6 +14,7 @@ def setup_env(ctx: RuntimeContext):
 def add_tweak_to_file(file: str, tweak: str):
     with open(file, 'a') as f:
         f.write(tweak)
+        f.write('\n')
 
 def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
     tasks = target_tweak.tasks
