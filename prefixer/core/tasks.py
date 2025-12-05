@@ -114,6 +114,17 @@ def extract(ctx: TaskContext, runtime: RuntimeContext):
         raise BadFileError
 
 @task
+@required_context('path', 'filename')
+def extract_cab(ctx: TaskContext, runtime: RuntimeContext):
+    if not os.path.exists(ctx.path):
+        click.echo("Target path non-existent, creating")
+        os.makedirs(ctx.path)
+
+    click.echo(f"Extracting CAB {ctx.filename}...")
+
+    subprocess.run(['cabextract', '-d', ctx.path, os.path.join(runtime.operation_path, ctx.filename)], check=True)
+
+@task
 @required_context('path', 'new_path')
 def copy(ctx: TaskContext, runtime: RuntimeContext):
     click.echo(f'Copying {click.style(ctx.path, fg='bright_blue')} to {click.style(ctx.new_path, fg='bright_blue')}...')
