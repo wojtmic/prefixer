@@ -1,13 +1,13 @@
 {
-  description: "Override renderer to Vulkan",
-  tasks: [
-    {
-      description: "Override registry",
-      type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
-      values: {
-        renderer: "vulkan"
-      }
-    }
-  ]
+    description: "Override renderer to Vulkan",
+    tasks: [
+        {
+            description: "Override registry",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+            values: {
+                renderer: "vulkan",
+            },
+        },
+    ],
 }

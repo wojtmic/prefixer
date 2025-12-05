@@ -1,27 +1,27 @@
 {
-  "description": "BepInEx 5.4.23.3",
-  "tasks": [
-    {
-      "description": "Download pack",
-      "type": "download",
-      "url": "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip",
-      "checksum": "41a089e5b1b1f0713b331346baf6677b1184c69eabebf51101097954e854c749",
-      "filename": "bepinex.zip"
-    },
-    {
-      "description": "Extract pack",
-      "type": "extract",
-      "filename": "bepinex.zip",
-      "path": "<gamedir>", // <gamedir> gets replaced automatically with the game root
-      "method": "zip"
-    },
-    { // This is required for BepInEx to work properly
-      "description": "Add winhttp override",
-      "type": "regedit",
-      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
-      "values": {
-        "winhttp": "native,builtin"
-      }
-    }
-  ]
+    description: "BepInEx 5.4.23.3",
+    tasks: [
+        {
+            description: "Download pack",
+            type: "download",
+            url: "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.3/BepInEx_win_x64_5.4.23.3.zip",
+            checksum: "41a089e5b1b1f0713b331346baf6677b1184c69eabebf51101097954e854c749",
+            filename: "bepinex.zip",
+        },
+        {
+            description: "Extract pack",
+            type: "extract",
+            filename: "bepinex.zip",
+            path: "<gamedir>",
+            method: "zip",
+        },
+        {
+            description: "Add winhttp override",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+            values: {
+                winhttp: "native,builtin",
+            },
+        },
+    ],
 }

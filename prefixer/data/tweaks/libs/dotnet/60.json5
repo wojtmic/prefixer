@@ -1,22 +1,22 @@
 {
-  "description": "MS .NET Framework 6.0.36",
-  "tasks": [
-    {
-      "description": "Download installer",
-      "type": "download",
-      "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.exe",
-      "checksum": "6bdad7bc4c41fe93d4ae7b0312b1d017cfe369d28e7e2e421f5b675f9feefe84",
-      "filename": "dotnet_installer.exe"
-    },
-    {
-      "description": "Install package",
-      "type": "run_exe",
-      "filename": "dotnet_installer.exe",
-      "args": [
-        "/install",
-        "/quiet",
-        "/norestart"
-      ]
-    }
-  ]
+    description: "MS .NET Framework 6.0.36",
+    tasks: [
+        {
+            description: "Download installer",
+            type: "download",
+            url: "https://builds.dotnet.microsoft.com/dotnet/Runtime/6.0.36/dotnet-runtime-6.0.36-win-x64.exe",
+            checksum: "6bdad7bc4c41fe93d4ae7b0312b1d017cfe369d28e7e2e421f5b675f9feefe84",
+            filename: "dotnet_installer.exe",
+        },
+        {
+            description: "Install package",
+            type: "run_exe",
+            filename: "dotnet_installer.exe",
+            args: [
+                "/install",
+                "/quiet",
+                "/norestart",
+            ],
+        },
+    ],
 }

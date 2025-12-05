@@ -1,26 +1,26 @@
 {
-  "description": "MS DirectX End-User Runtime 47",
-  "tasks": [
-    {
-      "description": "Download DLL",
-      "type": "download",
-      "url": "https://raw.githubusercontent.com/mozilla/fxc2/master/dll/d3dcompiler_47.dll",
-      "checksum": "4432bbd1a390874f3f0a503d45cc48d346abc3a8c0213c289f4b615bf0ee84f3",
-      "filename": "d3dcompiler_47.dll"
-    },
-    {
-      "description": "Install to System32",
-      "type": "copy",
-      "path": "<tempdir>/d3dcompiler_47.dll",
-      "new_path": "<pfxdir>/drive_c/windows/system32/d3dcompiler_47.dll"
-    },
-    {
-      "description": "Set Override",
-      "type": "regedit",
-      "path": "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
-      "values": {
-        "d3dcompiler_47": "native"
-      }
-    }
-  ]
+    description: "MS DirectX End-User Runtime 47",
+    tasks: [
+        {
+            description: "Download DLL",
+            type: "download",
+            url: "https://raw.githubusercontent.com/mozilla/fxc2/master/dll/d3dcompiler_47.dll",
+            checksum: "4432bbd1a390874f3f0a503d45cc48d346abc3a8c0213c289f4b615bf0ee84f3",
+            filename: "d3dcompiler_47.dll",
+        },
+        {
+            description: "Install to System32",
+            type: "copy",
+            path: "<tempdir>/d3dcompiler_47.dll",
+            new_path: "<pfxdir>/drive_c/windows/system32/d3dcompiler_47.dll",
+        },
+        {
+            description: "Set Override",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+            values: {
+                d3dcompiler_47: "native",
+            },
+        },
+    ],
 }

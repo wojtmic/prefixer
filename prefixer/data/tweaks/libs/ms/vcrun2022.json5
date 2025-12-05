@@ -1,36 +1,44 @@
 {
-  "description": "Visual C++ 2015-2022 Redistributable (x86 & x64)",
-  "tasks": [
-    {
-      "description": "Download x64 Runtime",
-      "type": "download",
-      "url": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
-      "checksum": "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b",
-      "filename": "vc_redist.x64.exe"
-    },
-    {
-      "description": "Download x86 Runtime",
-      "type": "download",
-      "url": "https://aka.ms/vs/17/release/vc_redist.x86.exe",
-      "checksum": "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64",
-      "filename": "vc_redist.x86.exe"
-    },
-    {
-      "description": "Install x64 Runtime",
-      "type": "run_exe",
-      "path": "vc_redist.x64.exe",
-      "args": ["/install", "/passive", "/norestart"]
-    },
-    {
-      "description": "Install x86 Runtime",
-      "type": "run_exe",
-      "path": "vc_redist.x86.exe",
-      "args": ["/install", "/passive", "/norestart"]
-    },
-    {
-      "description": "Register changes",
-      "type": "wineserver",
-      "action": "wait"
-    }
-  ]
+    description: "Visual C++ 2015-2022 Redistributable (x86 & x64)",
+    tasks: [
+        {
+            description: "Download x64 Runtime",
+            type: "download",
+            url: "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+            checksum: "cc0ff0eb1dc3f5188ae6300faef32bf5beeba4bdd6e8e445a9184072096b713b",
+            filename: "vc_redist.x64.exe",
+        },
+        {
+            description: "Download x86 Runtime",
+            type: "download",
+            url: "https://aka.ms/vs/17/release/vc_redist.x86.exe",
+            checksum: "0c09f2611660441084ce0df425c51c11e147e6447963c3690f97e0b25c55ed64",
+            filename: "vc_redist.x86.exe",
+        },
+        {
+            description: "Install x64 Runtime",
+            type: "run_exe",
+            path: "vc_redist.x64.exe",
+            args: [
+                "/install",
+                "/passive",
+                "/norestart",
+            ],
+        },
+        {
+            description: "Install x86 Runtime",
+            type: "run_exe",
+            path: "vc_redist.x86.exe",
+            args: [
+                "/install",
+                "/passive",
+                "/norestart",
+            ],
+        },
+        {
+            description: "Register changes",
+            type: "wineserver",
+            action: "wait",
+        },
+    ],
 }

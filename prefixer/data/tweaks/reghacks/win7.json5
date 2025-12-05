@@ -1,13 +1,13 @@
 {
-  description: "Set Windows version to Win7",
-  tasks: [
-    {
-      description: "Override version",
-      type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine",
-      values: {
-        Version: "win7"
-      }
-    }
-  ]
+    description: "Set Windows version to Win7",
+    tasks: [
+        {
+            description: "Override version",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Wine",
+            values: {
+                Version: "win7",
+            },
+        },
+    ],
 }

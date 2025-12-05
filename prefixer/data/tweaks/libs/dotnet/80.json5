@@ -1,22 +1,22 @@
 {
-  "description": "MS .NET Framework 8.0.22",
-  "tasks": [
-    {
-      "description": "Download installer",
-      "type": "download",
-      "url": "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.22/dotnet-runtime-8.0.22-win-x64.exe",
-      "checksum": "df98de9c6476e4aefc772fb6d8616bfa9e2998e3056b5c01992b97745443e1a0",
-      "filename": "dotnet_installer.exe"
-    },
-    {
-      "description": "Install package",
-      "type": "run_exe",
-      "filename": "dotnet_installer.exe",
-      "args": [
-        "/install",
-        "/quiet",
-        "/norestart"
-      ]
-    }
-  ]
+    description: "MS .NET Framework 8.0.22",
+    tasks: [
+        {
+            description: "Download installer",
+            type: "download",
+            url: "https://builds.dotnet.microsoft.com/dotnet/Runtime/8.0.22/dotnet-runtime-8.0.22-win-x64.exe",
+            checksum: "df98de9c6476e4aefc772fb6d8616bfa9e2998e3056b5c01992b97745443e1a0",
+            filename: "dotnet_installer.exe",
+        },
+        {
+            description: "Install package",
+            type: "run_exe",
+            filename: "dotnet_installer.exe",
+            args: [
+                "/install",
+                "/quiet",
+                "/norestart",
+            ],
+        },
+    ],
 }
