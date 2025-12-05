@@ -11,13 +11,13 @@ prefixer "Subnautica" tweak bepinex # Installs BepInEx 5 for Subnautica
 prefixer "Undertale" run ~/Downloads/mod-installer.exe # Runs a .exe file with the context of Undertale's wineprefix
 ```
 <br>
-Full built-in tweak list:<br>
+Full built-in tweak list (OUTDATED AS OF 1.2.6):<br>
 bepinex      - BepInEx 5.4.23.3<br>
 d3dcompiler  - MS DirectX End-User Runtime<br>
 dotnet48     - MS .NET Framework 4.8<br>
 vcrun2022    - MS Visual C++ 2022 Redistributable<br>
 winhttp      - Windows HTTP components library override<br>
-reshade      - ReShade 6.5.1 (Tested in Unity games)<br>
+~~reshade      - ReShade 6.5.1 (Tested in Unity games)~~ NOT CURRENTLY WORKING<br>
 
 # Installation
 The official way of downloading Prefixer is from the [AUR](https://aur.archlinux.org/packages/prefixer) under the package name `prefixer`. This approach only works on Arch Linux. If you use another distro, you are free to build the Python wheel yourself, but Arch is the primary distribution for Prefixer and is prioritized.
