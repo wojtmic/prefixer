@@ -104,10 +104,11 @@ def winecfg(ctx):
 
     subprocess.run([bin_path, 'run', 'winecfg'], env=env)
 
-@prefixer.command()
+@prefixer.command(context_settings={"ignore_unknown_options": True})
 @click.argument('exe_path')
+@click.argument('args', nargs=-1, type=click.UNPROCESSED)
 @click.pass_context
-def run(ctx, exe_path: str, *args):
+def run(ctx, exe_path: str, args):
     """
     Runs a .exe within the target prefix
     """
