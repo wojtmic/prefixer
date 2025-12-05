@@ -107,7 +107,7 @@ def winecfg(ctx):
 @prefixer.command()
 @click.argument('exe_path')
 @click.pass_context
-def run(ctx, exe_path: str):
+def run(ctx, exe_path: str, *args):
     """
     Runs a .exe within the target prefix
     """
@@ -121,7 +121,7 @@ def run(ctx, exe_path: str):
     env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = os.path.expanduser('~/.steam/steam')
 
     click.echo(f'Running {exe_path}...')
-    subprocess.run([bin_path, 'run', exe_path], env=env)
+    subprocess.run([bin_path, 'run', exe_path, *args], env=env)
 
 @prefixer.command()
 @click.pass_context
