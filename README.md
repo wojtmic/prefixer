@@ -11,7 +11,7 @@ prefixer "Subnautica" tweak bepinex # Installs BepInEx 5 for Subnautica
 prefixer "Undertale" run ~/Downloads/mod-installer.exe # Runs a .exe file with the context of Undertale's wineprefix
 ```
 <br>
-Full built-in tweak list:<br>
+Full built-in tweak list (OUTDATED AS OF 1.2.6):<br>
 bepinex      - BepInEx 5.4.23.3<br>
 d3dcompiler  - MS DirectX End-User Runtime<br>
 dotnet48     - MS .NET Framework 4.8<br>
