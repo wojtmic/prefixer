@@ -203,7 +203,7 @@ def debuginfo(ctx):
     else:
         ran_tweaks = []
 
-    reg_section = "[Software\\Wine\\DllOverrides]"
+    reg_section = "[Software\\\\Wine\\\\DllOverrides]"
 
     reg_path = os.path.join(pfx_path, 'user.reg')
     registry_data = {}
@@ -218,7 +218,7 @@ def debuginfo(ctx):
                     continue
 
                 if line.startswith('['):
-                    if line == reg_section:
+                    if line.startswith(reg_section):
                         in_section = True
                         continue
                     elif in_section: break
