@@ -4,7 +4,7 @@
         {
             description: "Install Microsoft Core Fonts",
             type: "tweak",
-            name: "themes.font.core"
+            name: "themes.fonts.core"
         },
         {
             description: "Enable font smoothing (ClearType)",

@@ -1,24 +1,12 @@
 {
-  description: "Windows Vista Mode",
+  description: "Set Windows version to Windows Vista",
   tasks: [
     {
-      description: "Set Windows version to Vista",
+      description: "Override Windows version",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion",
+      path: "HKEY_CURRENT_USER\\Software\\Wine",
       values: {
-        CSDVersion: "Service Pack 2",
-        CurrentBuild: "6002",
-        CurrentBuildNumber: "6002",
-        CurrentVersion: "6.0",
-        ProductName: "Microsoft Windows Vista"
-      }
-    },
-    {
-      description: "Set version in HKCU",
-      type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows",
-      values: {
-        CSDVersion: "dword:200"
+        Version: "vista"
       }
     }
   ]
