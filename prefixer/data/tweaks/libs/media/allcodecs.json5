@@ -1,0 +1,15 @@
+{
+  description: "All Video Codecs (FFDShow + Cinepak)",
+  tasks: [
+    {
+      description: "Set DLL overrides for video codecs",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        ir50_32: "native,builtin",
+        iccvid: "native,builtin",
+        msvidc32: "native,builtin"
+      }
+    }
+  ]
+}

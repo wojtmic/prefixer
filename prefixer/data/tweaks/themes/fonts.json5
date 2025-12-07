@@ -1,17 +1,15 @@
 {
     description: "Microsoft Core Fonts with font smoothing and DPI fix",
-    deps: ["themes/fonts/core"],
     tasks: [
         {
+            description: "Install Microsoft Core Fonts",
+            type: "tweak",
+            name: "themes.font.core"
+        },
+        {
             description: "Enable font smoothing (ClearType)",
-            type: "regedit",
-            path: "HKEY_CURRENT_USER\\Control Panel\\Desktop",
-            values: {
-                FontSmoothing: "2",
-                FontSmoothingGamma: 1400,
-                FontSmoothingOrientation: 1,
-                FontSmoothingType: 2,
-            },
+            type: "tweak",
+            name: "reghacks.fontsmooth_rgb"
         },
         {
             description: "Set screen DPI to 120 (125% scaling)",

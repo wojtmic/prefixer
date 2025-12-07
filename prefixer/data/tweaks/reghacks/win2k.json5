@@ -1,0 +1,25 @@
+{
+  description: "Windows 2000 Mode",
+  tasks: [
+    {
+      description: "Set Windows version to 2000",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion",
+      values: {
+        CSDVersion: "Service Pack 4",
+        CurrentBuild: "2195",
+        CurrentBuildNumber: "2195",
+        CurrentVersion: "5.0",
+        ProductName: "Microsoft Windows 2000"
+      }
+    },
+    {
+      description: "Set version in HKCU",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows",
+      values: {
+        CSDVersion: "dword:400"
+      }
+    }
+  ]
+}

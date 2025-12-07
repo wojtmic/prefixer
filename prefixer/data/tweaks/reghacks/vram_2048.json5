@@ -1,0 +1,13 @@
+{
+  description: "VRAM 2048 MB (2GB)",
+  tasks: [
+    {
+      description: "Set VRAM to 2GB",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      values: {
+        VideoMemorySize: "2048"
+      }
+    }
+  ]
+}

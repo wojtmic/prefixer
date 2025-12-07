@@ -1,0 +1,16 @@
+{
+  description: "Font Smoothing - BGR Subpixel",
+  tasks: [
+    {
+      description: "Enable BGR font smoothing",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Control Panel\\Desktop",
+      values: {
+        FontSmoothing: "2",
+        FontSmoothingType: "dword:2",
+        FontSmoothingGamma: "dword:578",
+        FontSmoothingOrientation: "dword:0"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  description: "Internet Explorer Components",
+  tasks: [
+    {
+      description: "Set DLL overrides for IE",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        ieframe: "native,builtin",
+        iertutil: "native,builtin",
+        itircl: "native,builtin",
+        itss: "native,builtin",
+        mshtml: "native,builtin",
+        shdocvw: "native,builtin",
+        urlmon: "native,builtin"
+      }
+    }
+  ]
+}

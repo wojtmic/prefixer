@@ -1,12 +1,12 @@
 {
-  description: "Microsoft XML Parser 6.0 - DLL Override",
+  description: "Universal C Runtime",
   tasks: [
     {
-      description: "Set DLL override",
+      description: "Set DLL override for ucrtbase",
       type: "regedit",
       path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
       values: {
-        msxml6: "native,builtin"
+        ucrtbase: "native,builtin"
       }
     }
   ]

@@ -1,0 +1,13 @@
+{
+  description: "Hide Wine Version Info",
+  tasks: [
+    {
+      description: "Hide Wine exports from detection",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine",
+      values: {
+        HideWineExports: "dword:1"
+      }
+    }
+  ]
+}

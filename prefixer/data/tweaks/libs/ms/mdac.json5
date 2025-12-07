@@ -1,0 +1,16 @@
+{
+  description: "MDAC (Microsoft Data Access Components)",
+  tasks: [
+    {
+      description: "Set DLL overrides for MDAC",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        msado15: "native,builtin",
+        msdaps: "native,builtin",
+        odbccp32: "native,builtin",
+        odbc32: "native,builtin"
+      }
+    }
+  ]
+}

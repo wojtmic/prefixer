@@ -1,9 +1,31 @@
 {
-  description: "FAudio/XAudio2 - DLL Overrides",
-  // NOTE: FAudio project no longer provides pre-built binaries.
-  // Modern Wine/Proton includes native XAudio2 support.
-  // This tweak sets native overrides which may help with compatibility.
+  description: "FAudio/XAudio2 (from FNA native libs)",
   tasks: [
+    {
+      description: "Download FNA native libs (includes FAudio)",
+      type: "download",
+      url: "https://fna.flibitijibibo.com/archive/FNA-2512.zip",
+      checksum: "db2dfd63f0c3de7f1632f781ba757410c1035eabe0311c7e13e5a0bec622cfb1",
+      filename: "fna.zip"
+    },
+    {
+      description: "Extract FNA",
+      type: "extract",
+      filename: "fna.zip",
+      path: "<tempdir>/fna"
+    },
+    {
+      description: "Copy FAudio x64 DLL",
+      type: "copy",
+      path: "<tempdir>/fna/fnalibs/x64/FAudio.dll",
+      new_path: "<pfxdir>/drive_c/windows/system32/FAudio.dll"
+    },
+    {
+      description: "Copy FAudio x86 DLL",
+      type: "copy",
+      path: "<tempdir>/fna/fnalibs/x86/FAudio.dll",
+      new_path: "<pfxdir>/drive_c/windows/syswow64/FAudio.dll"
+    },
     {
       description: "Set DLL overrides for XAudio",
       type: "regedit",
@@ -20,11 +42,6 @@
         xaudio2_8: "native,builtin",
         xaudio2_9: "native,builtin"
       }
-    },
-    {
-      description: "Note about FAudio",
-      type: "message",
-      content: "XAudio2 overrides set. For FAudio install use: winetricks faudio"
     }
   ]
 }

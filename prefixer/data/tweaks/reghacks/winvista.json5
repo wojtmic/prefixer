@@ -1,0 +1,25 @@
+{
+  description: "Windows Vista Mode",
+  tasks: [
+    {
+      description: "Set Windows version to Vista",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion",
+      values: {
+        CSDVersion: "Service Pack 2",
+        CurrentBuild: "6002",
+        CurrentBuildNumber: "6002",
+        CurrentVersion: "6.0",
+        ProductName: "Microsoft Windows Vista"
+      }
+    },
+    {
+      description: "Set version in HKCU",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Windows",
+      values: {
+        CSDVersion: "dword:200"
+      }
+    }
+  ]
+}

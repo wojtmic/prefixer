@@ -1,0 +1,17 @@
+{
+  description: "XInput (Xbox Controller Support)",
+  tasks: [
+    {
+      description: "Set DLL overrides for XInput",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        xinput1_1: "native,builtin",
+        xinput1_2: "native,builtin",
+        xinput1_3: "native,builtin",
+        xinput1_4: "native,builtin",
+        xinput9_1_0: "native,builtin"
+      }
+    }
+  ]
+}

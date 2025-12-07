@@ -1,0 +1,14 @@
+{
+  description: "Microsoft Foundation Classes 4.2",
+  tasks: [
+    {
+      description: "Set DLL overrides for MFC42",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        mfc42: "native,builtin",
+        mfc42u: "native,builtin"
+      }
+    }
+  ]
+}

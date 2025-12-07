@@ -1,0 +1,22 @@
+{
+  description: "DirectMusic (MIDI/Audio)",
+  tasks: [
+    {
+      description: "Set DLL overrides for DirectMusic",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        dmband: "native,builtin",
+        dmcompos: "native,builtin",
+        dmime: "native,builtin",
+        dmloader: "native,builtin",
+        dmscript: "native,builtin",
+        dmstyle: "native,builtin",
+        dmsynth: "native,builtin",
+        dmusic: "native,builtin",
+        dmusic32: "native,builtin",
+        dswave: "native,builtin"
+      }
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  description: "Renderer - OpenGL",
+  tasks: [
+    {
+      description: "Set Wine renderer to OpenGL",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      values: {
+        renderer: "gl"
+      }
+    }
+  ]
+}

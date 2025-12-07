@@ -1,0 +1,14 @@
+{
+  description: "Windows Sockets (Winsock)",
+  tasks: [
+    {
+      description: "Set DLL overrides for Winsock",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        ws2_32: "native,builtin",
+        wsock32: "native,builtin"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  description: "DXVK NVAPI (DLSS/RTX Support)",
+  tasks: [
+    {
+      description: "Set DLL overrides for NVAPI",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        nvapi: "native,builtin",
+        nvapi64: "native,builtin",
+        "nvml": "disabled"
+      }
+    }
+  ]
+}

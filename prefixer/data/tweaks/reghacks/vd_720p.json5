@@ -1,0 +1,21 @@
+{
+  description: "Virtual Desktop 1280x720",
+  tasks: [
+    {
+      description: "Enable virtual desktop",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops",
+      values: {
+        Default: "1280x720"
+      }
+    },
+    {
+      description: "Set explorer to use virtual desktop",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Explorer",
+      values: {
+        Desktop: "Default"
+      }
+    }
+  ]
+}

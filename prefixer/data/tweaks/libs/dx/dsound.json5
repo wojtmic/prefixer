@@ -1,12 +1,12 @@
 {
-  description: "Microsoft XML Parser 6.0 - DLL Override",
+  description: "DirectSound (Audio)",
   tasks: [
     {
-      description: "Set DLL override",
+      description: "Set DLL overrides for DirectSound",
       type: "regedit",
       path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
       values: {
-        msxml6: "native,builtin"
+        dsound: "native,builtin"
       }
     }
   ]

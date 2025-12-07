@@ -1,0 +1,13 @@
+{
+  description: "Grab Fullscreen (Mouse Lock)",
+  tasks: [
+    {
+      description: "Enable mouse grab in fullscreen",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      values: {
+        GrabFullscreen: "Y"
+      }
+    }
+  ]
+}

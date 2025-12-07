@@ -1,0 +1,16 @@
+{
+  description: "Microsoft Foundation Classes 14.0 (VS2015+)",
+  tasks: [
+    {
+      description: "Set DLL overrides for MFC140",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        mfc140: "native,builtin",
+        mfc140u: "native,builtin",
+        mfcm140: "native,builtin",
+        mfcm140u: "native,builtin"
+      }
+    }
+  ]
+}

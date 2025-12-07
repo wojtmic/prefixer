@@ -1,12 +1,12 @@
 {
-  description: "Microsoft XML Parser 6.0 - DLL Override",
+  description: "Visual Basic 6.0 Runtime",
   tasks: [
     {
-      description: "Set DLL override",
+      description: "Set DLL overrides for VB6",
       type: "regedit",
       path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
       values: {
-        msxml6: "native,builtin"
+        msvbvm60: "native,builtin"
       }
     }
   ]

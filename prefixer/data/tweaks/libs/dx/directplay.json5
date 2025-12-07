@@ -1,0 +1,20 @@
+{
+  description: "DirectPlay (Multiplayer Networking)",
+  tasks: [
+    {
+      description: "Set DLL overrides for DirectPlay",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        dplay: "native,builtin",
+        dplayx: "native,builtin",
+        dpnet: "native,builtin",
+        dpnaddr: "native,builtin",
+        dpnhpast: "native,builtin",
+        dpnlobby: "native,builtin",
+        dpvoice: "native,builtin",
+        dpwsockx: "native,builtin"
+      }
+    }
+  ]
+}

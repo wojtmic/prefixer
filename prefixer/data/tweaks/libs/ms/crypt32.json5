@@ -1,0 +1,15 @@
+{
+  description: "Cryptographic API",
+  tasks: [
+    {
+      description: "Set DLL overrides for Crypt32",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        crypt32: "native,builtin",
+        cryptnet: "native,builtin",
+        cryptui: "native,builtin"
+      }
+    }
+  ]
+}

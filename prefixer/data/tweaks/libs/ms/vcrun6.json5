@@ -1,0 +1,16 @@
+{
+  description: "MS Visual C++ 6.0 Runtime",
+  tasks: [
+    {
+      description: "Set DLL overrides for VC6 runtime",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        mfc42: "native,builtin",
+        mfc42u: "native,builtin",
+        msvcrt: "native,builtin",
+        msvcp60: "native,builtin"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  description: "Font Smoothing - Grayscale",
+  tasks: [
+    {
+      description: "Enable grayscale font smoothing",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Control Panel\\Desktop",
+      values: {
+        FontSmoothing: "2",
+        FontSmoothingType: "dword:1",
+        FontSmoothingGamma: "dword:578"
+      }
+    }
+  ]
+}
