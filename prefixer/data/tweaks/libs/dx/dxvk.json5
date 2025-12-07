@@ -1,0 +1,41 @@
+{
+  description: "DXVK (Vulkan-based DirectX 9/10/11 translation layer)",
+  tasks: [
+    {
+      description: "Download DXVK",
+      type: "download",
+      url: "https://github.com/doitsujin/dxvk/releases/download/v2.5.2/dxvk-2.5.2.tar.gz",
+      checksum: "472a667060d6459abe3025090411f6dfdbd7333377160e869ed975b7c2422b05",
+      filename: "dxvk.tar.gz"
+    },
+    {
+      description: "Extract DXVK",
+      type: "run_exe",
+      path: "tar",
+      args: ["-xzf", "<tempdir>/dxvk.tar.gz", "-C", "<tempdir>"]
+    },
+    {
+      description: "Copy x64 DLLs to system32",
+      type: "copy",
+      path: "<tempdir>/dxvk-2.5.2/x64",
+      new_path: "<pfxdir>/drive_c/windows/system32"
+    },
+    {
+      description: "Copy x32 DLLs to syswow64",
+      type: "copy",
+      path: "<tempdir>/dxvk-2.5.2/x32",
+      new_path: "<pfxdir>/drive_c/windows/syswow64"
+    },
+    {
+      description: "Set DLL overrides",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        d3d9: "native",
+        d3d10core: "native",
+        d3d11: "native",
+        dxgi: "native"
+      }
+    }
+  ]
+}

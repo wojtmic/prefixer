@@ -1,0 +1,18 @@
+{
+  description: "Lucida Console Font (debug logs and terminal UIs)",
+  tasks: [
+    {
+      description: "Set font substitution for Lucida Console",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      values: {
+        "Lucida Console": "Liberation Mono"
+      }
+    },
+    {
+      description: "Info about Lucida",
+      type: "message",
+      content: "Lucida Console mapped to Liberation Mono. For better results, install ttf-liberation on your system."
+    }
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  description: "Microsoft Core Fonts (Arial, Courier, Times, Verdana, etc)",
+  tasks: [
+    {
+      description: "Download Core Fonts package",
+      type: "download",
+      url: "https://downloads.sourceforge.net/corefonts/arial32.exe",
+      checksum: "85297a4d146e9c87ac6f74822734bdee5f4b2a722d7eaa584b7f2cbf76f478f6",
+      filename: "arial32.exe"
+    },
+    {
+      description: "Download Courier New",
+      type: "download",
+      url: "https://downloads.sourceforge.net/corefonts/courie32.exe",
+      checksum: "bb511d861655dde879ae552eb86b134d6fae67cb58502e6ff73ec5d9151f3384",
+      filename: "courie32.exe"
+    },
+    {
+      description: "Download Times New Roman",
+      type: "download",
+      url: "https://downloads.sourceforge.net/corefonts/times32.exe",
+      checksum: "db56595ec6ef5d3de5c24994f001f03b2a13e37cee27bc25c58f6f43e8f807ab",
+      filename: "times32.exe"
+    },
+    {
+      description: "Download Verdana",
+      type: "download",
+      url: "https://downloads.sourceforge.net/corefonts/verdan32.exe",
+      checksum: "c1cb61255e363166794e47664e2f21af8e3a26cb6346eb8d2ae2fa85dd5aad96",
+      filename: "verdan32.exe"
+    },
+    {
+      description: "Download Trebuchet MS",
+      type: "download",
+      url: "https://downloads.sourceforge.net/corefonts/trebuc32.exe",
+      checksum: "5a690d9bb8510be1b8b4fe49f1f2319651fe51bbe54775ddddd8ef0bd07fdac9",
+      filename: "trebuc32.exe"
+    },
+    {
+      description: "Extract Arial",
+      type: "run_exe",
+      path: "cabextract",
+      args: ["-d", "<tempdir>/fonts", "<tempdir>/arial32.exe"]
+    },
+    {
+      description: "Extract Courier",
+      type: "run_exe",
+      path: "cabextract",
+      args: ["-d", "<tempdir>/fonts", "<tempdir>/courie32.exe"]
+    },
+    {
+      description: "Extract Times",
+      type: "run_exe",
+      path: "cabextract",
+      args: ["-d", "<tempdir>/fonts", "<tempdir>/times32.exe"]
+    },
+    {
+      description: "Extract Verdana",
+      type: "run_exe",
+      path: "cabextract",
+      args: ["-d", "<tempdir>/fonts", "<tempdir>/verdan32.exe"]
+    },
+    {
+      description: "Extract Trebuchet",
+      type: "run_exe",
+      path: "cabextract",
+      args: ["-d", "<tempdir>/fonts", "<tempdir>/trebuc32.exe"]
+    },
+    {
+      description: "Copy fonts to Windows Fonts directory",
+      type: "copy",
+      path: "<tempdir>/fonts",
+      new_path: "<pfxdir>/drive_c/windows/Fonts"
+    },
+    {
+      description: "Register fonts",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts",
+      values: {
+        "Arial (TrueType)": "arial.ttf",
+        "Arial Bold (TrueType)": "arialbd.ttf",
+        "Arial Italic (TrueType)": "ariali.ttf",
+        "Arial Bold Italic (TrueType)": "arialbi.ttf",
+        "Courier New (TrueType)": "cour.ttf",
+        "Courier New Bold (TrueType)": "courbd.ttf",
+        "Courier New Italic (TrueType)": "couri.ttf",
+        "Courier New Bold Italic (TrueType)": "courbi.ttf",
+        "Times New Roman (TrueType)": "times.ttf",
+        "Times New Roman Bold (TrueType)": "timesbd.ttf",
+        "Times New Roman Italic (TrueType)": "timesi.ttf",
+        "Times New Roman Bold Italic (TrueType)": "timesbi.ttf",
+        "Verdana (TrueType)": "verdana.ttf",
+        "Verdana Bold (TrueType)": "verdanab.ttf",
+        "Verdana Italic (TrueType)": "verdanai.ttf",
+        "Verdana Bold Italic (TrueType)": "verdanaz.ttf",
+        "Trebuchet MS (TrueType)": "trebuc.ttf",
+        "Trebuchet MS Bold (TrueType)": "trebucbd.ttf",
+        "Trebuchet MS Italic (TrueType)": "trebucit.ttf",
+        "Trebuchet MS Bold Italic (TrueType)": "trebucbi.ttf"
+      }
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  description: "L3 Codec (MP3 audio codec for missing dialogue/music)",
+  tasks: [
+    {
+      description: "Set l3codecx DLL override",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        l3codecx: "native,builtin"
+      }
+    },
+    {
+      description: "Information about codec",
+      type: "message",
+      content: "MP3 codec override enabled. If audio issues persist, ensure you have gstreamer plugins installed on your system."
+    }
+  ]
+}

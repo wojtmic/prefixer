@@ -1,0 +1,30 @@
+{
+  description: "FAudio/XAudio2 - DLL Overrides",
+  // NOTE: FAudio project no longer provides pre-built binaries.
+  // Modern Wine/Proton includes native XAudio2 support.
+  // This tweak sets native overrides which may help with compatibility.
+  tasks: [
+    {
+      description: "Set DLL overrides for XAudio",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        xaudio2_0: "native,builtin",
+        xaudio2_1: "native,builtin",
+        xaudio2_2: "native,builtin",
+        xaudio2_3: "native,builtin",
+        xaudio2_4: "native,builtin",
+        xaudio2_5: "native,builtin",
+        xaudio2_6: "native,builtin",
+        xaudio2_7: "native,builtin",
+        xaudio2_8: "native,builtin",
+        xaudio2_9: "native,builtin"
+      }
+    },
+    {
+      description: "Note about FAudio",
+      type: "message",
+      content: "XAudio2 overrides set. For FAudio install use: winetricks faudio"
+    }
+  ]
+}

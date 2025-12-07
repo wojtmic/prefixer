@@ -1,0 +1,19 @@
+{
+  description: "Microsoft XML Parser 3.0 - DLL Override",
+  // NOTE: Original download URL is no longer available from Microsoft.
+  tasks: [
+    {
+      description: "Set DLL override",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        msxml3: "native,builtin"
+      }
+    },
+    {
+      description: "Note about MSXML3",
+      type: "message",
+      content: "MSXML3 override set. For full install use: winetricks msxml3"
+    }
+  ]
+}

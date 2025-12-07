@@ -1,0 +1,13 @@
+{
+  description: "MS .NET Core 3.1 Desktop Runtime - Registry Only",
+  // NOTE: .NET Core 3.1 reached end of support on December 13, 2022.
+  // Microsoft download links no longer work reliably.
+  // Use winetricks for full installation.
+  tasks: [
+    {
+      description: "Note about .NET Core 3.1",
+      type: "message",
+      content: ".NET Core 3.1 is EOL and not available for direct download. Use: winetricks dotnetcoredesktop3"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  description: "CJK Fonts (Chinese/Japanese/Korean text support)",
+  tasks: [
+    {
+      description: "Set CJK font substitutions",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      values: {
+        "MS Gothic": "Noto Sans CJK JP",
+        "MS PGothic": "Noto Sans CJK JP",
+        "MS UI Gothic": "Noto Sans CJK JP",
+        "MS Mincho": "Noto Serif CJK JP",
+        "MS PMincho": "Noto Serif CJK JP",
+        "SimSun": "Noto Sans CJK SC",
+        "SimHei": "Noto Sans CJK SC",
+        "NSimSun": "Noto Sans CJK SC",
+        "Malgun Gothic": "Noto Sans CJK KR",
+        "Gulim": "Noto Sans CJK KR",
+        "Dotum": "Noto Sans CJK KR"
+      }
+    },
+    {
+      description: "Set font link for CJK fallback",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontLink\\SystemLink",
+      values: {
+        "Tahoma": "Noto Sans CJK SC",
+        "Microsoft Sans Serif": "Noto Sans CJK SC"
+      }
+    },
+    {
+      description: "Info about CJK fonts",
+      type: "message",
+      content: "CJK fonts mapped to Noto CJK family. Install noto-fonts-cjk on your system for proper display."
+    }
+  ]
+}

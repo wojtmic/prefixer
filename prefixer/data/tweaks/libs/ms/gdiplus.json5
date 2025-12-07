@@ -1,0 +1,20 @@
+{
+  description: "Microsoft GDI+ (Graphics Device Interface) - DLL Override",
+  // NOTE: Original download URL is no longer available from Microsoft.
+  // This sets the DLL override. Install actual DLL via winetricks if needed.
+  tasks: [
+    {
+      description: "Set DLL override",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        gdiplus: "native,builtin"
+      }
+    },
+    {
+      description: "Note about GDI+",
+      type: "message",
+      content: "GDI+ override set. For full install use: winetricks gdiplus"
+    }
+  ]
+}

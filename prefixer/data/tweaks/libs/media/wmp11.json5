@@ -1,0 +1,24 @@
+{
+  description: "Windows Media Player 11 - DLL Overrides",
+  // NOTE: Original download URL is no longer available from Microsoft.
+  // This tweak sets DLL overrides for WMP components.
+  tasks: [
+    {
+      description: "Set WMP DLL overrides",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        wmvcore: "native,builtin",
+        wmp: "native,builtin",
+        wmpdxm: "native,builtin",
+        wmpeffects: "native,builtin",
+        wmploc: "native,builtin"
+      }
+    },
+    {
+      description: "Note about WMP11",
+      type: "message",
+      content: "WMP11 DLL overrides set. For full install use: winetricks wmp11"
+    }
+  ]
+}

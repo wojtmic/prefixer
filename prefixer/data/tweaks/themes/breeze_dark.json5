@@ -2,6 +2,37 @@
     description: "Apply Breeze Dark theme colors",
     tasks: [
         {
+            description: "Set Windows theme to no theme",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes",
+            values: {
+                CurrentTheme: "",
+                InstallTheme: "",
+                InstallVisualStyle: "",
+                ThemeActive: 0,
+            },
+        },
+        {
+            description: "Set Windows theme manager to inactive",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager",
+            values: {
+                ThemeActive: 0,
+                DllName: "",
+                ColorName: "",
+                SizeName: "",
+            },
+        },
+        {
+            description: "Set dark theme appearance",
+            type: "regedit",
+            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            values: {
+                AppsUseLightTheme: 0,
+                SystemUsesLightTheme: 0,
+            },
+        },
+        {
             description: "Set dark theme colors",
             type: "regedit",
             path: "HKEY_CURRENT_USER\\Control Panel\\Colors",

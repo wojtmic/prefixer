@@ -1,0 +1,39 @@
+{
+  description: "Enable TLS 1.2 support (modern server connections)",
+  tasks: [
+    {
+      description: "Enable TLS 1.2 for Schannel",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.2\\Client",
+      values: {
+        Enabled: 1,
+        DisabledByDefault: 0
+      }
+    },
+    {
+      description: "Enable TLS 1.2 for Schannel Server",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.2\\Server",
+      values: {
+        Enabled: 1,
+        DisabledByDefault: 0
+      }
+    },
+    {
+      description: "Set SecureProtocols for WinHTTP",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\WinHttp",
+      values: {
+        DefaultSecureProtocols: 2048
+      }
+    },
+    {
+      description: "Set SecureProtocols for Internet Settings",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings",
+      values: {
+        SecureProtocols: 2048
+      }
+    }
+  ]
+}

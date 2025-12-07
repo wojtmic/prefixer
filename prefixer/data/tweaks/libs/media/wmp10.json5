@@ -1,0 +1,23 @@
+{
+  description: "Windows Media Player 10 - DLL Overrides",
+  // NOTE: Original download URL is no longer available from Microsoft.
+  // This tweak sets DLL overrides for WMP components.
+  tasks: [
+    {
+      description: "Set WMP DLL overrides",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        wmvcore: "native,builtin",
+        wmp: "native,builtin",
+        wmpdxm: "native,builtin",
+        wmpeffects: "native,builtin"
+      }
+    },
+    {
+      description: "Note about WMP10",
+      type: "message",
+      content: "WMP10 DLL overrides set. For full install use: winetricks wmp10"
+    }
+  ]
+}

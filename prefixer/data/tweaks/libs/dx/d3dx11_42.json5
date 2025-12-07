@@ -1,0 +1,37 @@
+{
+  description: "DirectX 11 Helper Library (d3dx11_42)",
+  tasks: [
+    {
+      description: "Download DirectX End-User Runtime",
+      type: "download",
+      url: "https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe",
+      checksum: "053f76dcbb28802e23341b6a787e3b0791c0fa5c8d4d011b1044172dbf89c73b",
+      filename: "directx_jun2010.exe"
+    },
+    {
+      description: "Extract DirectX package",
+      type: "run_exe",
+      path: "directx_jun2010.exe",
+      args: ["/q", "/t:<tempdir>/dxtemp"]
+    },
+    {
+      description: "Run DirectX Setup",
+      type: "run_exe",
+      path: "<tempdir>/dxtemp/DXSETUP.exe",
+      args: ["/silent"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    },
+    {
+      description: "Set d3dx11_42 override",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        d3dx11_42: "native,builtin"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  description: "Segoe UI Font (modern Windows Metro-style apps)",
+  tasks: [
+    {
+      description: "Set font substitution for Segoe UI",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      values: {
+        "Segoe UI": "Noto Sans",
+        "Segoe UI Light": "Noto Sans Light",
+        "Segoe UI Semibold": "Noto Sans SemiBold",
+        "Segoe UI Symbol": "Noto Sans Symbols"
+      }
+    },
+    {
+      description: "Info about Segoe UI",
+      type: "message",
+      content: "Segoe UI mapped to Noto Sans family. For better results, install noto-fonts on your system."
+    }
+  ]
+}

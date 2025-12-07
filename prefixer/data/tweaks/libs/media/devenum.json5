@@ -1,0 +1,19 @@
+{
+  description: "Device Enumerator (DirectShow audio/video detection)",
+  tasks: [
+    {
+      description: "Set DLL override for devenum",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        devenum: "native,builtin"
+      }
+    },
+    {
+      description: "Register devenum.dll",
+      type: "run_exe",
+      path: "regsvr32",
+      args: ["/s", "devenum.dll"]
+    }
+  ]
+}

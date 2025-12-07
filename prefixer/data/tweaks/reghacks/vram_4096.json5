@@ -1,0 +1,13 @@
+{
+  description: "Force 4096MB (4GB) Video Memory",
+  tasks: [
+    {
+      description: "Set video memory size to 4096MB",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      values: {
+        VideoMemorySize: "4096"
+      }
+    }
+  ]
+}

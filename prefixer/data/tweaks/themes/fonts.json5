@@ -1,5 +1,6 @@
 {
     description: "Microsoft Core Fonts with font smoothing and DPI fix",
+    deps: ["themes/fonts/core"],
     tasks: [
         {
             description: "Enable font smoothing (ClearType)",

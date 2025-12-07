@@ -1,0 +1,21 @@
+{
+  description: "Tahoma Font (Steam and launcher UIs)",
+  // NOTE: Tahoma was removed from the corefonts package due to licensing.
+  // This tweak registers font entries - use winetricks for full font install.
+  tasks: [
+    {
+      description: "Register Tahoma fonts (if present)",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts",
+      values: {
+        "Tahoma (TrueType)": "tahoma.ttf",
+        "Tahoma Bold (TrueType)": "tahomabd.ttf"
+      }
+    },
+    {
+      description: "Note about Tahoma",
+      type: "message",
+      content: "Tahoma font entries registered. For full install use: winetricks tahoma"
+    }
+  ]
+}

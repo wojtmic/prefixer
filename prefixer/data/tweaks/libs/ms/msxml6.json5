@@ -1,0 +1,19 @@
+{
+  description: "Microsoft XML Parser 6.0 - DLL Override",
+  // NOTE: Original download URL is no longer available from Microsoft.
+  tasks: [
+    {
+      description: "Set DLL override",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        msxml6: "native,builtin"
+      }
+    },
+    {
+      description: "Note about MSXML6",
+      type: "message",
+      content: "MSXML6 override set. For full install use: winetricks msxml6"
+    }
+  ]
+}

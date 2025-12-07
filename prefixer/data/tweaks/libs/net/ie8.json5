@@ -1,0 +1,27 @@
+{
+  description: "Internet Explorer 8 components (older launcher HTML rendering)",
+  tasks: [
+    {
+      description: "Set IE DLL overrides",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        mshtml: "native,builtin",
+        urlmon: "native,builtin",
+        jscript: "native,builtin",
+        vbscript: "native,builtin",
+        shdocvw: "native,builtin"
+      }
+    },
+    {
+      description: "Set IE version in registry",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Internet Explorer",
+      values: {
+        Version: "8.0.6001.18702",
+        Build: "86001",
+        "W2kVersion": "8.0.6001.18702"
+      }
+    }
+  ]
+}

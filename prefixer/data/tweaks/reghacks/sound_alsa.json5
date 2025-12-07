@@ -1,0 +1,13 @@
+{
+  description: "Force ALSA audio driver",
+  tasks: [
+    {
+      description: "Set audio driver to ALSA",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\Drivers",
+      values: {
+        Audio: "alsa"
+      }
+    }
+  ]
+}

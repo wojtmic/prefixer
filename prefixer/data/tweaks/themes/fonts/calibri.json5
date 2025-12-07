@@ -1,0 +1,19 @@
+{
+  description: "Calibri Font (Office and modern game UIs)",
+  tasks: [
+    {
+      description: "Set font substitution for Calibri",
+      type: "regedit",
+      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      values: {
+        Calibri: "Carlito",
+        "Calibri Light": "Carlito"
+      }
+    },
+    {
+      description: "Info about Calibri",
+      type: "message",
+      content: "Calibri mapped to Carlito (metrically compatible). Install ttf-carlito on your system for best results."
+    }
+  ]
+}

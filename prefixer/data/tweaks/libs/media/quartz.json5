@@ -1,0 +1,19 @@
+{
+  description: "DirectShow Quartz filter (video playback)",
+  tasks: [
+    {
+      description: "Set DLL override for quartz",
+      type: "regedit",
+      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      values: {
+        quartz: "native,builtin"
+      }
+    },
+    {
+      description: "Register quartz.dll",
+      type: "run_exe",
+      path: "regsvr32",
+      args: ["/s", "quartz.dll"]
+    }
+  ]
+}

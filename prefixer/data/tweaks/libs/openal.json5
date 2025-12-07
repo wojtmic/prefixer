@@ -1,0 +1,29 @@
+{
+  description: "OpenAL (Open Audio Library for 3D audio)",
+  tasks: [
+    {
+      description: "Download OpenAL",
+      type: "download",
+      url: "https://www.openal.org/downloads/oalinst.zip",
+      checksum: "d165bcb7628fd950d14847585468cc11943b2a1da92a59a839d397c68f9d4b06",
+      filename: "openal.zip"
+    },
+    {
+      description: "Extract OpenAL",
+      type: "extract",
+      filename: "openal.zip",
+      path: "<tempdir>/openal"
+    },
+    {
+      description: "Install OpenAL",
+      type: "run_exe",
+      path: "<tempdir>/openal/oalinst.exe",
+      args: ["/s"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}
