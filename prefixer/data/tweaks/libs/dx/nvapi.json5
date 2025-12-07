@@ -8,7 +8,7 @@
       values: {
         nvapi: "native,builtin",
         nvapi64: "native,builtin",
-        "nvml": "disabled"
+        nvml: "disabled"
       }
     }
   ]
