@@ -17,6 +17,8 @@ class RuntimeContext:
     """Game path"""
     runnable_path: str
     """Path to the runnable/wrapper script for running the binary"""
+    compatdata_path: str
+    """Path to the compatdata folder (above pfx)"""
 
 @dataclass
 class TaskContext:

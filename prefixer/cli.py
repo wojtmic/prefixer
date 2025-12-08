@@ -168,7 +168,7 @@ def tweak(ctx, tweak_name: str):
     click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
 
     with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
-        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path)
+        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
         run_tweak(runtime, target_tweak)
 
     click.secho('All tasks completed successfully!', fg='bright_green')

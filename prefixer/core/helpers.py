@@ -1,5 +1,5 @@
 import os
-from prefixer.core.models import RuntimeContext
+from prefixer.core.models import RuntimeContext, TaskContext
 import click
 from prefixer.core.registry import task_registry
 from prefixer.core.tweaks import Tweak
@@ -23,6 +23,8 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
         click.echo(f'{click.style('==>', bold=True)} {task.description} {click.style(task.type, fg='bright_black')}')
         task.resolve_paths(runtime)
         task_registry[task.type](ctx=task, runtime=runtime)
+
+    task_registry['wineserver'](runtime=runtime, ctx=TaskContext(description='wait for wine to finish', type='wineserver', action='wait'))
 
     ran_tweak_file = os.path.join(runtime.pfx_path, 'tweaks.prefixer.txt')
 
