@@ -1,5 +1,4 @@
-from prefixer.directpfx.exceptions import RegeditParsingError
-from prefixer.directpfx.regedit.models import RegistryNode, RegistryHive
+from prefixer.serverless.regedit.models import RegistryNode, RegistryHive
 from typing import List
 import re
 

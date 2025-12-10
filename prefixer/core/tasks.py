@@ -4,8 +4,8 @@ from prefixer.core.registry import task
 from prefixer.core.settings import NO_DOWNLOAD, SILENCE_EXTERNAL, ALLOW_SHELL
 from prefixer.core.exceptions import BadFileError, BadDownloadError, MalformedTaskError
 from prefixer.core.tweaks import build_tweak
-from prefixer.directpfx.regedit import parser, writer
-from prefixer.directpfx.regedit.models import RegistryNode
+from prefixer.serverless.regedit import parser, writer
+from prefixer.serverless.regedit.models import RegistryNode
 import click
 import subprocess
 import zipfile
