@@ -14,7 +14,16 @@ from prefixer.core.helpers import run_tweak
 from prefixer.core.tweaks import get_tweaks
 import prefixer.core.tasks # Import necessary to actually load tasks!
 
+def print_version(ctx, param, value):
+    if not value or ctx.resilient_parsing: return
+    click.echo(f'{click.style('Prefixer', fg='bright_blue')} v1.3-Turing')
+    click.echo(f'Wineprefix management tool by {click.style('Wojtmic', fg='bright_blue')}')
+    click.echo('Licensed under GPL-3.0 - Source https://github.com/wojtmic/prefixer')
+    click.echo(f'Made with {click.style(' ', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
+    ctx.exit()
+
 @click.group()
+@click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.argument('game_id')
 @click.pass_context
 def prefixer(ctx, game_id: str):
