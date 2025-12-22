@@ -108,13 +108,17 @@ def regedit(ctx: TaskContext, runtime: RuntimeContext):
 
     hive = parser.parse_hive_file(reg_path)
 
-    if ctx.path not in hive.nodes:
-        hive.nodes[ctx.path] = RegistryNode(ctx.path, 0, {})
+    node_path = ctx.path.replace('\\', '\\\\')
 
-    node = hive.nodes[ctx.path]
+    if node_path not in hive.nodes:
+        print(hive.nodes.keys())
+        hive.nodes[node_path] = RegistryNode(node_path, 0, {})
+
+    node = hive.nodes[node_path]
 
     for key, value in ctx.values.items():
-        node.set(key, value)
+        if isinstance(value, str) and not value.startswith(('hex:', 'dword:')): node.set(key, f'"{value}"')
+        else: node.set(key, value)
 
     writer.write_to_file(hive, reg_path)
 

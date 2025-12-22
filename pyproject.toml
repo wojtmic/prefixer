@@ -22,6 +22,12 @@ prefixer = "prefixer.cli:prefixer"
 where = ["."]
 include = ["prefixer*"]
 
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "responses>=0.25.8",
+]
+
 [project.urls]
 Homepage = "https://github.com/wojtmic/prefixer"
 Issues = "https://github.com/wojtmic/prefixer/issues"

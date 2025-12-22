@@ -24,7 +24,7 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
         task.resolve_paths(runtime)
         task_registry[task.type](ctx=task, runtime=runtime)
 
-    task_registry['wineserver'](runtime=runtime, ctx=TaskContext(description='wait for wine to finish', type='wineserver', action='wait'))
+    # task_registry['wineserver'](runtime=runtime, ctx=TaskContext(description='wait for wine to finish', type='wineserver', action='wait'))
 
     ran_tweak_file = os.path.join(runtime.pfx_path, 'tweaks.prefixer.txt')
 
