@@ -111,7 +111,6 @@ def regedit(ctx: TaskContext, runtime: RuntimeContext):
     node_path = ctx.path.replace('\\', '\\\\')
 
     if node_path not in hive.nodes:
-        print(hive.nodes.keys())
         hive.nodes[node_path] = RegistryNode(node_path, 0, {})
 
     node = hive.nodes[node_path]
