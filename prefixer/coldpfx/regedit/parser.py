@@ -1,4 +1,4 @@
-from prefixer.serverless.regedit.models import RegistryNode, RegistryHive
+from prefixer.coldpfx.regedit.models import RegistryNode, RegistryHive
 from typing import List
 import re
 

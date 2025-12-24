@@ -1,4 +1,4 @@
-from prefixer.serverless.regedit.models import RegistryHive
+from prefixer.coldpfx.regedit.models import RegistryHive
 import time
 from typing import List
 
