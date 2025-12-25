@@ -119,6 +119,7 @@ def regedit(ctx: TaskContext, runtime: RuntimeContext):
         if isinstance(value, str) and not value.startswith(('hex:', 'dword:')): node.set(key, f'"{value}"')
         else: node.set(key, value)
 
+    shutil.copy(reg_path, os.path.join(runtime.pfx_path, f'{target_file}.bak'))
     writer.write_to_file(hive, reg_path)
 
 @task
