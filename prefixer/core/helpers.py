@@ -16,7 +16,7 @@ def add_tweak_to_file(file: str, tweak: str):
         f.write(tweak)
         f.write('\n')
 
-def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
+def run_tweak(runtime: RuntimeContext, target_tweak: Tweak, full_name: str='unknown'):
     tasks = target_tweak.tasks
 
     tweak_conditions = target_tweak.conditions
@@ -52,11 +52,11 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak):
     ran_tweak_file = os.path.join(runtime.pfx_path, 'tweaks.prefixer.txt')
 
     if not os.path.exists(ran_tweak_file):
-        add_tweak_to_file(ran_tweak_file, target_tweak.name)
+        add_tweak_to_file(ran_tweak_file, full_name)
         return
 
     with open(ran_tweak_file, 'r') as f:
         content = f.read()
-        if target_tweak.name in content: return
+        if full_name in content: return
 
-    add_tweak_to_file(ran_tweak_file, target_tweak.name)
+    add_tweak_to_file(ran_tweak_file, full_name)
