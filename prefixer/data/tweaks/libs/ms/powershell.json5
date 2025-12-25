@@ -4,7 +4,8 @@
     {
       description: "Set DLL overrides for PowerShell",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         "System.Management.Automation": "native,builtin"
       }

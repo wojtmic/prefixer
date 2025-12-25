@@ -4,7 +4,8 @@
         {
             description: "Reset Windows theme settings",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes",
+            path: "Software\\Microsoft\\Windows\\CurrentVersion\\Themes",
+            filename: 'user.reg',
             values: {
                 ThemeActive: "1",
                 InstallVisualStyle: "%ResourceDir%\\themes\\Light\\Light.msstyles",
@@ -13,7 +14,8 @@
         {
             description: "Reset theme manager settings",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager",
+            path: "Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager",
+            filename: 'user.reg',
             values: {
                 ThemeActive: "0",
                 DllName: "",
@@ -24,7 +26,8 @@
         {
             description: "Remove custom theme colors",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Control Panel\\Colors",
+            path: "Control Panel\\Colors",
+            filename: 'user.reg',
             values: {
                 ActiveBorder: null,
                 ActiveTitle: null,

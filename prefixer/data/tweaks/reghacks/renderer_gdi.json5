@@ -4,7 +4,8 @@
     {
       description: "Set Wine renderer to GDI (no 3D)",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+      path: "Software\\Wine\\Direct3D",
+      filename: 'user.reg',
       values: {
         renderer: "gdi"
       }

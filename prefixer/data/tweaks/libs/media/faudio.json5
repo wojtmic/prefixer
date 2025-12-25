@@ -29,7 +29,8 @@
     {
       description: "Set DLL overrides for XAudio",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         xaudio2_0: "native,builtin",
         xaudio2_1: "native,builtin",

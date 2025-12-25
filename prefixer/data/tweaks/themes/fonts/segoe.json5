@@ -4,7 +4,8 @@
     {
       description: "Set font substitution for Segoe UI",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      path: "Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      filename: 'system.reg',
       values: {
         "Segoe UI": "Noto Sans",
         "Segoe UI Light": "Noto Sans Light",

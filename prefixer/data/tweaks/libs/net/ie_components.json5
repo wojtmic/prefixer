@@ -4,7 +4,8 @@
     {
       description: "Set DLL overrides for IE",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         ieframe: "native,builtin",
         iertutil: "native,builtin",

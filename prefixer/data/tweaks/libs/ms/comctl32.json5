@@ -4,7 +4,8 @@
     {
       description: "Set DLL override for comctl32",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         comctl32: "native,builtin"
       }

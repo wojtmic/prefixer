@@ -4,7 +4,8 @@
     {
       description: "Set DLL overrides for DirectSound",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         dsound: "native,builtin"
       }

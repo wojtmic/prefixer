@@ -4,7 +4,8 @@
     {
       description: "Set DLL overrides for MFC140",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         mfc140: "native,builtin",
         mfc140u: "native,builtin",

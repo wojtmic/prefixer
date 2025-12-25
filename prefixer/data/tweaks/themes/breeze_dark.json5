@@ -4,7 +4,8 @@
         {
             description: "Set Windows theme to no theme",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes",
+            path: "Software\\Microsoft\\Windows\\CurrentVersion\\Themes",
+            filename: 'user.reg',
             values: {
                 CurrentTheme: "",
                 InstallTheme: "",
@@ -15,7 +16,8 @@
         {
             description: "Set Windows theme manager to inactive",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager",
+            path: "Software\\Microsoft\\Windows\\CurrentVersion\\ThemeManager",
+            filename: 'user.reg',
             values: {
                 ThemeActive: 0,
                 DllName: "",
@@ -26,7 +28,8 @@
         {
             description: "Set dark theme appearance",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            path: "Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+            filename: 'user.reg',
             values: {
                 AppsUseLightTheme: 0,
                 SystemUsesLightTheme: 0,
@@ -35,7 +38,8 @@
         {
             description: "Set dark theme colors",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Control Panel\\Colors",
+            path: "Control Panel\\Colors",
+            filename: 'user.reg',
             values: {
                 ActiveBorder: "49 54 58",
                 ActiveTitle: "49 54 58",

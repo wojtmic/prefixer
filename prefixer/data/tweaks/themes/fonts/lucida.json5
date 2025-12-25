@@ -4,7 +4,8 @@
     {
       description: "Set font substitution for Lucida Console",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      path: "Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      filename: 'system.reg',
       values: {
         "Lucida Console": "Liberation Mono"
       }

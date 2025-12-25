@@ -4,7 +4,8 @@
     {
       description: "Enable mouse grab in fullscreen",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+      path: "Software\\Wine\\X11 Driver",
+      filename: 'user.reg',
       values: {
         GrabFullscreen: "Y"
       }

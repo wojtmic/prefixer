@@ -4,7 +4,8 @@
     {
       description: "Enable TLS 1.2 for Schannel",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.2\\Client",
+      path: "System\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.2\\Client",
+      filename: 'system.reg',
       values: {
         Enabled: 1,
         DisabledByDefault: 0
@@ -13,7 +14,8 @@
     {
       description: "Enable TLS 1.2 for Schannel Server",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.2\\Server",
+      path: "System\\CurrentControlSet\\Control\\SecurityProviders\\SCHANNEL\\Protocols\\TLS 1.2\\Server",
+      filename: 'system.reg',
       values: {
         Enabled: 1,
         DisabledByDefault: 0
@@ -22,7 +24,8 @@
     {
       description: "Set SecureProtocols for WinHTTP",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\WinHttp",
+      path: "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\WinHttp",
+      filename: 'system.reg',
       values: {
         DefaultSecureProtocols: 2048
       }
@@ -30,7 +33,8 @@
     {
       description: "Set SecureProtocols for Internet Settings",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings",
+      path: "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings",
+      filename: 'user.reg',
       values: {
         SecureProtocols: 2048
       }

@@ -4,7 +4,8 @@
     {
       description: "Set audio driver to ALSA",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\Drivers",
+      path: "Software\\Wine\\Drivers",
+      filename: 'user.reg',
       values: {
         Audio: "alsa"
       }

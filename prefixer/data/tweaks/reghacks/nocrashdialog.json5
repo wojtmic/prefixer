@@ -4,7 +4,8 @@
     {
       description: "Disable crash dialog",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\WineDbg",
+      path: "Software\\Wine\\WineDbg",
+      filename: 'user.reg',
       values: {
         ShowCrashDialog: "dword:0"
       }

@@ -4,7 +4,8 @@
     {
       description: "Set DLL override for GLUT",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         glut32: "native,builtin"
       }

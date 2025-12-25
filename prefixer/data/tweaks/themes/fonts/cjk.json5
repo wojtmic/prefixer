@@ -4,7 +4,8 @@
     {
       description: "Set CJK font substitutions",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      path: "Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      filename: 'system.reg',
       values: {
         "MS Gothic": "Noto Sans CJK JP",
         "MS PGothic": "Noto Sans CJK JP",
@@ -22,7 +23,8 @@
     {
       description: "Set font link for CJK fallback",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontLink\\SystemLink",
+      path: "Software\\Microsoft\\Windows NT\\CurrentVersion\\FontLink\\SystemLink",
+      filename: 'system.reg',
       values: {
         "Tahoma": "Noto Sans CJK SC",
         "Microsoft Sans Serif": "Noto Sans CJK SC"

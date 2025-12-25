@@ -4,7 +4,8 @@
     {
       description: "Disable virtual desktop",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\Explorer",
+      path: "Software\\Wine\\Explorer",
+      filename: 'user.reg',
       values: {
         Desktop: ""
       }

@@ -14,7 +14,8 @@
         {
             description: "Set screen DPI to 120 (125% scaling)",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Control Panel\\Desktop",
+            path: "Control Panel\\Desktop",
+            filename: 'user.reg',
             values: {
                 LogPixels: 120,
             },

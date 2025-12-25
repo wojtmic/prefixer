@@ -4,7 +4,8 @@
     {
       description: "Enable virtual desktop",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\Explorer\\Desktops",
+      path: "Software\\Wine\\Explorer\\Desktops",
+      filename: 'user.reg',
       values: {
         Default: "1280x720"
       }
@@ -12,7 +13,8 @@
     {
       description: "Set explorer to use virtual desktop",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\Explorer",
+      path: "Software\\Wine\\Explorer",
+      filename: 'user.reg',
       values: {
         Desktop: "Default"
       }

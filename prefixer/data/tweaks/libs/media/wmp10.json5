@@ -4,7 +4,8 @@
     {
       description: "Set WMP DLL overrides",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         wmvcore: "native,builtin",
         wmp: "native,builtin",

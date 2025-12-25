@@ -4,7 +4,8 @@
     {
       description: "Set DLL overrides for Rich Edit",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         riched20: "native,builtin",
         riched32: "native,builtin"

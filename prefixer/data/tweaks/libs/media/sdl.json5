@@ -4,7 +4,8 @@
     {
       description: "Set DLL override for SDL",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         sdl: "native,builtin",
         sdl2: "native,builtin"

@@ -4,7 +4,8 @@
     {
       description: "Set font substitution for Calibri",
       type: "regedit",
-      path: "HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      path: "Software\\Microsoft\\Windows NT\\CurrentVersion\\FontSubstitutes",
+      filename: 'system.reg',
       values: {
         Calibri: "Carlito",
         "Calibri Light": "Carlito"

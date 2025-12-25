@@ -4,7 +4,8 @@
     {
       description: "Override Windows version",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine",
+      path: "Software\\Wine",
+      filename: 'user.reg',
       values: {
         Version: "vista"
       }

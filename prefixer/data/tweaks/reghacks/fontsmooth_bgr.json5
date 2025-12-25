@@ -4,7 +4,8 @@
     {
       description: "Enable BGR font smoothing",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Control Panel\\Desktop",
+      path: "Control Panel\\Desktop",
+      filename: 'user.reg',
       values: {
         FontSmoothing: "2",
         FontSmoothingType: "dword:2",

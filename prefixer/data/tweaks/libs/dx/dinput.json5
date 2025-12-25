@@ -4,7 +4,8 @@
     {
       description: "Set DLL overrides for DirectInput",
       type: "regedit",
-      path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
       values: {
         dinput: "native,builtin",
         dinput8: "native,builtin"
