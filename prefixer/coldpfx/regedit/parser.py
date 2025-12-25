@@ -5,6 +5,7 @@ import re
 def parse_hive(hive_raw: List[str]):
     """Parses raw strings of a hive into a RegistryHive object"""
     header = hive_raw[0].strip()
+    relative = hive_raw[1].strip()
     node_header_pattern = re.compile(r'^\[(?P<key_path>.+)\]\s+(?P<timestamp>\d+)$')
     value_pattern = re.compile(r'^(?:"(?P<key>(?:[^"\\]|\\.)*)"|(?P<default>@))=(?P<value>.*)$')
 
@@ -39,9 +40,10 @@ def parse_hive(hive_raw: List[str]):
 
                 value = value_match.group('value')
                 node.set(key, value)
+                node.changed = False
                 continue
 
-    return RegistryHive(header, nodes, arch)
+    return RegistryHive(header, relative, nodes, arch)
 
 def parse_hive_file(path: str):
     """Helper to read and redirect to parse_hive"""

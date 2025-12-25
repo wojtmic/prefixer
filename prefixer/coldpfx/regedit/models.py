@@ -24,6 +24,8 @@ class RegistryNode:
 class RegistryHive:
     header: str
     """Registry string header"""
+    relative: str
+    """All strings relative to X wine comment"""
     nodes: dict[str, RegistryNode]
     """Nodes in the hive"""
     arch: str = 'win32'

@@ -3,7 +3,7 @@ import time
 from typing import List
 
 def serialize(hive: RegistryHive) -> List[str]:
-    lines = [hive.header, ";; All keys relative to REGISTRY\\\\User\\\\S-1-5-21-1408259311-2033730227-1000-1000", '', f'#arch={hive.arch}', '']
+    lines = [hive.header, hive.relative, '', f'#arch={hive.arch}', '']
 
     current_time = int(time.time())
 
@@ -20,8 +20,6 @@ def serialize(hive: RegistryHive) -> List[str]:
             else:
                 escaped_name = name.replace('\\', '\\\\').replace('"', '\\"')
                 lines.append(f'"{escaped_name}"={raw_value}')
-
-        lines.append("")
 
     return lines
 
