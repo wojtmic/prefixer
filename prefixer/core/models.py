@@ -5,7 +5,7 @@ from prefixer.core.exceptions import MalformedTaskError
 from inspect import signature
 
 @dataclass
-class Condition:
+class ConditionContext:
     """Condition that needs to pass before running tweak/task"""
     type: str
     """Type of this condition; view core.conditions"""
@@ -41,7 +41,7 @@ class TaskContext:
     """Description of this task"""
     type: str
     """Type of this task; view core.tasks"""
-    conditions: Optional[List[Condition]] = None
+    conditions: Optional[List[ConditionContext]] = None
     """Conditions to run this task"""
     filename: Optional[str] = None
     """File name; depends on task type"""
@@ -99,7 +99,7 @@ class TweakData:
     """Prefixer tweak in raw, unparsed form"""
     name: str
     description: str
-    conditions: Optional[List[Condition]]
+    conditions: Optional[List[ConditionContext]]
     tasks: List[Dict[str, str]]
 
 def required_context(*keys: str):
