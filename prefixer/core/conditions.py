@@ -30,3 +30,14 @@ def reg_matches(ctx: ConditionContext, runtime: RuntimeContext):
         if not node.values.get(k, None) == v: return False
 
     return True
+
+@condition
+@required_context('value')
+def tweak_ran(ctx: ConditionContext, runtime: RuntimeContext):
+    list_file = os.path.join(runtime.pfx_path, 'tweaks.prefixer.txt')
+    if not os.path.exists(list_file): return False
+
+    with open(list_file, 'r') as f:
+        lines = f.readlines()
+
+    return ctx.value in lines
