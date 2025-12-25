@@ -49,3 +49,10 @@ def test_serialize():
     assert lines[5] == hive_raw[5]
 
     assert sorted(lines[6:]) == sorted(hive_raw[6:])
+
+def test_serialize_hive():
+    parsed_hive = parser.parse_hive(hive.split('\n'))
+    lines = writer.serialize(parsed_hive)
+    reparsed_hive = parser.parse_hive(lines)
+
+    assert parsed_hive == reparsed_hive
