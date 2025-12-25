@@ -5,6 +5,20 @@ from prefixer.core.exceptions import MalformedTaskError
 from inspect import signature
 
 @dataclass
+class Condition:
+    """Condition that needs to pass before running tweak/task"""
+    type: str
+    """Type of this condition; view core.conditions"""
+    invert: bool
+    """Inverts the condition"""
+    value: str = None
+    """Value name; depends on condition type"""
+    matches: Optional[str] = None
+    """Secondary value; depends on condition type"""
+    values: Dict[str, str] = None
+    """List of values; depends on condition type"""
+
+@dataclass
 class RuntimeContext:
     """Dynamic runtime values for tasks"""
     game_id: str
@@ -26,7 +40,9 @@ class TaskContext:
     description: str
     """Description of this task"""
     type: str
-    """Type of this task"""
+    """Type of this task; view core.tasks"""
+    conditions: Optional[List[Condition]] = None
+    """Conditions to run this task"""
     filename: Optional[str] = None
     """File name; depends on task type"""
     checksum: Optional[str] = None
@@ -83,6 +99,7 @@ class TweakData:
     """Prefixer tweak in raw, unparsed form"""
     name: str
     description: str
+    conditions: Optional[List[Condition]]
     tasks: List[Dict[str, str]]
 
 def required_context(*keys: str):
