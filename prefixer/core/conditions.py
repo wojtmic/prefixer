@@ -38,6 +38,6 @@ def tweak_ran(ctx: ConditionContext, runtime: RuntimeContext):
     if not os.path.exists(list_file): return False
 
     with open(list_file, 'r') as f:
-        lines = f.readlines()
+        lines = [line.strip() for line in f.readlines()]
 
     return ctx.value in lines
