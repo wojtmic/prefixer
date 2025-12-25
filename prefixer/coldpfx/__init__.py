@@ -8,12 +8,14 @@ def resolve_path(pfx_path: str, windows_path: str):
     if ':' not in windows_path: raise ValueError('Path must be absolute for Windows! (include a drive letter)')
 
     drive, tail = windows_path.split(':', 1)
+    drive = drive.lower()
+    tail = tail.lstrip('/')
 
     dosdevices = os.path.join(pfx_path, 'dosdevices')
-    drive_link = os.path.join(dosdevices, f'{drive.lower()}:')
+    drive_link = os.path.join(dosdevices, f'{drive}:')
 
-    if not os.path.exists(drive): raise DriveNotMappedError(f'Drive {drive} is not mapped in this prefix')
+    if not os.path.lexists(drive_link): raise DriveNotMappedError(f'Drive {drive} is not mapped in this prefix')
 
-    root = os.path.realpath(drive_link)
+    link_root = os.path.realpath(drive_link)
 
-    return os.path.join(root, tail)
+    return os.path.join(link_root, tail)

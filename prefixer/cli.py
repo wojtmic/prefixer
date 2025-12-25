@@ -9,6 +9,7 @@ from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
 import tempfile
 import sys
+from prefixer.coldpfx import resolve_path
 from prefixer.core.models import RuntimeContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.tweaks import get_tweaks
@@ -24,9 +25,10 @@ def print_version(ctx, param, value):
 
 @click.group()
 @click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
+@click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
-def prefixer(ctx, game_id: str):
+def prefixer(ctx, game_id: str, quiet: bool):
     """
     Modern tool to manage Proton prefixes.
     """
@@ -91,10 +93,11 @@ def prefixer(ctx, game_id: str):
 
     game_id_styled = click.style(ctx.obj['GAME_ID'], fg='bright_blue')
 
-    click.echo(f'Targeting => {game_id_styled}')
-    click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
-    click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
-    click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
+    if not quiet:
+        click.echo(f'Targeting => {game_id_styled}')
+        click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
+        click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
+        click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
 
 @prefixer.command()
 @click.pass_context
@@ -149,6 +152,14 @@ def opengamedir(ctx):
     """
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
+@prefixer.command()
+@click.argument('path')
+@click.pass_context
+def resolve(ctx, path: str):
+    """
+    Resolves a path in the prefix
+    """
+    click.echo(resolve_path(ctx.obj['PFX_PATH'], path))
 
 def complete_tweaks(ctx, param, incomplete):
     try:
