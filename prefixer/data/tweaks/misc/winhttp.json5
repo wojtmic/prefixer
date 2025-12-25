@@ -1,5 +1,16 @@
 {
     description: "Windows HTTP components library override",
+    conditions: [
+        {
+            type: 'reg_matches',
+            filename: 'user.reg',
+            path: 'Software\\Wine\\DllOverrides',
+            values: {
+                winhttp: '"native,builtin"'
+            },
+            invert: true
+        }
+    ],
     tasks: [
         {
             description: "Add override",

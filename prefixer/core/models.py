@@ -30,8 +30,12 @@ class ConditionContext:
     """Inverts the condition"""
     value: str = None
     """Value name; depends on condition type"""
-    matches: Optional[str] = None
+    matches: str = None
     """Secondary value; depends on condition type"""
+    path: str = None
+    """Path; depends on condition type"""
+    filename: str = None
+    """Filename; depends on condition type"""
     values: Dict[str, str] = None
     """List of values; depends on condition type"""
 
