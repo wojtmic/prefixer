@@ -5,20 +5,6 @@ from prefixer.core.exceptions import MalformedTaskError
 from inspect import signature
 
 @dataclass
-class ConditionContext:
-    """Condition that needs to pass before running tweak/task"""
-    type: str
-    """Type of this condition; view core.conditions"""
-    invert: bool
-    """Inverts the condition"""
-    value: str = None
-    """Value name; depends on condition type"""
-    matches: Optional[str] = None
-    """Secondary value; depends on condition type"""
-    values: Dict[str, str] = None
-    """List of values; depends on condition type"""
-
-@dataclass
 class RuntimeContext:
     """Dynamic runtime values for tasks"""
     game_id: str
@@ -33,6 +19,40 @@ class RuntimeContext:
     """Path to the runnable/wrapper script for running the binary"""
     compatdata_path: str
     """Path to the compatdata folder (above pfx)"""
+
+
+@dataclass
+class ConditionContext:
+    """Condition that needs to pass before running tweak/task"""
+    type: str
+    """Type of this condition; view core.conditions"""
+    invert: bool
+    """Inverts the condition"""
+    value: str = None
+    """Value name; depends on condition type"""
+    matches: Optional[str] = None
+    """Secondary value; depends on condition type"""
+    values: Dict[str, str] = None
+    """List of values; depends on condition type"""
+
+    def resolve_paths(self, runtime: RuntimeContext) -> None:
+        replacers = {
+            '<gamedir>': runtime.game_path,
+            '<pfxdir>': runtime.pfx_path,
+            '<tempdir>': runtime.operation_path,
+        }
+
+        def _apply_replacements(text: Optional[str]) -> Optional[str]:
+            if not text:
+                return text
+
+            for placeholder, value in replacers.items():
+                if value:
+                    text = text.replace(placeholder, value)
+            return text
+
+        self.value = _apply_replacements(self.value)
+        self.matches = _apply_replacements(self.matches)
 
 @dataclass
 class TaskContext:
@@ -112,7 +132,7 @@ def required_context(*keys: str):
             ctx = bound.arguments['ctx']
 
             missing = [k for k in keys if not getattr(ctx, k, None)]
-            extra   = [k for k, v in vars(ctx).items() if v and k not in keys and k not in {'type', 'description'}]
+            extra   = [k for k, v in vars(ctx).items() if v and k not in keys and k not in {'type', 'description', 'invert', 'conditions'}]
 
             if len(missing) > 0: raise MalformedTaskError(f'Too little fields! Should contain {keys}')
             if len(extra) > 0:   raise MalformedTaskError(f'Too many fields! Should contain {keys}')

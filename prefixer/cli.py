@@ -14,6 +14,7 @@ from prefixer.core.models import RuntimeContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.tweaks import get_tweaks
 import prefixer.core.tasks # Import necessary to actually load tasks!
+import prefixer.core.conditions # same with conditions
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing: return
