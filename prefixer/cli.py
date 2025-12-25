@@ -9,15 +9,27 @@ from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
 import tempfile
 import sys
+from prefixer.coldpfx import resolve_path
 from prefixer.core.models import RuntimeContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.tweaks import get_tweaks
 import prefixer.core.tasks # Import necessary to actually load tasks!
+import prefixer.core.conditions # same with conditions
+
+def print_version(ctx, param, value):
+    if not value or ctx.resilient_parsing: return
+    click.echo(f'{click.style('Prefixer', fg='bright_blue')} v1.3.0-Turing')
+    click.echo(f'Wineprefix management tool by {click.style('Wojtmic', fg='bright_blue')}')
+    click.echo('Licensed under GPL-3.0 - Source https://github.com/wojtmic/prefixer')
+    click.echo(f'Made with {click.style(' ', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
+    ctx.exit()
 
 @click.group()
+@click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
+@click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
-def prefixer(ctx, game_id: str):
+def prefixer(ctx, game_id: str, quiet: bool):
     """
     Modern tool to manage Proton prefixes.
     """
@@ -82,10 +94,11 @@ def prefixer(ctx, game_id: str):
 
     game_id_styled = click.style(ctx.obj['GAME_ID'], fg='bright_blue')
 
-    click.echo(f'Targeting => {game_id_styled}')
-    click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
-    click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
-    click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
+    if not quiet:
+        click.echo(f'Targeting => {game_id_styled}')
+        click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
+        click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
+        click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
 
 @prefixer.command()
 @click.pass_context
@@ -140,6 +153,14 @@ def opengamedir(ctx):
     """
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
+@prefixer.command()
+@click.argument('path')
+@click.pass_context
+def resolve(ctx, path: str):
+    """
+    Resolves a path in the prefix
+    """
+    click.echo(resolve_path(ctx.obj['PFX_PATH'], path))
 
 def complete_tweaks(ctx, param, incomplete):
     try:
@@ -168,8 +189,8 @@ def tweak(ctx, tweak_name: str):
     click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
 
     with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
-        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path)
-        run_tweak(runtime, target_tweak)
+        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
+        run_tweak(runtime, target_tweak, tweak_name)
 
     click.secho('All tasks completed successfully!', fg='bright_green')
 
@@ -186,88 +207,6 @@ def wipe(ctx):
     if not click.confirm('Are you sure you want to wipe the prefix?'): return
 
     shutil.rmtree(ctx.obj['PFX_PATH'])
-
-@prefixer.command()
-@click.pass_context
-def debuginfo(ctx):
-    """
-    Dump debug information about the selected prefix
-    """
-    # Info for possible contributors: this part of the code is very messy. If someone would like to clean it up, I would be glad to accept a pull request.
-    pfx_path = ctx.obj['PFX_PATH']
-    ran_tweak_file = os.path.join(pfx_path, 'tweaks.prefixer.txt')
-
-    if os.path.exists(ran_tweak_file):
-        with open(ran_tweak_file, 'r') as f:
-            ran_tweaks = f.readlines()
-    else:
-        ran_tweaks = []
-
-    reg_section = "[Software\\\\Wine\\\\DllOverrides]"
-
-    reg_path = os.path.join(pfx_path, 'user.reg')
-    registry_data = {}
-
-    if os.path.exists(reg_path):
-        with open(reg_path, 'r', encoding='utf-8', errors='replace') as f:
-            in_section = False
-            for line in f:
-                line = line.strip()
-
-                if not line or line.startswith(';') or line.startswith('#'):
-                    continue
-
-                if line.startswith('['):
-                    if line.startswith(reg_section):
-                        in_section = True
-                        continue
-                    elif in_section: break
-                    continue
-
-                if in_section and '=' in line:
-                    key_raw, val_raw = line.split('=', 1)
-
-                    key = key_raw.strip('"')
-                    val = val_raw
-                    if val_raw.startswith('"') and val_raw.endswith('"'):
-                        val = val_raw[1:-1]
-                    elif val_raw.lower().startswith('dword:'):
-                        val = val_raw.split(':', 1)[1]
-
-                    registry_data[key] = val
-
-    system32 = os.path.join(pfx_path, 'drive_c', 'windows', 'system32')
-
-    checks = {
-        "64bit": os.path.exists(os.path.join(pfx_path, 'drive_c', 'windows', 'syswow64'))
-    }
-
-    click.echo('[ PREFIXER DEBUG REPORT ]')
-    click.echo(f'{click.style('TARGET', fg='bright_blue')} : {ctx.obj['GAME_ID']}')
-    click.echo(f'{click.style('PROTON VERSION', fg='bright_blue')} : {ctx.obj['PROTON_VER']}')
-    click.echo(f'{click.style('64-BIT', fg='bright_blue')} : {checks["64bit"]}')
-    click.echo()
-
-    click.echo('DLL Overrides')
-    click.echo("="*20)
-    if not registry_data:
-        click.echo("(None)")
-    else:
-        width = max(len(k) for k in registry_data)
-
-        for dll, mode in registry_data.items():
-            click.echo(f"{dll:<{width}} : {mode}")
-
-    click.echo()
-
-    click.echo('Tweak History')
-    click.echo('='*20)
-    if not ran_tweaks:
-        click.echo('(None)')
-        return
-
-    for tweak in ran_tweaks:
-        click.echo(tweak)
 
 if __name__ == '__main__':
     try:
@@ -288,8 +227,10 @@ if __name__ == '__main__':
         click.secho('ERROR: Prefixer wasn\'t able to download a file!', fg='bright_red')
     except excs.BadTweakError:
         click.secho('ERROR: The tweak is malformed or requires a newer version of Prefixer!', fg='bright_red')
+        click.secho('Prefixer v1.3-Turing changed the syntax for the regedit task. Read the wiki at https://github.com/wojtmic/prefixer/wiki/Creating-Tweaks#registry-edition-regedit', fg='bright_red')
     except excs.MalformedTaskError as e:
         click.secho(f'Malformed tweak! {e}', fg='bright_red')
+        click.secho('Prefixer v1.3-Turing changed the syntax for the regedit task. Read the wiki at https://github.com/wojtmic/prefixer/wiki/Creating-Tweaks#registry-edition-regedit', fg='bright_red')
 
     except excs.InternalExeError:
         click.secho('ERROR: There was an error while running an external exe within the tweak!', fg='bright_red')

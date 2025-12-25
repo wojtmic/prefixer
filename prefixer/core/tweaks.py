@@ -1,14 +1,15 @@
-from prefixer.core.models import TweakData, TaskContext, RuntimeContext
+from prefixer.core.models import TweakData, TaskContext, RuntimeContext, ConditionContext
 from prefixer.core.paths import TWEAKS_DIR_USER, TWEAKS_DIR_SYSTEM
 import os
 import json5
 from typing import List
 
 class Tweak:
-    def __init__(self, name: str, description: str, tasks: List[TaskContext]):
+    def __init__(self, name: str, description: str, tasks: List[TaskContext], conditions: List[ConditionContext]):
         self.name = name
         self.description = description
         self.tasks = tasks
+        self.conditions = conditions
 
 TWEAKS_PATHS = [TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
 
@@ -25,13 +26,16 @@ def index_tweak_folder(folder: str, layer: str = ''):
         if not (tweak.endswith('.json5') or tweak.endswith('.json')): continue
 
         with open(path, 'r') as f:
-            obj = json5.loads(f.read())
+            obj: dict = json5.loads(f.read())
 
         tasks = obj['tasks']
         desc = obj['description']
-        tweakName = tweak.split('.')[0]
+        tweak_name = tweak.split('.')[0]
 
-        tweaks[f'{layer}{tweakName}'] = TweakData(tweakName, desc, tasks)
+        if 'conditions' in obj: conditions = obj['conditions']
+        else: conditions = []
+
+        tweaks[f'{layer}{tweak_name}'] = TweakData(tweak_name, desc, conditions, tasks)
 
     return tweaks
 
@@ -58,4 +62,9 @@ def build_tweak(name: str):
     for t in tweak.tasks:
         tasks.append(TaskContext(**t))
 
-    return Tweak(tweak.name, tweak.description, tasks)
+    conditions = []
+    for c in tweak.conditions:
+        if 'invert' not in c: c['invert'] = False
+        conditions.append(ConditionContext(**c))
+
+    return Tweak(name=tweak.name, description=tweak.description, conditions=conditions, tasks=tasks)

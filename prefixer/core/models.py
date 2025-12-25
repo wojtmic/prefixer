@@ -17,6 +17,46 @@ class RuntimeContext:
     """Game path"""
     runnable_path: str
     """Path to the runnable/wrapper script for running the binary"""
+    compatdata_path: str
+    """Path to the compatdata folder (above pfx)"""
+
+
+@dataclass
+class ConditionContext:
+    """Condition that needs to pass before running tweak/task"""
+    type: str
+    """Type of this condition; view core.conditions"""
+    invert: bool
+    """Inverts the condition"""
+    value: str = None
+    """Value name; depends on condition type"""
+    matches: str = None
+    """Secondary value; depends on condition type"""
+    path: str = None
+    """Path; depends on condition type"""
+    filename: str = None
+    """Filename; depends on condition type"""
+    values: Dict[str, str] = None
+    """List of values; depends on condition type"""
+
+    def resolve_paths(self, runtime: RuntimeContext) -> None:
+        replacers = {
+            '<gamedir>': runtime.game_path,
+            '<pfxdir>': runtime.pfx_path,
+            '<tempdir>': runtime.operation_path,
+        }
+
+        def _apply_replacements(text: Optional[str]) -> Optional[str]:
+            if not text:
+                return text
+
+            for placeholder, value in replacers.items():
+                if value:
+                    text = text.replace(placeholder, value)
+            return text
+
+        self.value = _apply_replacements(self.value)
+        self.matches = _apply_replacements(self.matches)
 
 @dataclass
 class TaskContext:
@@ -24,7 +64,9 @@ class TaskContext:
     description: str
     """Description of this task"""
     type: str
-    """Type of this task"""
+    """Type of this task; view core.tasks"""
+    conditions: Optional[List[ConditionContext]] = None
+    """Conditions to run this task"""
     filename: Optional[str] = None
     """File name; depends on task type"""
     checksum: Optional[str] = None
@@ -81,6 +123,7 @@ class TweakData:
     """Prefixer tweak in raw, unparsed form"""
     name: str
     description: str
+    conditions: Optional[List[ConditionContext]]
     tasks: List[Dict[str, str]]
 
 def required_context(*keys: str):
@@ -93,7 +136,7 @@ def required_context(*keys: str):
             ctx = bound.arguments['ctx']
 
             missing = [k for k in keys if not getattr(ctx, k, None)]
-            extra   = [k for k, v in vars(ctx).items() if v and k not in keys and k not in {'type', 'description'}]
+            extra   = [k for k, v in vars(ctx).items() if v and k not in keys and k not in {'type', 'description', 'invert', 'conditions'}]
 
             if len(missing) > 0: raise MalformedTaskError(f'Too little fields! Should contain {keys}')
             if len(extra) > 0:   raise MalformedTaskError(f'Too many fields! Should contain {keys}')

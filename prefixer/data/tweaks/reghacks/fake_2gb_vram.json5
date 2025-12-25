@@ -4,7 +4,8 @@
         {
             description: "Override VRAM",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Wine\\Direct3D",
+            path: "Software\\Wine\\Direct3D",
+            filename: 'user.reg',
             values: {
                 VideoMemorySize: "2048",
             },

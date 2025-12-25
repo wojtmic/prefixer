@@ -4,7 +4,8 @@
         {
             description: "Override registry",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Wine\\DirectInput",
+            path: "Software\\Wine\\DirectInput",
+            filename: 'user.reg',
             values: {
                 MouseWarpOverride: "force",
             },
