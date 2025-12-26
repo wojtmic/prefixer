@@ -33,6 +33,7 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak, full_name: str='unkn
     for task in tasks:
         click.echo(f'{click.style('==>', bold=True)} {task.description} {click.style(task.type, fg='bright_black')}')
         task_conditions = task.conditions
+        if not task_conditions: task_conditions = []
         for c in task_conditions:
             if 'invert' not in c: c['invert'] = False
 
