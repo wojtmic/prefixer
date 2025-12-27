@@ -1,0 +1,14 @@
+{
+  description: "XMLLite Parser",
+  tasks: [
+    {
+      description: "Set DLL override for xmllite",
+      type: "regedit",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
+      values: {
+        xmllite: "native,builtin"
+      }
+    }
+  ]
+}

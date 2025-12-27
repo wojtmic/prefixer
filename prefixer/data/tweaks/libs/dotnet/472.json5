@@ -1,0 +1,23 @@
+{
+  description: "MS .NET Framework 4.7.2",
+  tasks: [
+    {
+      description: "Download installer",
+      type: "download",
+      url: "https://go.microsoft.com/fwlink/?LinkId=863265",
+      checksum: "84ea476eb3a03ab878c14b160495f071dd29f9e5d031e713623ee8635638355f",
+      filename: "dotnet472_installer.exe"
+    },
+    {
+      description: "Install package",
+      type: "run_exe",
+      path: "dotnet472_installer.exe",
+      args: ["/q", "/norestart"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  description: "Force PulseAudio driver",
+  tasks: [
+    {
+      description: "Set audio driver to PulseAudio",
+      type: "regedit",
+      path: "Software\\Wine\\Drivers",
+      filename: 'user.reg',
+      values: {
+        Audio: "pulse"
+      }
+    }
+  ]
+}

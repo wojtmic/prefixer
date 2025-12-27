@@ -1,0 +1,15 @@
+{
+  description: "Font Smoothing - Disabled",
+  tasks: [
+    {
+      description: "Disable font smoothing",
+      type: "regedit",
+      path: "Control Panel\\Desktop",
+      filename: 'user.reg',
+      values: {
+        FontSmoothing: "0",
+        FontSmoothingType: "dword:0"
+      }
+    }
+  ]
+}

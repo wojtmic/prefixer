@@ -1,0 +1,14 @@
+{
+  description: "Renderer - Vulkan",
+  tasks: [
+    {
+      description: "Set Wine renderer to Vulkan",
+      type: "regedit",
+      path: "Software\\Wine\\Direct3D",
+      filename: 'user.reg',
+      values: {
+        renderer: "vulkan"
+      }
+    }
+  ]
+}

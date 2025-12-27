@@ -1,0 +1,14 @@
+{
+  description: "Virtual Desktop - Off",
+  tasks: [
+    {
+      description: "Disable virtual desktop",
+      type: "regedit",
+      path: "Software\\Wine\\Explorer",
+      filename: 'user.reg',
+      values: {
+        Desktop: ""
+      }
+    }
+  ]
+}

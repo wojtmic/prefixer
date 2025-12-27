@@ -1,6 +1,7 @@
 {
-    description: "Visual C++ 2008-2022 Redistributable (x86 & x64)",
+    description: "Visual C++ 2005-2022 Redistributable (x86 & x64)",
     tasks: [
+        {description: "VCRUN 2005", type: "tweak", name: "libs.ms.vcrun2005"},
         {description: "VCRUN 2008", type: "tweak", name: "libs.ms.vcrun2008"},
         {description: "VCRUN 2010", type: "tweak", name: "libs.ms.vcrun2010"},
         {description: "VCRUN 2012", type: "tweak", name: "libs.ms.vcrun2012"},

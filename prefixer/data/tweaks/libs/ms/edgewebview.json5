@@ -1,0 +1,18 @@
+{
+    description: "Microsoft Edge WebView 2",
+    tasks: [
+        {
+            description: "Download installer",
+            type: "download",
+            url: "https://go.microsoft.com/fwlink/p/?LinkId=2124703",
+            checksum: "df48e18b6708cdc994edf1b570a1c8180058eb2ad43ed471d1eba9670d332159",
+            filename: "installer.exe",
+        },
+        {
+            description: "Install package",
+            type: "run_exe",
+            path: "installer.exe",
+            args: ["/silent", "/install"],
+        }
+    ],
+}

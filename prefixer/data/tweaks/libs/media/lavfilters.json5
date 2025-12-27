@@ -1,0 +1,23 @@
+{
+  description: "LAV Filters (Video/Audio Codecs)",
+  tasks: [
+    {
+      description: "Download LAV Filters",
+      type: "download",
+      url: "https://github.com/Nevcairiel/LAVFilters/releases/download/0.79.2/LAVFilters-0.79.2-Installer.exe",
+      checksum: "99c6e095f25e9a3211862d2ccb8efd8063ef8cac54b36031a4203bdbcb949029",
+      filename: "lavfilters.exe"
+    },
+    {
+      description: "Install LAV Filters",
+      type: "run_exe",
+      path: "lavfilters.exe",
+      args: ["/VERYSILENT", "/NORESTART"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}

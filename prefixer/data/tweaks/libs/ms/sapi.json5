@@ -1,0 +1,14 @@
+{
+  description: "SAPI (Speech API)",
+  tasks: [
+    {
+      description: "Set DLL override for SAPI",
+      type: "regedit",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
+      values: {
+        sapi: "native,builtin"
+      }
+    }
+  ]
+}

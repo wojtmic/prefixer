@@ -1,0 +1,14 @@
+{
+  description: "GLUT (OpenGL Utility Toolkit)",
+  tasks: [
+    {
+      description: "Set DLL override for GLUT",
+      type: "regedit",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
+      values: {
+        glut32: "native,builtin"
+      }
+    }
+  ]
+}

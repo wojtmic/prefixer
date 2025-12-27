@@ -1,0 +1,23 @@
+{
+  description: "NVIDIA PhysX Legacy Runtime (Batman Arkham, Borderlands, etc)",
+  tasks: [
+    {
+      description: "Download PhysX Legacy",
+      type: "download",
+      url: "https://us.download.nvidia.com/Windows/9.17.0524/PhysX-9.17.0524-SystemSoftware.exe",
+      checksum: "7dfedc01439826f367feadd76ee00615dc855b035e57a07bfd75b7566d90585d",
+      filename: "physx.exe"
+    },
+    {
+      description: "Install PhysX",
+      type: "run_exe",
+      path: "physx.exe",
+      args: ["/s"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}

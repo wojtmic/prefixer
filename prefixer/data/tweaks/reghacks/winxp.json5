@@ -1,0 +1,14 @@
+{
+  description: "Set Windows version to Windows XP",
+  tasks: [
+    {
+      description: "Override Windows version",
+      type: "regedit",
+      path: "Software\\Wine",
+      filename: 'user.reg',
+      values: {
+        Version: "winxp"
+      }
+    }
+  ]
+}

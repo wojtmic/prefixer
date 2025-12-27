@@ -1,0 +1,36 @@
+{
+  description: "MS .NET Core 3.1.31 Desktop Runtime",
+  tasks: [
+    {
+      description: "Download x64 runtime",
+      type: "download",
+      url: "https://download.visualstudio.microsoft.com/download/pr/f68e8704-171f-47dc-88a5-40572a22319a/43a6b2785e73b2177a4401ceccd01ef3/windowsdesktop-runtime-3.1.31-win-x64.exe",
+      checksum: "94468ec7fa1c0d989e1ce24334b8811f4057a59c25bfa93289742aaa8859b548",
+      filename: "dotnetcore31_x64.exe"
+    },
+    {
+      description: "Download x86 runtime",
+      type: "download",
+      url: "https://download.visualstudio.microsoft.com/download/pr/df67c05e-3019-4d7f-846b-e08b92924b60/18a670ed3b1b60c5f7061f7bdaa6f7f6/windowsdesktop-runtime-3.1.31-win-x86.exe",
+      checksum: "a6139dfcb17823bf035469c1fabaaba655bb959260d0fc6f6c8aa5b588be48ae",
+      filename: "dotnetcore31_x86.exe"
+    },
+    {
+      description: "Install x86 runtime",
+      type: "run_exe",
+      path: "dotnetcore31_x86.exe",
+      args: ["/install", "/quiet", "/norestart"]
+    },
+    {
+      description: "Install x64 runtime",
+      type: "run_exe",
+      path: "dotnetcore31_x64.exe",
+      args: ["/install", "/quiet", "/norestart"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}

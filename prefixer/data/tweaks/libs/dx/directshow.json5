@@ -1,0 +1,20 @@
+{
+  description: "DirectShow (Video Playback)",
+  tasks: [
+    {
+      description: "Set DLL overrides for DirectShow",
+      type: "regedit",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
+      values: {
+        amstream: "native,builtin",
+        devenum: "native,builtin",
+        qasf: "native,builtin",
+        qcap: "native,builtin",
+        qdvd: "native,builtin",
+        qedit: "native,builtin",
+        quartz: "native,builtin"
+      }
+    }
+  ]
+}

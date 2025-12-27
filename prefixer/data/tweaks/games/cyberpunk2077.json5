@@ -14,7 +14,8 @@
         {
             description: "Set winmm and version overrides",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Wine\\DllOverrides",
+            path: "Software\\Wine\\DllOverrides",
+            filename: 'user.reg',
             values: {
                 winmm: "native,builtin",
                 version: "native,builtin",
