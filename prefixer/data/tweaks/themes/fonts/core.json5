@@ -67,10 +67,10 @@
       args: ["-d", "<tempdir>/fonts", "<tempdir>/trebuc32.exe"]
     },
     // Arial
-    { description: "Install Arial", type: "install_font", filename: "<tempdir>/fonts/arial.ttf", name: "Arial (TrueType)" },
-    { description: "Install Arial Bold", type: "install_font", filename: "<tempdir>/fonts/arialbd.ttf", name: "Arial Bold (TrueType)" },
-    { description: "Install Arial Italic", type: "install_font", filename: "<tempdir>/fonts/ariali.ttf", name: "Arial Italic (TrueType)" },
-    { description: "Install Arial Bold Italic", type: "install_font", filename: "<tempdir>/fonts/arialbi.ttf", name: "Arial Bold Italic (TrueType)" },
+    { description: "Install Arial", type: "install_font", filename: "<tempdir>/fonts/Arial.TTF", name: "Arial (TrueType)" },
+    { description: "Install Arial Bold", type: "install_font", filename: "<tempdir>/fonts/Arialbd.TTF", name: "Arial Bold (TrueType)" },
+    { description: "Install Arial Italic", type: "install_font", filename: "<tempdir>/fonts/Ariali.TTF", name: "Arial Italic (TrueType)" },
+    { description: "Install Arial Bold Italic", type: "install_font", filename: "<tempdir>/fonts/Arialbi.TTF", name: "Arial Bold Italic (TrueType)" },
     // Courier New
     { description: "Install Courier New", type: "install_font", filename: "<tempdir>/fonts/cour.ttf", name: "Courier New (TrueType)" },
     { description: "Install Courier New Bold", type: "install_font", filename: "<tempdir>/fonts/courbd.ttf", name: "Courier New Bold (TrueType)" },
