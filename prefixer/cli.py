@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import click
 from click.shell_completion import shell_complete
-
+from rapidfuzz import process
 from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
@@ -50,7 +50,9 @@ def prefixer(ctx, game_id: str, quiet: bool):
 
         pfx_path = steam.get_prefix_path(game_id)
         if pfx_path is None:
-            index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
+            names = [d["name"] for d in games]
+            # index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
+            match_str, score, index = process.extractOne(game_id, names)
             if not index is None:
                 ctx.obj['GAME_ID'] = games[index]['appid']
                 game_id = ctx.obj['GAME_ID']
@@ -81,16 +83,16 @@ def prefixer(ctx, game_id: str, quiet: bool):
         ctx.obj['GAME_PATH'] = os.getcwd()
         ctx.obj['BINARY_PATH'] = shutil.which('wine')
 
-    pfxOverride = os.environ.get('PREFIX_PATH', '')
-    gamePathOverride = os.environ.get('PROGRAM_PATH', '')
-    binaryOverride = os.environ.get('WINE_BINARY', '')
+    pfx_override = os.environ.get('PREFIX_PATH', '')
+    game_path_override = os.environ.get('PROGRAM_PATH', '')
+    binary_override = os.environ.get('WINE_BINARY', '')
 
-    if pfxOverride != '':
-        ctx.obj['PFX_PATH'] = pfxOverride
-    if gamePathOverride != '':
-        ctx.obj['GAME_PATH'] = gamePathOverride
-    if binaryOverride != '':
-        ctx.obj['BINARY_PATH'] = binaryOverride
+    if pfx_override != '':
+        ctx.obj['PFX_PATH'] = pfx_override
+    if game_path_override != '':
+        ctx.obj['GAME_PATH'] = game_path_override
+    if binary_override != '':
+        ctx.obj['BINARY_PATH'] = binary_override
 
     game_id_styled = click.style(ctx.obj['GAME_ID'], fg='bright_blue')
 
@@ -99,6 +101,11 @@ def prefixer(ctx, game_id: str, quiet: bool):
         click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
         click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
         click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
+
+    if None in [ctx.obj['PFX_PATH'], ctx.obj['GAME_PATH'], ctx.obj['BINARY_PATH']]:
+        click.secho('ERROR: The game has to be launched at least once AND Steam has to be restarted for proper detection to work.', fg='bright_red')
+        click.secho('This is due to a technical limitation in how Prefixer reads Steam files, we are currently not able to do anything about this.', fg='bright_red')
+        sys.exit(1)
 
 @prefixer.command()
 @click.pass_context
