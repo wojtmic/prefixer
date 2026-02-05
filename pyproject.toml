@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.scripts]
-prefixer = "prefixer.cli:prefixer"
+prefixer = "prefixer.cli:main"
 #prefixerrun = "prefixer.dialog:runDialog"
 
 [tool.setuptools.packages.find]
