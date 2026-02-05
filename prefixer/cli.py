@@ -24,8 +24,29 @@ def print_version(ctx, param, value):
     click.echo(f'Made with {click.style(' ', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
     ctx.exit()
 
+
+def list_tweaks(ctx, param, value):
+    if not value or ctx.resilient_parsing: return
+    all_tweaks = get_tweaks()
+
+    if not all_tweaks:
+        click.secho("No tweaks found! Have you installed Prefixer correctly?", fg='bright_red')
+        ctx.exit()
+
+    max_len = max(len(name) for name in all_tweaks.keys())
+
+    for name, tweak in all_tweaks.items():
+        padding = " " * (max_len - len(name))
+        name_styled = click.style(name, fg='bright_blue')
+        desc_styled = click.style(tweak.description, bold=True)
+
+        click.echo(f"{name_styled}{padding} - {desc_styled}")
+
+    ctx.exit()
+
 @click.group()
 @click.option('--version', '-v', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
+@click.option('--list-tweaks', is_flag=True, callback=list_tweaks, expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
