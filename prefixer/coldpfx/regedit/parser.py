@@ -11,38 +11,43 @@ def parse_hive(hive_raw: List[str]):
 
     node = None
     nodes = {}
-    arch = 'win32'
+    current_key = None
+    arch = None
 
     for line in hive_raw:
-        line = line.strip()
+        clean_line = line.strip()
 
-        if line.startswith('#arch='):
-            arch = line.split('=')[1].strip()
+        if clean_line.startswith('#arch='):
+            arch = clean_line.split('=')[1].strip()
             continue
 
-        node_match = node_header_pattern.match(line)
-
+        node_match = node_header_pattern.match(clean_line)
         if node_match:
             key_path = node_match.group('key_path')
             timestamp = int(node_match.group('timestamp'))
-
             node = RegistryNode(key_path, timestamp, {})
             nodes[key_path] = node
             continue
 
         if node:
-            value_match = value_pattern.match(line)
+            if line.startswith("  ") and current_key:
+                new_val = node.values[current_key] + "\n" + line.rstrip()
+                node.values[current_key] = new_val
+                continue
+
+            value_match = value_pattern.match(clean_line)
             if value_match:
                 if value_match.group('default'):
                     key = '@'
                 else:
                     key = value_match.group('key').replace(r'\"', '"').replace(r'\\', '\\')
 
-                value = value_match.group('value')
-                node.set(key, value)
+                current_key = key
+                node.set(key, value_match.group('value'))
                 node.changed = False
                 continue
 
+    if not arch: arch = 'win64'
     return RegistryHive(header, relative, nodes, arch)
 
 def parse_hive_file(path: str):
