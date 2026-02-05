@@ -25,7 +25,7 @@ def print_version(ctx, param, value):
     ctx.exit()
 
 @click.group()
-@click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
+@click.option('--version', '-v', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
