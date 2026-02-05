@@ -54,9 +54,8 @@ def prefixer(ctx, game_id: str, quiet: bool):
             # index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
             output = process.extractOne(game_id, names, score_cutoff=50)
             if not output: raise excs.NoPrefixError
-            print(len(output))
             match_str, score, index = output
-            print(score)
+
             if not index is None:
                 ctx.obj['GAME_ID'] = games[index]['appid']
                 game_id = ctx.obj['GAME_ID']
