@@ -153,6 +153,7 @@ def openpfx(ctx):
     """
     Opens the wineprefix folder in your file manager
     """
+    click.echo('Opening wineprefix directory in your file manager...')
     subprocess.run(['xdg-open', ctx.obj['PFX_PATH']])
 
 @prefixer.command()
@@ -161,6 +162,7 @@ def opengamedir(ctx):
     """
     Opens the gamedir folder in your file manager
     """
+    click.echo('Opening game directory in your file manager...')
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
 @prefixer.command()
