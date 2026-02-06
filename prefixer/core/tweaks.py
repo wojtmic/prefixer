@@ -1,5 +1,6 @@
 from prefixer.core.models import TweakData, TaskContext, RuntimeContext, ConditionContext
 from prefixer.core.paths import TWEAKS_DIR_USER, TWEAKS_DIR_SYSTEM
+from prefixer.core.exceptions import NoTweakError
 import os
 import json5
 from typing import List
@@ -54,6 +55,7 @@ def get_tweaks():
 tweaks = get_tweaks()
 
 def get_tweak(name: str):
+    if not name in tweaks: raise NoTweakError(name)
     return tweaks[name]
 
 def build_tweak(name: str):
