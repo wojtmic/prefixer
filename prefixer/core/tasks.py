@@ -146,7 +146,7 @@ def extract_cab(ctx: TaskContext, runtime: RuntimeContext):
 
     click.echo(f"Extracting CAB {ctx.filename}...")
 
-    subprocess.run(['cabextract', '-d', ctx.path, os.path.join(runtime.operation_path, ctx.filename)], check=True)
+    subprocess.run(['cabextract', '-q', '-d', ctx.path, os.path.join(runtime.operation_path, ctx.filename)], check=True)
 
 @task
 @required_context('path', 'new_path')
