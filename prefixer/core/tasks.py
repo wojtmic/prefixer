@@ -200,7 +200,7 @@ def install_font(ctx: TaskContext, runtime: RuntimeContext):
     shutil.copy(source_path, dest_path)
 
     regedit_ctx = TaskContext('Apply registry edit for font', 'regedit',
-                              path='Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Fonts',
+                              path='Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts',
                               values={ctx.name: ctx.filename},
                               filename='system.reg')
     regedit(regedit_ctx, runtime)
