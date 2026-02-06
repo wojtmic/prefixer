@@ -27,7 +27,7 @@ def download(ctx: TaskContext, runtime: RuntimeContext):
     else:
         try:
             headers = {
-                'User-Agent': 'Prefixer/1.3.2 (Linux; OpenSource)'
+                'User-Agent': 'Prefixer/1.3.2 (Linux)'
             }
 
             with requests.get(ctx.url, stream=True, headers=headers) as response:
