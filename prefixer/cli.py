@@ -247,8 +247,10 @@ def main():
         prefixer(standalone_mode=False)
 
     except click.ClickException as e:
-        # Standard Click errors (help, missing options) still need to be shown
         e.show()
+
+    except click.Abort:
+        click.secho('Operation aborted by user.', fg='bright_red')
 
     except excs.NoTweakError:
         click.secho('ERROR: The specified tweak wasn\'t found!', fg='bright_red')
