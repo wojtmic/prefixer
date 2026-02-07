@@ -1,0 +1,24 @@
+{
+  description: 'Microsoft Impact Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/impact32.exe",
+      checksum: "6061ef3b7401d9642f5dfdb5f2b376aa14663f6275e60a51207ad4facf2fccfb",
+      filename: "impact32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'impact32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'Impact.TTF',
+      name: 'Impact (TrueType)'
+    }
+  ]
+}

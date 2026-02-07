@@ -15,25 +15,25 @@
       path: '<tempdir>'
     },
     {
-      description: 'Install basic',
+      description: 'Install Regular',
       type: 'install_font',
       filename: 'Arial.TTF',
       name: 'Arial (TrueType)'
     },
     {
-      description: 'Install bold',
+      description: 'Install Bold',
       type: 'install_font',
       filename: 'Arialbd.TTF',
       name: 'Arial Bold (TrueType)'
     },
     {
-      description: 'Install italic',
+      description: 'Install Italic',
       type: 'install_font',
       filename: 'Ariali.TTF',
       name: 'Arial Italic (TrueType)'
     },
     {
-      description: 'Install bold italic',
+      description: 'Install Bold Italic',
       type: 'install_font',
       filename: 'Arialbi.TTF',
       name: 'Arial Bold Italic (TrueType)'

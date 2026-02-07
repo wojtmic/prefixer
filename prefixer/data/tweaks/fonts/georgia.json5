@@ -1,0 +1,42 @@
+{
+  description: 'Microsoft Georgia Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/georgi32.exe",
+      checksum: "2c2c7dcda6606ea5cf08918fb7cd3f3359e9e84338dc690013f20cd42e930301",
+      filename: "georgi32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'georgi32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'Georgia.TTF',
+      name: 'Georgia (TrueType)'
+    },
+    {
+      description: 'Install Bold',
+      type: 'install_font',
+      filename: 'Georgiab.TTF',
+      name: 'Georgia Bold (TrueType)'
+    },
+    {
+      description: 'Install Italic',
+      type: 'install_font',
+      filename: 'Georgiai.TTF',
+      name: 'Georgia Italic (TrueType)'
+    },
+    {
+      description: 'Install Bold Italic',
+      type: 'install_font',
+      filename: 'Georgiaz.TTF',
+      name: 'Georgia Bold Italic (TrueType)'
+    }
+  ]
+}
