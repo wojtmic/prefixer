@@ -12,7 +12,7 @@ class Tweak:
         self.tasks = tasks
         self.conditions = conditions
 
-TWEAKS_PATHS = [TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER, TWEAKS_DIR_PACKAGE]
+TWEAKS_PATHS = [TWEAKS_DIR_PACKAGE, TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
 
 def index_tweak_folder(folder: str, layer: str = ''):
     tweak_files = os.listdir(folder)
