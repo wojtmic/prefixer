@@ -1,0 +1,18 @@
+{
+  description: 'NVIDIA PhysX Legacy System Software (9.13.0604)',
+  tasks: [
+    {
+      description: 'Download Installer',
+      type: 'download',
+      url: 'https://us.download.nvidia.com/Windows/9.13.0604/PhysX-9.13.0604-SystemSoftware-Legacy.msi',
+      filename: 'physx_legacy.msi',
+      checksum: '1e52f146497f1f3a9e69123089d7b48325992f1539e605d31518b3684a0058b8'
+    },
+    {
+      description: 'Run Installer',
+      type: 'run_exe',
+      path: 'msiexec',
+      args: ['/i', '<tempdir>/physx_legacy.msi', '/quiet', '/norestart']
+    }
+  ]
+}
