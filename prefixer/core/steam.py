@@ -114,3 +114,37 @@ def get_proton_path(name: str):
         raise NoProtonError
     else:
         raise NoProtonError
+
+def get_last_user():
+    with open(os.path.expanduser('~/.local/share/Steam/config/loginusers.vdf'), 'r') as f:
+        data = vdf.loads(f.read())
+
+    for i in data['users']:
+        if data['users'][i]['MostRecent'] == '1': return i, data['users'][i]
+
+    return 0, {
+        'AccountName': 'NO LAST LOGIN',
+        'PersonaName': 'NO LAST LOGIN'
+    }
+
+def get_shortcuts(user_id: str):
+    account_id = int(user_id) & 0xFFFFFFFF
+    with open(os.path.expanduser(f'~/.local/share/Steam/userdata/{account_id}/config/shortcuts.vdf'), 'rb') as f:
+        data = vdf.binary_loads(f.read())
+
+    return data
+
+def build_shortcut_manifest(user_id: str):
+    manifest = []
+    shortcuts = get_shortcuts(user_id)
+    for shortcut in shortcuts:
+        obj = shortcuts[shortcut]['0']
+        unsigned_id = int(obj['appid']) & 0xFFFFFFFF # we have to unsign the number for whatever reason
+        manifest.append({
+            'id': unsigned_id,
+            'name': obj['AppName'],
+            'path': obj['StartDir'],
+            'prefix': os.path.expanduser(f'~/.local/share/Steam/steamapps/compatdata/{unsigned_id}/')
+        })
+
+    return manifest

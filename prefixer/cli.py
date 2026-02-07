@@ -10,6 +10,7 @@ from prefixer.core import exceptions as excs
 import tempfile
 import sys
 from prefixer.coldpfx import resolve_path
+from prefixer.core.exceptions import NoPrefixError
 from prefixer.core.models import RuntimeContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.tweaks import get_tweaks
@@ -67,6 +68,7 @@ def prefixer(ctx, game_id: str, quiet: bool):
     if os.environ.get('NO_STEAM', 'false').lower() != 'true':
         games = steam.build_game_manifest()
 
+        game_path = ''
         ctx.obj = {'GAME_ID': game_id}
 
         pfx_path = steam.get_prefix_path(game_id)
@@ -74,16 +76,35 @@ def prefixer(ctx, game_id: str, quiet: bool):
             names = [d["name"] for d in games]
             # index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
             output = process.extractOne(game_id, names, score_cutoff=50)
-            if not output: raise excs.NoPrefixError
-            match_str, score, index = output
+            if output:
+                match_str, score, index = output
 
-            if not index is None:
-                ctx.obj['GAME_ID'] = games[index]['appid']
-                game_id = ctx.obj['GAME_ID']
-                pfx_path = steam.get_prefix_path(game_id)
+                if not index is None:
+                    ctx.obj['GAME_ID'] = games[index]['appid']
+                    game_id = ctx.obj['GAME_ID']
+                    pfx_path = steam.get_prefix_path(game_id)
+                else:
+                    raise excs.NoPrefixError
             else:
-                raise excs.NoPrefixError
+                user_id, user = steam.get_last_user()
+                if user_id == 0:
+                    click.secho('Weird! Your Steam data has no last login user. Have you logged into Steam before?',
+                                fg='bright_black')
+                    raise excs.NoPrefixError
 
+                shortcuts = steam.build_shortcut_manifest(user_id)
+                s_names = [d['name'] for d in shortcuts]
+
+                output = process.extractOne(game_id, s_names, score_cutoff=50)
+
+                if not output: raise excs.NoPrefixError
+
+                match_str, score, index = output
+
+                ctx.obj['GAME_ID'] = shortcuts[index]['id']
+                game_id = ctx.obj['GAME_ID']
+                pfx_path = shortcuts[index]['prefix']
+                game_path = shortcuts[index]['path']
 
         proton_ver = steam.get_compat_tool(game_id)
         if 'steamlinuxruntime' in proton_ver:
@@ -95,7 +116,7 @@ def prefixer(ctx, game_id: str, quiet: bool):
         ctx.obj['PROTON_VER'] = proton_ver
         ctx.obj['PFX_PATH'] = pfx_path
 
-        game_path = steam.get_installdir(game_id)
+        if not game_path: game_path = steam.get_installdir(game_id)
         ctx.obj['GAME_PATH'] = game_path
 
         ctx.obj['BINARY_PATH'] = os.path.join(proton_path, 'proton')
@@ -240,6 +261,14 @@ def wipe(ctx):
     if not click.confirm('Are you sure you want to wipe the prefix?'): return
 
     shutil.rmtree(ctx.obj['PFX_PATH'])
+
+@prefixer.command()
+@click.pass_context
+def info(ctx):
+    """
+    Prints (debug) information about the prefix
+    """
+    click.echo('='*20)
 
 # if __name__ == '__main__':
 def main():
