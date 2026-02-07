@@ -30,7 +30,7 @@ def download(ctx: TaskContext, runtime: RuntimeContext):
                 'User-Agent': 'Prefixer/1.3.2 (Linux)'
             }
 
-            with requests.get(ctx.url, stream=True, headers=headers) as response:
+            with requests.get(ctx.url, stream=True, headers=headers, allow_redirects=True) as response:
                 response.raise_for_status()
 
                 total_size = int(response.headers.get('content-length', 0))
