@@ -1,5 +1,5 @@
 from prefixer.core.models import TweakData, TaskContext, RuntimeContext, ConditionContext
-from prefixer.core.paths import TWEAKS_DIR_USER, TWEAKS_DIR_SYSTEM
+from prefixer.core.paths import TWEAKS_DIR_USER, TWEAKS_DIR_SYSTEM, TWEAKS_DIR_PACKAGE
 from prefixer.core.exceptions import NoTweakError
 import os
 import json5
@@ -12,7 +12,7 @@ class Tweak:
         self.tasks = tasks
         self.conditions = conditions
 
-TWEAKS_PATHS = [TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
+TWEAKS_PATHS = [TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER, TWEAKS_DIR_PACKAGE]
 
 def index_tweak_folder(folder: str, layer: str = ''):
     tweak_files = os.listdir(folder)

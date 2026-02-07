@@ -36,6 +36,12 @@ prefixer = "prefixer.cli:main"
 where = ["."]
 include = ["prefixer*"]
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+prefixer = ["data/**/*.json5"]
+
 [dependency-groups]
 dev = [
     "pytest>=9.0.2",
