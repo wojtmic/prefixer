@@ -19,4 +19,11 @@ prefixer 'Balatro' openpfx # opens the wineprefix folder in your file manager
 Alongside more! Run `prefixer --help` or `prefixer --list-tweaks` for everything!
 
 ## Installation
-The official way of downloading Prefixer is from the [AUR](https://aur.archlinux.org/packages/prefixer) under the package name `prefixer`. This approach only works on Arch Linux. If you use another distro, Prefixer is also on PyPI: Use pipx with `pipx install prefixer`
+On Arch install `prefixer` with your favorite AUR helper, for example:
+```bash
+yay -S prefixer
+```
+On any other distro, use pipx to get it from the AUR:
+```bash
+pipx install prefixer
+```
