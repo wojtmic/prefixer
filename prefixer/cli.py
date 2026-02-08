@@ -225,9 +225,9 @@ def complete_tweaks(ctx, param, incomplete):
     return suggestions
 
 @prefixer.command()
-@click.argument('tweak_name', shell_complete=complete_tweaks)
+@click.argument('tweak_names', shell_complete=complete_tweaks, nargs=-1)
 @click.pass_context
-def tweak(ctx, tweak_name: str):
+def tweak(ctx, tweak_names: list[str]):
     """
     Apply a tweak
     """
@@ -236,15 +236,17 @@ def tweak(ctx, tweak_name: str):
     game_path = ctx.obj['GAME_PATH']
     game_id = ctx.obj['GAME_ID']
 
-    target_tweak = tweaks.build_tweak(tweak_name)
+    for tweak_name in tweak_names:
+        target_tweak = tweaks.build_tweak(tweak_name)
 
-    click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
+        click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
 
-    with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
-        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
-        run_tweak(runtime, target_tweak, tweak_name)
+        with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
+            runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
+            run_tweak(runtime, target_tweak, tweak_name)
 
-    click.secho('All tasks completed successfully!', fg='bright_green')
+        click.secho('All tasks completed successfully!', fg='bright_green')
+    click.secho('All tweaks completed!', fg='bright_green')
 
 @prefixer.command()
 @click.pass_context
