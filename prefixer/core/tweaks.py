@@ -12,7 +12,8 @@ class Tweak:
         self.tasks = tasks
         self.conditions = conditions
 
-TWEAKS_PATHS = [TWEAKS_DIR_PACKAGE, TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
+# TWEAKS_PATHS = [TWEAKS_DIR_PACKAGE, TWEAKS_DIR_SYSTEM, TWEAKS_DIR_USER]
+TWEAKS_PATHS = [TWEAKS_DIR_USER, TWEAKS_DIR_SYSTEM, TWEAKS_DIR_PACKAGE]
 
 def index_tweak_folder(folder: str, layer: str = ''):
     tweak_files = os.listdir(folder)
@@ -26,12 +27,14 @@ def index_tweak_folder(folder: str, layer: str = ''):
 
         if not (tweak.endswith('.json5') or tweak.endswith('.json')): continue
 
+        tweak_name = tweak.split('.')[0]
+        if f'{layer}{tweak_name}' in tweaks: continue
+
         with open(path, 'r') as f:
             obj: dict = json5.loads(f.read())
 
         tasks = obj['tasks']
         desc = obj['description']
-        tweak_name = tweak.split('.')[0]
 
         if 'conditions' in obj: conditions = obj['conditions']
         else: conditions = []
