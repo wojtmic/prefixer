@@ -2,7 +2,6 @@ import os
 import shutil
 import subprocess
 import click
-from click.shell_completion import shell_complete
 from rapidfuzz import process
 from prefixer.core import steam
 from prefixer.core import tweaks
@@ -10,10 +9,9 @@ from prefixer.core import exceptions as excs
 import tempfile
 import sys
 from prefixer.coldpfx import resolve_path
-from prefixer.core.exceptions import NoPrefixError
 from prefixer.core.models import RuntimeContext
 from prefixer.core.helpers import run_tweak
-from prefixer.core.tweaks import get_tweaks
+from prefixer.core.tweaks import get_tweaks, get_tweak_names
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
 
@@ -218,7 +216,7 @@ def resolve(ctx, path: str):
 
 def complete_tweaks(ctx, param, incomplete):
     try:
-        available_tweaks = get_tweaks().keys()
+        available_tweaks = get_tweak_names()
     except Exception:
         return []
 

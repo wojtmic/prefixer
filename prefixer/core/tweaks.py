@@ -52,9 +52,8 @@ def get_tweaks():
 
     return all_tweaks
 
-tweaks = get_tweaks()
-
 def get_tweak(name: str):
+    tweaks = get_tweaks()
     if not name in tweaks: raise NoTweakError(name)
     return tweaks[name]
 
@@ -70,3 +69,31 @@ def build_tweak(name: str):
         conditions.append(ConditionContext(**c))
 
     return Tweak(name=tweak.name, description=tweak.description, conditions=conditions, tasks=tasks)
+
+
+def scan_tweak_names(folder: str, layer: str = ''):
+    names = set()
+    if not os.path.exists(folder):
+        return names
+
+    try:
+        entries = os.listdir(folder)
+    except PermissionError:
+        return names
+
+    for entry in entries:
+        path = os.path.join(folder, entry)
+        if os.path.isdir(path):
+            names.update(scan_tweak_names(path, f"{layer}{entry}."))
+        elif entry.endswith(('.json', '.json5')):
+            tweak_name = entry.split('.')[0]
+            names.add(f"{layer}{tweak_name}")
+
+    return names
+
+
+def get_tweak_names():
+    all_names = set()
+    for tweakpath in TWEAKS_PATHS:
+        all_names.update(scan_tweak_names(tweakpath))
+    return all_names
