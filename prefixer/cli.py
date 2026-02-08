@@ -20,7 +20,7 @@ def print_version(ctx, param, value):
     click.echo(f'{click.style('Prefixer', fg='bright_blue')} v1.3.2-Turing')
     click.echo(f'Wineprefix management tool by {click.style('Wojtmic', fg='bright_blue')}')
     click.echo('Licensed under GPL-3.0 - Source https://github.com/wojtmic/prefixer')
-    click.echo(f'Made with {click.style(' ', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
+    click.echo(f'Made with {click.style('', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
     ctx.exit()
 
 
