@@ -7,6 +7,8 @@ Prefixer:
 - is **up to 40 times faster** than legacy methods by modifying files directly (no wineserver)
 - instead of "verbs" uses a declarative **json5 format** for tweaks, so you can share your work
 - includes built-in first-class **Steam support**
+![output](https://github.com/user-attachments/assets/69e49b07-e332-4bc2-80d5-b9e1f16b0578)
+*Overriding winhttp for BepInEx, compared to protontricks*
 
 ## Usage
 ```bash
