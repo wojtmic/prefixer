@@ -23,7 +23,7 @@ On Arch install `prefixer` with your favorite AUR helper, for example:
 ```bash
 yay -S prefixer
 ```
-On any other distro, use pipx to get it from the AUR:
+On any other distro, use pipx to get it from PyPI:
 ```bash
 pipx install prefixer
 ```
