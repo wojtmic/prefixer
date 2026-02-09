@@ -274,6 +274,7 @@ def info(ctx):
 def main():
     try:
         prefixer(standalone_mode=False)
+        sys.exit(0)
 
     except click.ClickException as e:
         e.show()
@@ -303,3 +304,5 @@ def main():
 
     except excs.InternalExeError:
         click.secho('ERROR: There was an error while running an external exe within the tweak!', fg='bright_red')
+
+    sys.exit(1)
