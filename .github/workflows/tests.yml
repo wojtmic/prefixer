@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - '**.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - '**.py'
+      - 'pyproject.toml'
+      - 'uv.lock'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          # Automatically manages the uv cache to speed up subsequent runs
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        # Syncs all dependencies including the 'dev' group which contains pytest
+        run: uv sync --all-groups
+
+      - name: Run tests
+        # Executes pytest within the synchronized environment
+        run: uv run pytest
