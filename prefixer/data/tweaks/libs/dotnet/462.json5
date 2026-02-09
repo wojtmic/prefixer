@@ -1,0 +1,23 @@
+{
+  description: "MS .NET Framework 4.6.2",
+  tasks: [
+    {
+      description: "Download installer",
+      type: "download",
+      url: "https://go.microsoft.com/fwlink/?linkid=780597",
+      checksum: "67242c8fe953d454edb4171023343f33740e3d16e8469a4b0c11bd42eb85f3fa",
+      filename: "dotnet462_installer.exe"
+    },
+    {
+      description: "Install package",
+      type: "run_exe",
+      path: "dotnet462_installer.exe",
+      args: ["/q", "/norestart"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}

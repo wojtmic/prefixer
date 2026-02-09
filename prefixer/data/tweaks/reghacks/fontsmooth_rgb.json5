@@ -1,0 +1,17 @@
+{
+  description: "Font Smoothing - RGB Subpixel",
+  tasks: [
+    {
+      description: "Enable RGB font smoothing",
+      type: "regedit",
+      path: "Control Panel\\Desktop",
+      filename: 'user.reg',
+      values: {
+        FontSmoothing: "2",
+        FontSmoothingType: "dword:2",
+        FontSmoothingGamma: "dword:578",
+        FontSmoothingOrientation: "dword:1"
+      }
+    }
+  ]
+}

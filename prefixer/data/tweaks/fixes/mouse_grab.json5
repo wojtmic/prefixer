@@ -4,7 +4,8 @@
         {
             description: "Enable X11 GrabFullscreen",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Wine\\X11 Driver",
+            path: "Software\\Wine\\X11 Driver",
+            filename: 'user.reg',
             values: {
                 GrabFullscreen: "Y",
             },
@@ -12,7 +13,8 @@
         {
             description: "Enable DXGrab (DirectInput)",
             type: "regedit",
-            path: "HKEY_CURRENT_USER\\Software\\Wine\\DirectInput",
+            path: "Software\\Wine\\DirectInput",
+            filename: 'user.reg',
             values: {
                 UseNative: "N",
             },

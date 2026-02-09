@@ -1,0 +1,23 @@
+{
+  description: "Virtual Desktop 1920x1080",
+  tasks: [
+    {
+      description: "Enable virtual desktop",
+      type: "regedit",
+      path: "Software\\Wine\\Explorer\\Desktops",
+      filename: 'user.reg',
+      values: {
+        Default: "1920x1080"
+      }
+    },
+    {
+      description: "Set explorer to use virtual desktop",
+      type: "regedit",
+      path: "Software\\Wine\\Explorer",
+      filename: 'user.reg',
+      values: {
+        Desktop: "Default"
+      }
+    }
+  ]
+}

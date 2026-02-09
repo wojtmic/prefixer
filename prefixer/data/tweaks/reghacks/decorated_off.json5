@@ -1,0 +1,14 @@
+{
+  description: "Undecorated Windows (Borderless)",
+  tasks: [
+    {
+      description: "Disable window decorations",
+      type: "regedit",
+      path: "Software\\Wine\\X11 Driver",
+      filename: 'user.reg',
+      values: {
+        Decorated: "N"
+      }
+    }
+  ]
+}
