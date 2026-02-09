@@ -2,7 +2,7 @@ import os
 import shutil
 import subprocess
 import click
-from rapidfuzz import process
+from rapidfuzz import process, fuzz
 from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
@@ -43,9 +43,34 @@ def list_tweaks(ctx, param, value):
 
     ctx.exit()
 
+def search_tweaks(ctx, param, query):
+    all_tweaks = get_tweaks()
+    all_tweaks_values = list(all_tweaks.values())
+    ids = list(all_tweaks.keys())
+
+    results = process.extract(
+        query,
+        all_tweaks_values,
+        processor=lambda x: x.description if hasattr(x, 'description') else str(x),
+        limit=5,
+        score_cutoff=30
+    )
+
+    max_len = max(len(ids[index]) for choice, score, index in results)
+
+    for choice, score, index in results:
+        padding = " " * (max_len - len(ids[index]))
+        id_styled = click.style(ids[index], fg='bright_blue')
+        desc_styled = click.style(choice.description, bold=True)
+
+        click.echo(f'{id_styled}{padding} - {desc_styled}')
+
+    ctx.exit()
+
 @click.group()
 @click.option('--version', '-v', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.option('--list-tweaks', is_flag=True, callback=list_tweaks, expose_value=False, is_eager=True)
+@click.option('--search', callback=search_tweaks, help='Search for a tweak', is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
