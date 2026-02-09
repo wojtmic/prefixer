@@ -13,7 +13,8 @@ from prefixer.coldpfx import resolve_path
 from prefixer.core.exceptions import BadTweakError
 from prefixer.core.models import RuntimeContext, TweakData
 from prefixer.core.helpers import run_tweak
-from prefixer.core.tweaks import get_tweaks, get_tweak_names
+from prefixer.core.registry import task_registry, condition_registry
+from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
 
@@ -96,8 +97,15 @@ def validate_tweak(ctx, param, path: str):
     try:
         if not 'conditions' in data: data['conditions'] = []
         data['name'] = path.split('/')[-1]
-        TweakData(**data)
+        t = TweakData(**data)
+        Tweak(t.name, t.description, t.tasks, t.conditions)
     except: raise BadTweakError
+
+    for i in t.tasks:
+        if i['type'] not in task_registry: raise BadTweakError
+
+    for i in t.conditions:
+        if i['type'] not in condition_registry: raise BadTweakError
 
     click.secho('Tweak valid!', fg='bright_green')
     ctx.exit()
