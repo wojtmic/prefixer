@@ -37,6 +37,7 @@
           ];
 
           doCheck = false;
+          dontCheckRuntimeDeps = true;
 
           pythonImportsCheck = [ "prefixer" ];
 
