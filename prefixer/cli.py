@@ -2,14 +2,16 @@ import os
 import shutil
 import subprocess
 import click
-from rapidfuzz import process, fuzz
+import json5
+from rapidfuzz import process
 from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
 import tempfile
 import sys
 from prefixer.coldpfx import resolve_path
-from prefixer.core.models import RuntimeContext
+from prefixer.core.exceptions import BadTweakError
+from prefixer.core.models import RuntimeContext, TweakData
 from prefixer.core.helpers import run_tweak
 from prefixer.core.tweaks import get_tweaks, get_tweak_names
 import prefixer.core.tasks # Import necessary to actually load tasks!
@@ -69,10 +71,42 @@ def search_tweaks(ctx, param, query):
 
     ctx.exit()
 
+def validate_tweak(ctx, param, path: str):
+    if not path or ctx.resilient_parsing: return
+
+    if not os.path.exists(os.path.expanduser(path)):
+        click.secho('The path specified does not exist!', fg='bright_red')
+        sys.exit(1)
+
+    if not path.endswith(('.json5', '.json')):
+        click.secho('The file is not JSON/JSON5 format', fg='bright_red')
+        sys.exit(1)
+
+    if os.path.isdir(path):
+        click.secho('You need to target a file, not dir', fg='bright_red')
+        sys.exit(1)
+
+    with open(path, 'r') as f:
+        try:
+            data: dict = json5.loads(f.read())
+        except:
+            click.secho('This tweak is not in valid JSON5 format!', fg='bright_red')
+            sys.exit(1)
+
+    try:
+        if not 'conditions' in data: data['conditions'] = []
+        data['name'] = path.split('/')[-1]
+        TweakData(**data)
+    except: raise BadTweakError
+
+    click.secho('Tweak valid!', fg='bright_green')
+    ctx.exit()
+
 @click.group()
 @click.option('--version', '-v', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.option('--list-tweaks', is_flag=True, callback=list_tweaks, expose_value=False, is_eager=True)
 @click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
+@click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
