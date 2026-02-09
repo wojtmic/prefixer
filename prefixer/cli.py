@@ -44,6 +44,8 @@ def list_tweaks(ctx, param, value):
     ctx.exit()
 
 def search_tweaks(ctx, param, query):
+    if not query or ctx.resilient_parsing: return
+
     all_tweaks = get_tweaks()
     all_tweaks_values = list(all_tweaks.values())
     ids = list(all_tweaks.keys())
@@ -70,7 +72,7 @@ def search_tweaks(ctx, param, query):
 @click.group()
 @click.option('--version', '-v', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
 @click.option('--list-tweaks', is_flag=True, callback=list_tweaks, expose_value=False, is_eager=True)
-@click.option('--search', callback=search_tweaks, help='Search for a tweak', is_eager=True)
+@click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
