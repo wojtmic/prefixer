@@ -11,10 +11,11 @@ import tempfile
 import sys
 from prefixer.coldpfx import resolve_path
 from prefixer.core.exceptions import BadTweakError
-from prefixer.core.models import RuntimeContext, TweakData
+from prefixer.core.models import RuntimeContext, TweakData, TaskContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.registry import task_registry, condition_registry
 from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
+from prefixer.coldpfx.regedit import parser
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
 
@@ -330,6 +331,51 @@ def wipe(ctx):
     if not click.confirm('Are you sure you want to wipe the prefix?'): return
 
     shutil.rmtree(ctx.obj['PFX_PATH'])
+
+@prefixer.command()
+@click.argument('dll_names', nargs=-1)
+@click.pass_context
+def overridedll(ctx, dll_names: list[str]):
+    """
+    Overrides one or multiple DLLs; do not duplicate names; will list if no args specified
+    """
+    dll_names = set(dll_names) # set for deduplication
+    reg = parser.parse_hive_file(os.path.join(ctx.obj['PFX_PATH'], 'user.reg'))
+    overridden = reg.nodes['Software\\\\Wine\\\\DllOverrides']
+    if not dll_names:
+        max_len = max(len(name) for name in overridden.values.keys())
+
+        for dll, status in overridden.values.items():
+            padding = " " * (max_len - len(dll))
+            click.echo(f'{click.style(dll, fg='bright_blue')}{padding}: {click.style(status, bold=True)}')
+
+        ctx.exit()
+
+    new_status = {}
+    for dll in dll_names:
+        if dll in overridden.values.keys():
+            new_status[dll] = '!prefixer_remove!'
+            click.secho(f'{dll}', fg='bright_red', nl=False)
+
+        else:
+            new_status[dll] = '"native,builtin"'
+            click.secho(f'{dll}', fg='bright_blue', nl=False)
+
+        click.echo(', ', nl=False)
+    click.secho('applying...', fg='bright_black')
+
+    task = TaskContext(
+        description='Manual DLL Override',
+        filename='user.reg',
+        path='Software\\Wine\\DllOverrides',
+        values=new_status,
+        type='regedit'
+    )
+    runtime = RuntimeContext('not needed', ctx.obj['PFX_PATH'], 'not needed', 'not needed', 'not needed', 'not needed')
+
+    task_registry['regedit'](ctx=task, runtime=runtime)
+
+    click.secho('Done!', fg='bright_green')
 
 @prefixer.command()
 @click.pass_context
