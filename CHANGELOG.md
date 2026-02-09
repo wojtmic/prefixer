@@ -1,3 +1,25 @@
+## [1.3.6] - 2026-02-09
+
+### 🚀 Features
+
+- *(cli)* Add help text
+- Add NixOS support (Merge pull request #5 from keygenesis/master)
+- *(cli)* Add overridedll command
+
+### 🐛 Bug Fixes
+
+- Properly set non-Steam pfx path
+- *(coldpfx)* Prefixer_remove not working
+- *(cli)* Overridedll command
+
+### 📚 Documentation
+
+- *(readme)* Improve install instructions
+
+### ⚙️ Development Process
+
+- Add pypi release workflow
+- Update pr-title workflow to allow tweak
 ## [1.3.5] - 2026-02-09
 
 ### 🚀 Features
