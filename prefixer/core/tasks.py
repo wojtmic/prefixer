@@ -300,20 +300,6 @@ def text_replace(ctx: TaskContext, runtime: RuntimeContext):
         f.write(content)
 
 @task
-@required_context('path', 'args')
-def shell(ctx: TaskContext, runtime: RuntimeContext):
-    if not ALLOW_SHELL:
-        click.secho('This tweak uses the `shell` task,', fg='bright_red')
-        click.secho(f'which allows execution of {click.style('ANY LINUX COMMAND', bold=True, fg='bright_red')} {click.style('on', fg='bright_red')} {click.style('YOUR COMPUTER', bold=True, fg='bright_red')}', fg='bright_red')
-        click.secho('Make sure you trust this tweak fully!', fg='bright_red')
-        click.secho('This message can be suppressed/skipped by setting the PF_ALLOW_SHELL environment variable to true!', fg='bright_black')
-
-        if not click.confirm('Do you want to execute the shell task?'): sys.exit(1)
-
-    subprocess.run([ctx.path, *ctx.args])
-
-
-@task
 @required_context('path')
 def register_dll(ctx: TaskContext, runtime: RuntimeContext):
     env = setup_env(runtime)
