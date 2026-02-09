@@ -1,3 +1,51 @@
+## [1.3.5] - 2026-02-09
+
+### 🚀 Features
+
+- *(cli)* Add proper exit codes
+- *(cli)* Add --search arg
+- *(cli)* Add --validate-tweak
+
+### 🐛 Bug Fixes
+
+- *(cli)* Crash when --search not specified
+- *(cli)* Validate tweak types properly
+
+### 📚 Documentation
+
+- *(readme)* Improve installation instructions
+- *(readme)* Correct pypi install instructions
+- Add contributing guide
+- *(readme)* Add comparison showcase gif
+- *(contributing)* Add info on tweak commit type
+
+### 🎨 Styling
+
+- Change winhttp description
+
+### 🧪 Testing
+
+- Move regedit to top level
+- Add basic performance check
+- Add test workflow
+- Add validate-tweaks workflow
+
+### ⚙️ Development Process
+
+- Add tweak commit type for patch notes
+- Add automated release generation action
+- Skip showing release fixes
+- Change chore header
+- Don't show bump ver chores
+- Add autogeneration of title from git cliff header on release
+- Add pr title validator
+- Add pr template
+- Add security group to changelog
+- Add issue templates
+
+### 🛡️ Security
+
+- *(tasks)* Removed shell task
 ## [1.3.4] - 2026-02-08
 
 ### 🚀 Features
@@ -28,6 +76,7 @@
 
 - *(readme)* Rewrite for clarity & add highlights
 - *(readme)* Update pipx info
+- *(changelog)* Add changelog
 
 ### ⚡ Performance
 
@@ -40,11 +89,10 @@
 - *(tasks)* Add -q for cabextract for ux
 - *(cli)* Remove extra space
 
-### ⚙️ Miscellaneous Tasks
+### ⚙️ Development Process
 
-- Bump ver
 - Remove accidental pushed file
 - Add uv.lock to git
 - Add info for pypi
-- Bump ver
 - Add cliff.toml
+## [1.0.0] - 2025-09-14
