@@ -2,7 +2,7 @@
 We appreciate all contributions, whenever you're optimizing, adding features, fixing bugs or simply making more tweaks! However, for the sake of organization, there are a few guidelines you must follow when making a PR.
 
 ## The guidelines
-- If you are contributing tweaks, make sure to follow their [specific guidelines](https://github.com/wojtmic/prefixer/wiki/Tweak-Contribution-Guildelines)
+- If you are contributing tweaks, make sure to follow their [specific guidelines](https://github.com/wojtmic/prefixer/wiki/Tweak-Contribution-Guildelines) and commit as `tweak:` or `tweaks:`
 - Use [Conventional Commits](https://conventionalcommits.org/) for the sake of automated patch notes
 - Under any circumstance, **do not shell out to winetricks** - we are building a modern alternative
 - If possible, it's best to reimplement something in Python or use a dependency (reimplementing > dependency > subprocess)
