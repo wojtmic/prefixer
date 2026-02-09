@@ -144,7 +144,7 @@ def build_shortcut_manifest(user_id: str):
             'id': unsigned_id,
             'name': obj['AppName'],
             'path': obj['StartDir'],
-            'prefix': os.path.expanduser(f'~/.local/share/Steam/steamapps/compatdata/{unsigned_id}/')
+            'prefix': os.path.expanduser(f'~/.local/share/Steam/steamapps/compatdata/{unsigned_id}/pfx/')
         })
 
     return manifest
