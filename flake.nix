@@ -14,7 +14,7 @@
       {
         packages.default = pkgs.python3Packages.buildPythonApplication {
           pname = "prefixer";
-          version = "1.3.4";
+          version = "1.3.5";
           format = "pyproject";
 
           src = ./.;
@@ -62,7 +62,6 @@
             python3Packages.black
             python3Packages.ruff
             wine64
-            winetricks
           ];
         };
 

@@ -25,9 +25,9 @@ On Arch install `prefixer` with your favorite AUR helper, for example:
 ```bash
 yay -S prefixer
 ```
-On NixOS add an input:
+On NixOS add an input (pinned to the most recent release for stability):
 ```nix
-inputs.prefixer.url = "github:wojtmic/prefixer";
+inputs.prefixer.url = "github:wojtmic/prefixer/1.3.5";
 ```
 
 Then add the package:
