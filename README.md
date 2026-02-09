@@ -25,6 +25,18 @@ On Arch install `prefixer` with your favorite AUR helper, for example:
 ```bash
 yay -S prefixer
 ```
+On NixOS add an input:
+```nix
+inputs.prefixer.url = "github:wojtmic/prefixer";
+```
+
+Then add the package:
+```nix
+home.packages = [
+  inputs.prefixer.packages.${pkgs.system}.default
+];
+```
+
 On any other distro, use pipx to get it from PyPI:
 ```bash
 pipx install prefixer
