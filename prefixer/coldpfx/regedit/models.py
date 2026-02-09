@@ -17,8 +17,8 @@ class RegistryNode:
 
     def set(self, name: str, value: str) -> Optional[str]:
         self.changed = True
-        if value == '!prefixer_remove!': self.values.pop(name, None)
-        self.values[name] = value
+        if '!prefixer_remove!' in value: self.values.pop(name, None)
+        else: self.values[name] = value
 
 @dataclass
 class RegistryHive:
