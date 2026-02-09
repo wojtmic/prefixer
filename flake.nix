@@ -25,10 +25,11 @@
           ];
 
           propagatedBuildInputs = with pkgs.python3Packages; [
-            click
-            rich
+            vdf
+            json5
             requests
-            pyyaml
+            click
+            rapidfuzz
           ];
 
           makeWrapperArgs = [
