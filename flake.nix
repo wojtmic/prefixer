@@ -33,7 +33,7 @@
           ];
 
           makeWrapperArgs = [
-            "--prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.wine64 pkgs.winetricks ]}"
+            "--prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.wine64 ]}"
           ];
 
           doCheck = false;
