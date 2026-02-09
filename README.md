@@ -21,11 +21,13 @@ prefixer 'Balatro' openpfx # opens the wineprefix folder in your file manager
 Alongside more! Run `prefixer --help` or `prefixer --list-tweaks` for everything!
 
 ## Installation
-On Arch install `prefixer` with your favorite AUR helper, for example:
+### Arch 
+install `prefixer` with your favorite AUR helper, for example:
 ```bash
 yay -S prefixer
 ```
-On NixOS add an input (pinned to the most recent release for stability):
+### NixOS 
+add an input (pinned to the most recent release for stability):
 ```nix
 inputs.prefixer.url = "github:wojtmic/prefixer/1.3.5";
 ```
@@ -37,7 +39,8 @@ home.packages = [
 ];
 ```
 
-On any other distro, use pipx to get it from PyPI:
+### Any other distro
+Use `pipx` (or `uv`) to get it from PyPI:
 ```bash
 pipx install prefixer
 ```
