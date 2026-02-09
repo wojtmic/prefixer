@@ -111,8 +111,8 @@ def validate_tweak(ctx, param, path: str):
     ctx.exit()
 
 @click.group()
-@click.option('--version', '-v', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
-@click.option('--list-tweaks', is_flag=True, callback=list_tweaks, expose_value=False, is_eager=True)
+@click.option('--version', '-v', is_flag=True, help='Print version', callback=print_version, expose_value=False, is_eager=True)
+@click.option('--list-tweaks', is_flag=True, help='Lists available tweaks', callback=list_tweaks, expose_value=False, is_eager=True)
 @click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
 @click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
