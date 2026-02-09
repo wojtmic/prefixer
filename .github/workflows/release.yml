@@ -12,15 +12,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       - name: Generate Changelog
         uses: orhun/git-cliff-action@v4
         id: git-cliff
         with:
-          args: --latest --strip-header
+          args: --latest
+
+      - name: Set Release Title
+        id: vars
+        run: |
+          TITLE=$(echo "${{ steps.git-cliff.outputs.content }}" | head -n 1 | sed 's/^#* //')
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: Release ${{ github.ref_name }}
+          name: ${{ steps.vars.outputs.title }}
           tag_name: ${{ github.ref_name }}
           body: ${{ steps.git-cliff.outputs.content }}
           draft: false
