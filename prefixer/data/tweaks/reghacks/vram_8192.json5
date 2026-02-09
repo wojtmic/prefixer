@@ -1,0 +1,14 @@
+{
+  description: "VRAM 8192 MB (8GB)",
+  tasks: [
+    {
+      description: "Set VRAM to 8GB",
+      type: "regedit",
+      path: "Software\\Wine\\Direct3D",
+      filename: 'user.reg',
+      values: {
+        VideoMemorySize: "8192"
+      }
+    }
+  ]
+}

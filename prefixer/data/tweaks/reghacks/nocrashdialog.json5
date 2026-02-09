@@ -1,0 +1,14 @@
+{
+  description: "Disable Wine Crash Dialog",
+  tasks: [
+    {
+      description: "Disable crash dialog",
+      type: "regedit",
+      path: "Software\\Wine\\WineDbg",
+      filename: 'user.reg',
+      values: {
+        ShowCrashDialog: "dword:0"
+      }
+    }
+  ]
+}

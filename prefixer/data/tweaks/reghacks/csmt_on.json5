@@ -1,0 +1,14 @@
+{
+  description: "CSMT (Command Stream Multi-Threading) On",
+  tasks: [
+    {
+      description: "Enable CSMT",
+      type: "regedit",
+      path: "Software\\Wine\\Direct3D",
+      filename: 'user.reg',
+      values: {
+        csmt: "dword:3"
+      }
+    }
+  ]
+}

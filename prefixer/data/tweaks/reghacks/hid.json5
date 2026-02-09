@@ -1,0 +1,25 @@
+{
+  description: "Gamepad/Controller Detection Fix (HID settings)",
+  tasks: [
+    {
+      description: "Enable SDL controller support",
+      type: "regedit",
+      path: "Software\\Wine\\DirectInput",
+      filename: 'user.reg',
+      values: {
+        UseSDLMappings: "Y"
+      }
+    },
+    {
+      description: "Set xinput DLL override",
+      type: "regedit",
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
+      values: {
+        xinput1_3: "native,builtin",
+        xinput1_4: "native,builtin",
+        xinput9_1_0: "native,builtin"
+      }
+    }
+  ]
+}
