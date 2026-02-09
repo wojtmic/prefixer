@@ -1,5 +1,5 @@
 {
-    description: "Windows HTTP components library override",
+    description: "Windows HTTP Components DLL override",
     conditions: [
         {
             type: 'reg_matches',
