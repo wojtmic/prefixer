@@ -1,0 +1,39 @@
+name: Release
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate Changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          args: --latest
+
+      - name: Set Release Title
+        id: vars
+        run: |
+          TITLE=$(echo "${{ steps.git-cliff.outputs.content }}" | head -n 1 | sed 's/^#* //')
+          echo "title=$TITLE" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.vars.outputs.title }}
+          tag_name: ${{ github.ref_name }}
+          body: ${{ steps.git-cliff.outputs.content }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

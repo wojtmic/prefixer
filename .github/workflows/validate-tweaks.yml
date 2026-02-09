@@ -1,0 +1,52 @@
+name: Validate Tweaks
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'prefixer/data/tweaks/**.json5'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'prefixer/data/tweaks/**.json5'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Fetch all history so comparisons can find changed files accurately
+          fetch-depth: 0
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install 3.13
+
+      - name: Install dependencies
+        # Installs the project in editable mode so 'prefixer' is in the PATH
+        run: uv sync
+
+      - name: Get changed tweak files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          # Filter specifically for your tweak data directory
+          files: prefixer/data/tweaks/**/*.json5
+
+      - name: Validate changed tweaks
+        if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          # Bypass Steam discovery logic to avoid errors on the runner
+          NO_STEAM: "true"
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Validating $file..."
+            uv run prefixer --validate-tweak "$file"
+          done

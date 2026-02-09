@@ -1,0 +1,24 @@
+{
+  description: 'Microsoft Webdings Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/webdin32.exe",
+      checksum: "64595b5abc1080fba8610c5c34fab5863408e806aafe84653ca8575bed17d75a",
+      filename: "webdin32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'webdin32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'Webdings.TTF',
+      name: 'Webdings (TrueType)'
+    }
+  ]
+}

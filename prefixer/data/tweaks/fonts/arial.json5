@@ -1,0 +1,42 @@
+{
+  description: 'Microsoft Arial Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/arial32.exe",
+      checksum: "85297a4d146e9c87ac6f74822734bdee5f4b2a722d7eaa584b7f2cbf76f478f6",
+      filename: "arial32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'arial32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'Arial.TTF',
+      name: 'Arial (TrueType)'
+    },
+    {
+      description: 'Install Bold',
+      type: 'install_font',
+      filename: 'Arialbd.TTF',
+      name: 'Arial Bold (TrueType)'
+    },
+    {
+      description: 'Install Italic',
+      type: 'install_font',
+      filename: 'Ariali.TTF',
+      name: 'Arial Italic (TrueType)'
+    },
+    {
+      description: 'Install Bold Italic',
+      type: 'install_font',
+      filename: 'Arialbi.TTF',
+      name: 'Arial Bold Italic (TrueType)'
+    }
+  ]
+}

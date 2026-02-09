@@ -1,0 +1,24 @@
+{
+  description: 'Microsoft Andale Mono Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/andale32.exe",
+      checksum: "0524fe42951adc3a7eb870e32f0920313c71f170c859b5f770d82b4ee111e970",
+      filename: "andale32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'andale32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'AndaleMo.TTF',
+      name: 'Andale Mono (TrueType)'
+    }
+  ]
+}

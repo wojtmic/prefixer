@@ -1,0 +1,42 @@
+{
+  description: 'Microsoft Courier New Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/courie32.exe",
+      checksum: "bb511d861655dde879ae552eb86b134d6fae67cb58502e6ff73ec5d9151f3384",
+      filename: "courie32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'courie32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'cour.ttf',
+      name: 'Courier New (TrueType)'
+    },
+    {
+      description: 'Install Bold',
+      type: 'install_font',
+      filename: 'courbd.ttf',
+      name: 'Courier New Bold (TrueType)'
+    },
+    {
+      description: 'Install Italic',
+      type: 'install_font',
+      filename: 'couri.ttf',
+      name: 'Courier New Italic (TrueType)'
+    },
+    {
+      description: 'Install Bold Italic',
+      type: 'install_font',
+      filename: 'courbi.ttf',
+      name: 'Courier New Bold Italic (TrueType)'
+    }
+  ]
+}

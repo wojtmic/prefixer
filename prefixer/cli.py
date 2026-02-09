@@ -2,30 +2,119 @@ import os
 import shutil
 import subprocess
 import click
-from click.shell_completion import shell_complete
-
+import json5
+from rapidfuzz import process
 from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
 import tempfile
 import sys
 from prefixer.coldpfx import resolve_path
-from prefixer.core.models import RuntimeContext
+from prefixer.core.exceptions import BadTweakError
+from prefixer.core.models import RuntimeContext, TweakData
 from prefixer.core.helpers import run_tweak
-from prefixer.core.tweaks import get_tweaks
+from prefixer.core.registry import task_registry, condition_registry
+from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing: return
-    click.echo(f'{click.style('Prefixer', fg='bright_blue')} v1.3.0-Turing')
+    click.echo(f'{click.style('Prefixer', fg='bright_blue')} v1.3.5-Turing')
     click.echo(f'Wineprefix management tool by {click.style('Wojtmic', fg='bright_blue')}')
     click.echo('Licensed under GPL-3.0 - Source https://github.com/wojtmic/prefixer')
-    click.echo(f'Made with {click.style(' ', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
+    click.echo(f'Made with {click.style('', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
+    ctx.exit()
+
+
+def list_tweaks(ctx, param, value):
+    if not value or ctx.resilient_parsing: return
+    all_tweaks = get_tweaks()
+
+    if not all_tweaks:
+        click.secho("No tweaks found! Have you installed Prefixer correctly?", fg='bright_red')
+        ctx.exit()
+
+    max_len = max(len(name) for name in all_tweaks.keys())
+
+    for name, tweak in all_tweaks.items():
+        padding = " " * (max_len - len(name))
+        name_styled = click.style(name, fg='bright_blue')
+        desc_styled = click.style(tweak.description, bold=True)
+
+        click.echo(f"{name_styled}{padding} - {desc_styled}")
+
+    ctx.exit()
+
+def search_tweaks(ctx, param, query):
+    if not query or ctx.resilient_parsing: return
+
+    all_tweaks = get_tweaks()
+    all_tweaks_values = list(all_tweaks.values())
+    ids = list(all_tweaks.keys())
+
+    results = process.extract(
+        query,
+        all_tweaks_values,
+        processor=lambda x: x.description if hasattr(x, 'description') else str(x),
+        limit=5,
+        score_cutoff=30
+    )
+
+    max_len = max(len(ids[index]) for choice, score, index in results)
+
+    for choice, score, index in results:
+        padding = " " * (max_len - len(ids[index]))
+        id_styled = click.style(ids[index], fg='bright_blue')
+        desc_styled = click.style(choice.description, bold=True)
+
+        click.echo(f'{id_styled}{padding} - {desc_styled}')
+
+    ctx.exit()
+
+def validate_tweak(ctx, param, path: str):
+    if not path or ctx.resilient_parsing: return
+
+    if not os.path.exists(os.path.expanduser(path)):
+        click.secho('The path specified does not exist!', fg='bright_red')
+        sys.exit(1)
+
+    if not path.endswith(('.json5', '.json')):
+        click.secho('The file is not JSON/JSON5 format', fg='bright_red')
+        sys.exit(1)
+
+    if os.path.isdir(path):
+        click.secho('You need to target a file, not dir', fg='bright_red')
+        sys.exit(1)
+
+    with open(path, 'r') as f:
+        try:
+            data: dict = json5.loads(f.read())
+        except:
+            click.secho('This tweak is not in valid JSON5 format!', fg='bright_red')
+            sys.exit(1)
+
+    try:
+        if not 'conditions' in data: data['conditions'] = []
+        data['name'] = path.split('/')[-1]
+        t = TweakData(**data)
+        Tweak(t.name, t.description, t.tasks, t.conditions)
+    except: raise BadTweakError
+
+    for i in t.tasks:
+        if i['type'] not in task_registry: raise BadTweakError
+
+    for i in t.conditions:
+        if i['type'] not in condition_registry: raise BadTweakError
+
+    click.secho('Tweak valid!', fg='bright_green')
     ctx.exit()
 
 @click.group()
-@click.option('--version', is_flag=True, callback=print_version, expose_value=False, is_eager=True)
+@click.option('--version', '-v', is_flag=True, help='Print version', callback=print_version, expose_value=False, is_eager=True)
+@click.option('--list-tweaks', is_flag=True, help='Lists available tweaks', callback=list_tweaks, expose_value=False, is_eager=True)
+@click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
+@click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True)
 @click.argument('game_id')
 @click.pass_context
@@ -46,18 +135,43 @@ def prefixer(ctx, game_id: str, quiet: bool):
     if os.environ.get('NO_STEAM', 'false').lower() != 'true':
         games = steam.build_game_manifest()
 
+        game_path = ''
         ctx.obj = {'GAME_ID': game_id}
 
         pfx_path = steam.get_prefix_path(game_id)
         if pfx_path is None:
-            index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
-            if not index is None:
-                ctx.obj['GAME_ID'] = games[index]['appid']
-                game_id = ctx.obj['GAME_ID']
-                pfx_path = steam.get_prefix_path(game_id)
-            else:
-                raise excs.NoPrefixError
+            names = [d["name"] for d in games]
+            # index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
+            output = process.extractOne(game_id, names, score_cutoff=50)
+            if output:
+                match_str, score, index = output
 
+                if not index is None:
+                    ctx.obj['GAME_ID'] = games[index]['appid']
+                    game_id = ctx.obj['GAME_ID']
+                    pfx_path = steam.get_prefix_path(game_id)
+                else:
+                    raise excs.NoPrefixError
+            else:
+                user_id, user = steam.get_last_user()
+                if user_id == 0:
+                    click.secho('Weird! Your Steam data has no last login user. Have you logged into Steam before?',
+                                fg='bright_black')
+                    raise excs.NoPrefixError
+
+                shortcuts = steam.build_shortcut_manifest(user_id)
+                s_names = [d['name'] for d in shortcuts]
+
+                output = process.extractOne(game_id, s_names, score_cutoff=50)
+
+                if not output: raise excs.NoPrefixError
+
+                match_str, score, index = output
+
+                ctx.obj['GAME_ID'] = shortcuts[index]['id']
+                game_id = ctx.obj['GAME_ID']
+                pfx_path = shortcuts[index]['prefix']
+                game_path = shortcuts[index]['path']
 
         proton_ver = steam.get_compat_tool(game_id)
         if 'steamlinuxruntime' in proton_ver:
@@ -69,7 +183,7 @@ def prefixer(ctx, game_id: str, quiet: bool):
         ctx.obj['PROTON_VER'] = proton_ver
         ctx.obj['PFX_PATH'] = pfx_path
 
-        game_path = steam.get_installdir(game_id)
+        if not game_path: game_path = steam.get_installdir(game_id)
         ctx.obj['GAME_PATH'] = game_path
 
         ctx.obj['BINARY_PATH'] = os.path.join(proton_path, 'proton')
@@ -81,16 +195,16 @@ def prefixer(ctx, game_id: str, quiet: bool):
         ctx.obj['GAME_PATH'] = os.getcwd()
         ctx.obj['BINARY_PATH'] = shutil.which('wine')
 
-    pfxOverride = os.environ.get('PREFIX_PATH', '')
-    gamePathOverride = os.environ.get('PROGRAM_PATH', '')
-    binaryOverride = os.environ.get('WINE_BINARY', '')
+    pfx_override = os.environ.get('PREFIX_PATH', '')
+    game_path_override = os.environ.get('PROGRAM_PATH', '')
+    binary_override = os.environ.get('WINE_BINARY', '')
 
-    if pfxOverride != '':
-        ctx.obj['PFX_PATH'] = pfxOverride
-    if gamePathOverride != '':
-        ctx.obj['GAME_PATH'] = gamePathOverride
-    if binaryOverride != '':
-        ctx.obj['BINARY_PATH'] = binaryOverride
+    if pfx_override != '':
+        ctx.obj['PFX_PATH'] = pfx_override
+    if game_path_override != '':
+        ctx.obj['GAME_PATH'] = game_path_override
+    if binary_override != '':
+        ctx.obj['BINARY_PATH'] = binary_override
 
     game_id_styled = click.style(ctx.obj['GAME_ID'], fg='bright_blue')
 
@@ -99,6 +213,11 @@ def prefixer(ctx, game_id: str, quiet: bool):
         click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
         click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
         click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
+
+    if None in [ctx.obj['PFX_PATH'], ctx.obj['GAME_PATH'], ctx.obj['BINARY_PATH']]:
+        click.secho('ERROR: The game has to be launched at least once AND Steam has to be restarted for proper detection to work.', fg='bright_red')
+        click.secho('This is due to a technical limitation in how Prefixer reads Steam files, we are currently not able to do anything about this.', fg='bright_red')
+        sys.exit(1)
 
 @prefixer.command()
 @click.pass_context
@@ -143,6 +262,7 @@ def openpfx(ctx):
     """
     Opens the wineprefix folder in your file manager
     """
+    click.echo('Opening wineprefix directory in your file manager...')
     subprocess.run(['xdg-open', ctx.obj['PFX_PATH']])
 
 @prefixer.command()
@@ -151,6 +271,7 @@ def opengamedir(ctx):
     """
     Opens the gamedir folder in your file manager
     """
+    click.echo('Opening game directory in your file manager...')
     subprocess.run(['xdg-open', ctx.obj['GAME_PATH']])
 
 @prefixer.command()
@@ -164,7 +285,7 @@ def resolve(ctx, path: str):
 
 def complete_tweaks(ctx, param, incomplete):
     try:
-        available_tweaks = get_tweaks().keys()
+        available_tweaks = get_tweak_names()
     except Exception:
         return []
 
@@ -173,9 +294,9 @@ def complete_tweaks(ctx, param, incomplete):
     return suggestions
 
 @prefixer.command()
-@click.argument('tweak_name', shell_complete=complete_tweaks)
+@click.argument('tweak_names', shell_complete=complete_tweaks, nargs=-1)
 @click.pass_context
-def tweak(ctx, tweak_name: str):
+def tweak(ctx, tweak_names: list[str]):
     """
     Apply a tweak
     """
@@ -184,15 +305,17 @@ def tweak(ctx, tweak_name: str):
     game_path = ctx.obj['GAME_PATH']
     game_id = ctx.obj['GAME_ID']
 
-    target_tweak = tweaks.build_tweak(tweak_name)
+    for tweak_name in tweak_names:
+        target_tweak = tweaks.build_tweak(tweak_name)
 
-    click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
+        click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
 
-    with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
-        runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
-        run_tweak(runtime, target_tweak, tweak_name)
+        with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
+            runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
+            run_tweak(runtime, target_tweak, tweak_name)
 
-    click.secho('All tasks completed successfully!', fg='bright_green')
+        click.secho('All tasks completed successfully!', fg='bright_green')
+    click.secho('All tweaks completed!', fg='bright_green')
 
 @prefixer.command()
 @click.pass_context
@@ -208,9 +331,25 @@ def wipe(ctx):
 
     shutil.rmtree(ctx.obj['PFX_PATH'])
 
-if __name__ == '__main__':
+@prefixer.command()
+@click.pass_context
+def info(ctx):
+    """
+    Prints (debug) information about the prefix
+    """
+    click.echo('='*20)
+
+# if __name__ == '__main__':
+def main():
     try:
-        prefixer()
+        prefixer(standalone_mode=False)
+        sys.exit(0)
+
+    except click.ClickException as e:
+        e.show()
+
+    except click.Abort:
+        click.secho('Operation aborted by user.', fg='bright_red')
 
     except excs.NoTweakError:
         click.secho('ERROR: The specified tweak wasn\'t found!', fg='bright_red')
@@ -234,3 +373,5 @@ if __name__ == '__main__':
 
     except excs.InternalExeError:
         click.secho('ERROR: There was an error while running an external exe within the tweak!', fg='bright_red')
+
+    sys.exit(1)

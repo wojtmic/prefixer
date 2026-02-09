@@ -1,0 +1,42 @@
+{
+  description: 'Microsoft Trebuchet MS Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/trebuc32.exe",
+      checksum: "5a690d9bb8510be1b8b4fe49f1f2319651fe51bbe54775ddddd8ef0bd07fdac9",
+      filename: "trebuc32.exe"
+    },
+    {
+      description: 'Extract package',
+      type: 'extract_cab',
+      filename: 'trebuc32.exe',
+      path: '<tempdir>'
+    },
+    {
+      description: 'Install Regular',
+      type: 'install_font',
+      filename: 'trebuc.ttf',
+      name: 'Trebuchet MS (TrueType)'
+    },
+    {
+      description: 'Install Bold',
+      type: 'install_font',
+      filename: 'trebucbd.ttf',
+      name: 'Trebuchet MS Bold (TrueType)'
+    },
+    {
+      description: 'Install Italic',
+      type: 'install_font',
+      filename: 'trebucit.ttf',
+      name: 'Trebuchet MS Italic (TrueType)'
+    },
+    {
+      description: 'Install Bold Italic',
+      type: 'install_font',
+      filename: 'trebucbi.ttf',
+      name: 'Trebuchet MS Bold Italic (TrueType)'
+    }
+  ]
+}

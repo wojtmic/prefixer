@@ -1,0 +1,55 @@
+{
+  description: 'Microsoft Core Fonts (All)',
+  tasks: [
+    {
+      description: 'Install Arial',
+      type: 'tweak',
+      name: 'fonts.arial'
+    },
+    {
+      description: 'Install Times New Roman',
+      type: 'tweak',
+      name: 'fonts.times'
+    },
+    {
+      description: 'Install Courier New',
+      type: 'tweak',
+      name: 'fonts.courier'
+    },
+    {
+      description: 'Install Verdana',
+      type: 'tweak',
+      name: 'fonts.verdana'
+    },
+    {
+      description: 'Install Georgia',
+      type: 'tweak',
+      name: 'fonts.georgia'
+    },
+    {
+      description: 'Install Trebuchet MS',
+      type: 'tweak',
+      name: 'fonts.trebuchet'
+    },
+    {
+      description: 'Install Comic Sans MS',
+      type: 'tweak',
+      name: 'fonts.comic'
+    },
+    {
+      description: 'Install Impact',
+      type: 'tweak',
+      name: 'fonts.impact'
+    },
+    {
+      description: 'Install Andale Mono',
+      type: 'tweak',
+      name: 'fonts.andale'
+    },
+    {
+      description: 'Install Webdings',
+      type: 'tweak',
+      name: 'fonts.webdings'
+    }
+  ]
+}

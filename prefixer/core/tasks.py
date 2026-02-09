@@ -26,7 +26,11 @@ def download(ctx: TaskContext, runtime: RuntimeContext):
 
     else:
         try:
-            with requests.get(ctx.url, stream=True) as response:
+            headers = {
+                'User-Agent': 'Prefixer/1.3.2 (Linux)'
+            }
+
+            with requests.get(ctx.url, stream=True, headers=headers, allow_redirects=True) as response:
                 response.raise_for_status()
 
                 total_size = int(response.headers.get('content-length', 0))
@@ -146,7 +150,7 @@ def extract_cab(ctx: TaskContext, runtime: RuntimeContext):
 
     click.echo(f"Extracting CAB {ctx.filename}...")
 
-    subprocess.run(['cabextract', '-d', ctx.path, os.path.join(runtime.operation_path, ctx.filename)], check=True)
+    subprocess.run(['cabextract', '-q', '-d', ctx.path, os.path.join(runtime.operation_path, ctx.filename)], check=True)
 
 @task
 @required_context('path', 'new_path')
@@ -200,8 +204,9 @@ def install_font(ctx: TaskContext, runtime: RuntimeContext):
     shutil.copy(source_path, dest_path)
 
     regedit_ctx = TaskContext('Apply registry edit for font', 'regedit',
-                              path='HKEY_LOCAL_MACHINE\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Fonts',
-                              values={ctx.name: ctx.filename})
+                              path='Software\\Microsoft\\Windows NT\\CurrentVersion\\Fonts',
+                              values={ctx.name: ctx.filename},
+                              filename='system.reg')
     regedit(regedit_ctx, runtime)
 
 @task
@@ -293,20 +298,6 @@ def text_replace(ctx: TaskContext, runtime: RuntimeContext):
 
     with open(ctx.path, 'w') as f:
         f.write(content)
-
-@task
-@required_context('path', 'args')
-def shell(ctx: TaskContext, runtime: RuntimeContext):
-    if not ALLOW_SHELL:
-        click.secho('This tweak uses the `shell` task,', fg='bright_red')
-        click.secho(f'which allows execution of {click.style('ANY LINUX COMMAND', bold=True, fg='bright_red')} {click.style('on', fg='bright_red')} {click.style('YOUR COMPUTER', bold=True, fg='bright_red')}', fg='bright_red')
-        click.secho('Make sure you trust this tweak fully!', fg='bright_red')
-        click.secho('This message can be suppressed/skipped by setting the PF_ALLOW_SHELL environment variable to true!', fg='bright_black')
-
-        if not click.confirm('Do you want to execute the shell task?'): sys.exit(1)
-
-    subprocess.run([ctx.path, *ctx.args])
-
 
 @task
 @required_context('path')
