@@ -1,4 +1,9 @@
-# Prefixer
+ <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="branding/banner.svg">
+    <source media="(prefers-color-scheme: light)" srcset="branding/banner-light.svg">
+    <img alt="Project Banner" src="branding/banner-light.svg" width="400">
+  </picture>
+
 Prefixer is a tool for managing [Steam](https://store.steampowered.com/) [Proton](https://github.com/ValveSoftware/Proton) prefixes, alternative to [protontricks](https://github.com/Matoking/protontricks) with a friendlier interface, faster responses and modular approach.
 
 ## Why this?
