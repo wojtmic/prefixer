@@ -4,6 +4,11 @@
     <img alt="Project Banner" src="branding/banner-light.svg" width="400">
   </picture>
 
+![PyPI](https://img.shields.io/pypi/v/prefixer)
+![Python Version](https://img.shields.io/pypi/pyversions/prefixer)
+![License](https://img.shields.io/github/license/wojtmic/prefixer)
+![Tests](https://img.shields.io/github/actions/workflow/status/wojtmic/prefixer/tests.yml)
+
 Prefixer is a tool for managing [Steam](https://store.steampowered.com/) [Proton](https://github.com/ValveSoftware/Proton) prefixes, alternative to [protontricks](https://github.com/Matoking/protontricks) with a friendlier interface, faster responses and modular approach.
 
 ## Why this?
