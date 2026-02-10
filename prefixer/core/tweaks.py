@@ -28,7 +28,7 @@ def index_tweak_folder(folder: str, layer: str = ''):
         if not (tweak.endswith('.json5') or tweak.endswith('.json')): continue
 
         tweak_name = tweak.split('.')[0]
-        if f'{layer}{tweak_name}' in tweaks: continue
+        if f'{layer}{tweak_name}' in tweaks.keys(): continue
 
         with open(path, 'r') as f:
             obj: dict = json5.loads(f.read())
