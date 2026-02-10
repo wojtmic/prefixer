@@ -49,3 +49,14 @@ Use `pipx` (or `uv`) to get it from PyPI:
 ```bash
 pipx install prefixer
 ```
+
+## Community
+Prefixer is a fairly new project, you can become an early adopter now!
+
+### Star graph
+[![Star History Chart](https://api.star-history.com/svg?repos=wojtmic/prefixer&type=Date)](https://star-history.com/#wojtmic/prefixer&Date)
+
+### Contributors
+- [Wojtmic](https://github.com/wojtmic) - Maintainer, founder, all Python
+- [Tymon3310](https://github.com/tymon3310) - Multiple tweaks
+- [Keygenesis (david)](https://github.com/keygenesis) - NixOS Flake
