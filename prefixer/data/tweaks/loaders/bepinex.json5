@@ -12,8 +12,7 @@
             description: "Extract pack",
             type: "extract",
             filename: "bepinex.zip",
-            path: "<gamedir>",
-            method: "zip",
+            path: "<gamedir>"
         },
         {
             description: "Add winhttp override",
