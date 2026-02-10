@@ -9,16 +9,15 @@
       filename: "webdin32.exe"
     },
     {
-      description: 'Extract package',
-      type: 'extract_cab',
-      filename: 'webdin32.exe',
-      path: '<tempdir>'
+      description: 'Run installer',
+      type: 'run_exe',
+      path: 'webdin32.exe',
+      args: ['/q', '/r:n']
     },
     {
-      description: 'Install Regular',
-      type: 'install_font',
-      filename: 'Webdings.TTF',
-      name: 'Webdings (TrueType)'
+      description: 'Wait for wineserver',
+      type: 'wineserver',
+      action: 'wait'
     }
   ]
 }

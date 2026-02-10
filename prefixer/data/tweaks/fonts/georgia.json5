@@ -9,34 +9,15 @@
       filename: "georgi32.exe"
     },
     {
-      description: 'Extract package',
-      type: 'extract_cab',
-      filename: 'georgi32.exe',
-      path: '<tempdir>'
+      description: 'Run installer',
+      type: 'run_exe',
+      path: 'georgi32.exe',
+      args: ['/q', '/r:n']
     },
     {
-      description: 'Install Regular',
-      type: 'install_font',
-      filename: 'Georgia.TTF',
-      name: 'Georgia (TrueType)'
-    },
-    {
-      description: 'Install Bold',
-      type: 'install_font',
-      filename: 'Georgiab.TTF',
-      name: 'Georgia Bold (TrueType)'
-    },
-    {
-      description: 'Install Italic',
-      type: 'install_font',
-      filename: 'Georgiai.TTF',
-      name: 'Georgia Italic (TrueType)'
-    },
-    {
-      description: 'Install Bold Italic',
-      type: 'install_font',
-      filename: 'Georgiaz.TTF',
-      name: 'Georgia Bold Italic (TrueType)'
+      description: 'Wait for wineserver',
+      type: 'wineserver',
+      action: 'wait'
     }
   ]
 }

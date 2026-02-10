@@ -9,34 +9,15 @@
       filename: "courie32.exe"
     },
     {
-      description: 'Extract package',
-      type: 'extract_cab',
-      filename: 'courie32.exe',
-      path: '<tempdir>'
+      description: 'Run installer',
+      type: 'run_exe',
+      path: 'courie32.exe',
+      args: ['/q', '/r:n']
     },
     {
-      description: 'Install Regular',
-      type: 'install_font',
-      filename: 'cour.ttf',
-      name: 'Courier New (TrueType)'
-    },
-    {
-      description: 'Install Bold',
-      type: 'install_font',
-      filename: 'courbd.ttf',
-      name: 'Courier New Bold (TrueType)'
-    },
-    {
-      description: 'Install Italic',
-      type: 'install_font',
-      filename: 'couri.ttf',
-      name: 'Courier New Italic (TrueType)'
-    },
-    {
-      description: 'Install Bold Italic',
-      type: 'install_font',
-      filename: 'courbi.ttf',
-      name: 'Courier New Bold Italic (TrueType)'
+      description: 'Wait for wineserver',
+      type: 'wineserver',
+      action: 'wait'
     }
   ]
 }
