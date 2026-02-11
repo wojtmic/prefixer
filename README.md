@@ -36,6 +36,8 @@ install `prefixer` with your favorite AUR helper, for example:
 ```bash
 yay -S prefixer
 ```
+**Enjoying Prefixer? Drop a vote on the [AUR](https://aur.archlinux.org/packages/prefixer)! It costs you nothing and could help us get Prefixer into the `[extra]` repo!**
+
 ### NixOS 
 add an input (pinned to the most recent release for stability):
 ```nix
