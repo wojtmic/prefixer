@@ -90,7 +90,7 @@ def validate_tweak(ctx, param, path: str):
 
     with open(path, 'r') as f:
         try:
-            data: dict = json5.loads(f.read())
+            data: dict = json5.load(f)
         except:
             click.secho('This tweak is not in valid JSON5 format!', fg='bright_red')
             sys.exit(1)
