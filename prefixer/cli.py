@@ -76,24 +76,18 @@ def search_tweaks(ctx, param, query):
 def validate_tweak(ctx, param, path: str):
     if not path or ctx.resilient_parsing: return
 
-    if not os.path.exists(os.path.expanduser(path)):
+    try:
+        with open(path, 'r') as f:
+            data: dict = json5.load(f)
+    except (ValueError, UnicodeDecodeError):
+        click.secho('This tweak is not in valid JSON5 format!', fg='bright_red')
+        sys.exit(1)
+    except FileNotFoundError:
         click.secho('The path specified does not exist!', fg='bright_red')
         sys.exit(1)
-
-    if not path.endswith(('.json5', '.json')):
-        click.secho('The file is not JSON/JSON5 format', fg='bright_red')
-        sys.exit(1)
-
-    if os.path.isdir(path):
+    except IsADirectoryError:
         click.secho('You need to target a file, not dir', fg='bright_red')
         sys.exit(1)
-
-    with open(path, 'r') as f:
-        try:
-            data: dict = json5.loads(f.read())
-        except:
-            click.secho('This tweak is not in valid JSON5 format!', fg='bright_red')
-            sys.exit(1)
 
     try:
         if not 'conditions' in data: data['conditions'] = []

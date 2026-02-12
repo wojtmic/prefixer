@@ -31,7 +31,7 @@ def index_tweak_folder(folder: str, layer: str = ''):
         if f'{layer}{tweak_name}' in tweaks.keys(): continue
 
         with open(path, 'r') as f:
-            obj: dict = json5.loads(f.read())
+            obj: dict = json5.load(f)
 
         tasks = obj['tasks']
         desc = obj['description']
