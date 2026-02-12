@@ -23,3 +23,6 @@ The use of color is encouraged, but don't spam it.
 
 ## AI?
 AI-assisted development IS allowed, however **YOU/The person submitting the PR** is responsible for everything and is expected to understand the code.
+
+## Don't be shy!
+Once you create your PR, feel free to request a review from me (wojtmic)! All quality contributions that meet the guidelines will most likely be accepted.
