@@ -1,0 +1,72 @@
+{
+  description: 'Balatro Steamodded Mod Loader',
+  tasks: [
+    {
+      description: 'Download Lovely framework',
+      type: 'download',
+      conditions: [
+        {
+          type: 'file_exists',
+          filename: '<gamedir>/version.dll',
+          invert: true
+        }
+      ],
+      url: 'https://github.com/ethangreen-dev/lovely-injector/releases/download/v0.9.0/lovely-x86_64-pc-windows-msvc.zip',
+      checksum: '40b994a055ee75e5f2aba81e7ae06f2c17460e18cc346483089921899fadd1f7',
+      filename: 'lovely.zip'
+    },
+    {
+      description: 'Extract Lovely framework',
+      type: 'extract',
+      conditions: [
+        {
+          type: 'file_exists',
+          filename: '<gamedir>/version.dll',
+          invert: true
+        }
+      ],
+      filename: 'lovely.zip',
+      path: '<gamedir>'
+    },
+    {
+      description: 'Override version.dll',
+      type: 'regedit',
+      conditions: [
+        {
+          type: 'reg_matches',
+          filename: 'user.reg',
+          path: "Software\\Wine\\DllOverrides",
+          values: {
+              version: "native,builtin",
+          },
+          invert: true
+        }
+      ],
+      path: "Software\\Wine\\DllOverrides",
+      filename: 'user.reg',
+      values: {
+          version: "native,builtin",
+      }
+    },
+
+    {
+      description: 'Download Steamodded',
+      type: 'download',
+      url: 'https://github.com/Steamodded/smods/archive/refs/tags/1.0.0-beta-1224a.zip',
+      checksum: '1506c6912f344c95bec5c17a18a9641b0a8c4d28cee565b823f6744cb9ddd2e4',
+      filename: 'smods.zip'
+    },
+    {
+      description: 'Extract Steamodded',
+      type: 'extract',
+      filename: 'smods.zip',
+      path: '<pfxdir>/drive_c/users/steamuser/AppData/Roaming/Balatro/Mods/smods'
+    },
+
+    {
+      description: 'Show message',
+      type: 'message',
+      content: 'Steamodded installed successfully! To view the mod folder, run:\n xdg-open "$(prefixer -q balatro resolve C:/users/steamuser/AppData/Roaming/Balatro/Mods)"'
+    }
+  ]
+}
