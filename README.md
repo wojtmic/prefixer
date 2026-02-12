@@ -67,3 +67,4 @@ Prefixer is a fairly new project, you can become an early adopter now!
 - [Wojtmic](https://github.com/wojtmic) - Maintainer, founder, all Python
 - [Tymon3310](https://github.com/tymon3310) - Multiple tweaks
 - [Keygenesis (david)](https://github.com/keygenesis) - NixOS Flake
+- [Jamakoiv (Jaakko Koivisto)](https://github.com/jamakoiv) - Tweak JSON5 code cleanup
