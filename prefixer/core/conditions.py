@@ -7,7 +7,7 @@ import os
 @condition
 @required_context('filename')
 def file_exists(ctx: ConditionContext, runtime: RuntimeContext):
-    return os.path.exists(ctx.value)
+    return os.path.exists(ctx.filename)
 
 @condition
 @required_context('filename', 'matches')
