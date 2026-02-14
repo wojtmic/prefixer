@@ -17,6 +17,25 @@
 
 - Add many tweaks (#6)
 
+## [1.3.7] - 2026-02-10
+
+### 🐛 Bug Fixes
+
+- *(cli)* Add help text to -q
+- *(tweaks)* Fix bepinex malformed
+- Improperly override tweaks
+
+### 📚 Documentation
+
+- Add branding svgs
+- *(readme)* Add community section
+- *(readme)* Add badges
+- *(readme)* Change graph to dark
+
+### 🎮 Tweaks
+
+- Add many tweaks (#6)
+
 ## [1.3.6] - 2026-02-09
 
 ### 🚀 Features
