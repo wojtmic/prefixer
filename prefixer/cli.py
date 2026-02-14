@@ -156,8 +156,12 @@ def prefixer(ctx, game_id: str, quiet: bool):
 
                 shortcuts = steam.build_shortcut_manifest(user_id)
                 s_names = [d['name'] for d in shortcuts]
+                s_ids = [d['id'] for d in shortcuts]
 
-                output = process.extractOne(game_id, s_names, score_cutoff=50)
+                try:
+                    output = ('', 100, s_ids.index(int(game_id)))
+                except ValueError:
+                    output = process.extractOne(game_id, s_names, score_cutoff=50)
 
                 if not output: raise excs.NoPrefixError
 
