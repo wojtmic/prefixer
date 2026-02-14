@@ -9,6 +9,7 @@ from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
 import tempfile
 import sys
+from importlib.metadata import version
 from prefixer.coldpfx import resolve_path
 from prefixer.core.exceptions import BadTweakError
 from prefixer.core.models import RuntimeContext, TweakData, TaskContext
@@ -21,7 +22,7 @@ import prefixer.core.conditions # same with conditions
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing: return
-    click.echo(f'{click.style('Prefixer', fg='bright_blue')} v1.3.7-Turing')
+    click.echo(f'{click.style('Prefixer', fg='bright_blue')} v{version('prefixer')}-Turing')
     click.echo(f'Wineprefix management tool by {click.style('Wojtmic', fg='bright_blue')}')
     click.echo('Licensed under GPL-3.0 - Source https://github.com/wojtmic/prefixer')
     click.echo(f'Made with {click.style('', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
