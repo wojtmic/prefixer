@@ -62,6 +62,7 @@ commit_parsers = [
     { message = "^feat", group = "<!-- 0 -->🚀 Features" },
     { message = "^fix\\(release\\)", skip = true},
     { message = "^fix", group = "<!-- 1 -->🐛 Bug Fixes" },
+    { message = "^docs\\: update changelog", skip = true },
     { message = "^doc", group = "<!-- 3 -->📚 Documentation" },
     { message = "^perf", group = "<!-- 4 -->⚡ Performance" },
     { message = "^refactor", group = "<!-- 2 -->🚜 Refactor" },
