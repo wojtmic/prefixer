@@ -41,7 +41,7 @@ yay -S prefixer
 ### NixOS 
 add an input (pinned to the most recent release for stability):
 ```nix
-inputs.prefixer.url = "github:wojtmic/prefixer/1.3.7";
+inputs.prefixer.url = "github:wojtmic/prefixer/1.3.8";
 ```
 
 Then add the package:
