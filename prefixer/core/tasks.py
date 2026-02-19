@@ -84,26 +84,6 @@ def run_exe(ctx: TaskContext, runtime: RuntimeContext):
     else:
         subprocess.run([runtime.runnable_path, 'run', ctx.path, *ctx.args], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-# @task
-# @required_context('values', 'path')
-# def regedit(ctx: TaskContext, runtime: RuntimeContext):
-#     env = setup_env(runtime)
-#
-#     formatted_values = '\n'.join(
-#         [f'"{key}"="{value}"' for key, value in ctx.values.items()]
-#     )
-#
-#     reg_content = f"""Windows Registry Editor Version 5.00
-#
-#     [{ctx.path}]
-#     {formatted_values}"""
-#
-#     reg_file_path = os.path.join(runtime.operation_path, 'edit.reg')
-#     with open(reg_file_path, 'w') as f:
-#         f.write(reg_content)
-#
-#     subprocess.run([runtime.runnable_path, 'run', 'regedit', f'Z:{reg_file_path}'], env=env)
-
 @task
 @required_context('values', 'path', 'filename')
 def regedit(ctx: TaskContext, runtime: RuntimeContext):
