@@ -2,3 +2,6 @@
 .idea
 prefixer.egg-info
 __pycache__/
+
+# nix
+result
