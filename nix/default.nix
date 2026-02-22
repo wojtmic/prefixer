@@ -9,6 +9,7 @@
   click,
   rapidfuzz,
   wine64,
+  steam-run-free,
 }: let
   pyproject = (lib.importTOML ../pyproject.toml).project;
 in
@@ -18,6 +19,8 @@ in
     pyproject = true;
 
     src = lib.cleanSource ../.;
+
+    patches = [./steam-run.patch];
 
     nativeBuildInputs = [
       setuptools
@@ -33,7 +36,7 @@ in
     ];
 
     makeWrapperArgs = [
-      "--prefix PATH : ${lib.makeBinPath [wine64]}"
+      "--prefix PATH : ${lib.makeBinPath [wine64 steam-run-free]}"
     ];
 
     doCheck = false;
