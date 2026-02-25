@@ -1,9 +1,8 @@
 from pathlib import Path
-
-from prefixer.core.helpers import setup_env, run_tweak
+from prefixer.core.helpers import run_tweak
 from prefixer.core.models import TaskContext, RuntimeContext, required_context
 from prefixer.core.registry import task
-from prefixer.core.settings import NO_DOWNLOAD, SILENCE_EXTERNAL, ALLOW_SHELL
+from prefixer.core.settings import NO_DOWNLOAD
 from prefixer.core.exceptions import BadFileError, BadDownloadError, MalformedTaskError
 from prefixer.core.tweaks import build_tweak
 from prefixer.coldpfx.regedit import parser, writer
@@ -208,7 +207,7 @@ def wineserver(ctx: TaskContext, runtime: RuntimeContext):
     elif ctx.action == 'kill':
         click.echo(f"Forcibly terminating prefix {click.style(runtime.pfx_path, fg='bright_blue')}...")
 
-    runtime.prefix.run(Path('wineserver'), args=flags[ctx.action])
+    runtime.prefix.run(Path('wineserver'), args=[flags[ctx.action]])
     click.secho('Done!', fg='bright_blue')
 
 @task
@@ -275,15 +274,12 @@ def text_replace(ctx: TaskContext, runtime: RuntimeContext):
 @task
 @required_context('path')
 def register_dll(ctx: TaskContext, runtime: RuntimeContext):
-    env = setup_env(runtime)
-
     if not os.path.exists(ctx.path):
         click.secho(f"ERROR: DLL not found at {ctx.path}", fg='red')
         return
 
     click.echo(f"Registering DLL: {click.style(ctx.path, fg='bright_blue')}")
 
-    # subprocess.run([runtime.runnable_path, 'run', 'regsvr32', '/s', ctx.path], env=env)
     runtime.prefix.run(Path('regsvr32'), ['/s', ctx.path])
 
     click.secho('Registered!', fg='bright_blue')
