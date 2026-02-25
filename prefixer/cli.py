@@ -1,6 +1,8 @@
 import os
 import shutil
 import subprocess
+from pathlib import Path
+
 import click
 import json5
 from rapidfuzz import process
@@ -18,11 +20,10 @@ from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
 from prefixer.coldpfx.regedit import parser, writer
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
-from prefixer.providers.classes import provider_reg, PrefixProvider
+from prefixer.providers.classes import provider_reg, PrefixProvider, Prefix
 from prefixer import providers
 import pkgutil
 import importlib
-from pathlib import Path
 
 def load_providers():
     for _, name, _ in pkgutil.iter_modules(providers.__path__):
@@ -172,22 +173,16 @@ def prefixer(ctx, app_id: str, quiet: bool):
         click.secho('This is due to a technical limitation in how Prefixer reads Steam files, we are currently not able to do anything about this.', fg='bright_red')
         sys.exit(1)
 
+    ctx.obj = {'PREFIX': prefix}
+
 @prefixer.command()
 @click.pass_context
 def winecfg(ctx):
     """
     Opens a winecfg window for the prefix
     """
-    pfx_path = ctx.obj['PFX_PATH']
-    bin_path = ctx.obj['BINARY_PATH']
-    click.echo('Opening winecfg...')
-
-    env = os.environ.copy()
-    env['STEAM_COMPAT_DATA_PATH'] = os.path.dirname(pfx_path)
-    env['WINEPREFIX'] = pfx_path
-    env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = os.path.expanduser('~/.steam/steam')
-
-    subprocess.run([bin_path, 'run', 'winecfg'], env=env)
+    prefix: Prefix = ctx.obj['PREFIX']
+    prefix.run(Path('winecfg'))
 
 @prefixer.command(context_settings={"ignore_unknown_options": True})
 @click.argument('exe_path')
@@ -197,17 +192,10 @@ def run(ctx, exe_path: str, args):
     """
     Runs a .exe within the target prefix
     """
-
-    pfx_path = ctx.obj['PFX_PATH']
-    bin_path = ctx.obj['BINARY_PATH']
-
-    env = os.environ.copy()
-    env['WINEPREFIX'] = pfx_path
-    env['STEAM_COMPAT_DATA_PATH'] = os.path.dirname(pfx_path)
-    env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = os.path.expanduser('~/.steam/steam')
+    prefix: Prefix = ctx.obj['PREFIX']
 
     click.echo(f'Running {exe_path}...')
-    subprocess.run([bin_path, 'run', exe_path, *args], env=env)
+    prefix.run(Path(exe_path).expanduser(), args)
 
 @prefixer.command()
 @click.pass_context
