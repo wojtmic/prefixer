@@ -30,3 +30,6 @@ class MalformedTaskError(PrefixerError):
 
 class NoProtonError(PrefixerError):
     pass
+
+class ProviderError(PrefixerError):
+    pass
