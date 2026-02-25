@@ -22,9 +22,9 @@ class SteamPrefix(Prefix):
         env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = str(STEAMPATH)
 
         if not silent:
-            run([str(self.proton_script_path), 'run', str(exe), *args], env=env)
+            run([str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env)
         else:
-            run([str(self.proton_script_path), 'run', str(exe), *args], env=env, stdout=DEVNULL, stderr=DEVNULL)
+            run([str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env, stdout=DEVNULL, stderr=DEVNULL)
 
 class SteamPrefixProvider(PrefixProvider):
     def get_libraries(self):
