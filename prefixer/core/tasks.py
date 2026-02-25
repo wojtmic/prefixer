@@ -14,7 +14,6 @@ import shutil
 import hashlib
 import os.path
 import requests
-import sys
 
 @task
 @required_context('filename', 'url', 'checksum')
