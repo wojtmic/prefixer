@@ -4,14 +4,13 @@ import subprocess
 import click
 import json5
 from rapidfuzz import process
-from prefixer.core import steam
 from prefixer.core import tweaks
 from prefixer.core import exceptions as excs
 import tempfile
 import sys
 from importlib.metadata import version
 from prefixer.coldpfx import resolve_path
-from prefixer.core.exceptions import BadTweakError
+from prefixer.core.exceptions import BadTweakError, NoPrefixError
 from prefixer.core.models import RuntimeContext, TweakData, TaskContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.registry import task_registry, condition_registry
@@ -19,6 +18,17 @@ from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
 from prefixer.coldpfx.regedit import parser, writer
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
+from prefixer.providers.classes import provider_reg, PrefixProvider
+from prefixer import providers
+import pkgutil
+import importlib
+from pathlib import Path
+
+def load_providers():
+    for _, name, _ in pkgutil.iter_modules(providers.__path__):
+        if name == 'classes': continue
+        full_module_name = f"prefixer.providers.{name}"
+        importlib.import_module(full_module_name)
 
 def print_version(ctx, param, value):
     if not value or ctx.resilient_parsing: return
@@ -27,7 +37,6 @@ def print_version(ctx, param, value):
     click.echo('Licensed under GPL-3.0 - Source https://github.com/wojtmic/prefixer')
     click.echo(f'Made with {click.style('', fg='bright_red')} from {click.style('P', fg='bright_white')}{click.style('L', fg='bright_red')}')
     ctx.exit()
-
 
 def list_tweaks(ctx, param, value):
     if not value or ctx.resilient_parsing: return
@@ -112,9 +121,9 @@ def validate_tweak(ctx, param, path: str):
 @click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
 @click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True, help='Disable non-essential logging')
-@click.argument('game_id')
+@click.argument('app_id')
 @click.pass_context
-def prefixer(ctx, game_id: str, quiet: bool):
+def prefixer(ctx, app_id: str, quiet: bool):
     """
     Modern tool to manage Proton prefixes.
     """
@@ -128,93 +137,37 @@ def prefixer(ctx, game_id: str, quiet: bool):
         else:
             click.secho('WARNING: Running as root with ALLOW_ROOT override set. The developer of Prefixer is not responsible for any damages.', fg='bright_yellow')
 
-    if os.environ.get('NO_STEAM', 'false').lower() != 'true':
-        games = steam.build_game_manifest()
+    load_providers()
+    # I am sorry to every non-functional programmer on Earth for this
+    provider_objs: list[PrefixProvider] = [cls() for cls in provider_reg.values()]
+    prefix_ids: list[str] = [p for provider in provider_objs for p in provider.get_prefix_ids()]
+    prefixes: list[str] = [p for provider in provider_objs for p in provider.get_prefixes()]
+    prefix_provider_map: dict[int, int] = {}
+    offset = 0
+    for i, provider in enumerate(provider_objs):
+        p = provider.get_prefixes()
+        for j in range(len(p)):
+            prefix_provider_map[offset + j] = i
+        offset += len(p)
 
-        game_path = ''
-        ctx.obj = {'GAME_ID': game_id}
-
-        pfx_path = steam.get_prefix_path(game_id)
-        if pfx_path is None:
-            names = [d["name"] for d in games]
-            # index = next((i for i, item in enumerate(games) if item['name'].lower() == game_id.lower()), None)
-            output = process.extractOne(game_id, names, score_cutoff=50)
-            if output:
-                match_str, score, index = output
-
-                if not index is None:
-                    ctx.obj['GAME_ID'] = games[index]['appid']
-                    game_id = ctx.obj['GAME_ID']
-                    pfx_path = steam.get_prefix_path(game_id)
-                else:
-                    raise excs.NoPrefixError
-            else:
-                user_id, user = steam.get_last_user()
-                if user_id == 0:
-                    click.secho('Weird! Your Steam data has no last login user. Have you logged into Steam before?',
-                                fg='bright_black')
-                    raise excs.NoPrefixError
-
-                shortcuts = steam.build_shortcut_manifest(user_id)
-                s_names = [d['name'] for d in shortcuts]
-                s_ids = [d['id'] for d in shortcuts]
-
-                try:
-                    output = ('', 100, s_ids.index(int(game_id)))
-                except ValueError:
-                    output = process.extractOne(game_id, s_names, score_cutoff=50)
-
-                if not output: raise excs.NoPrefixError
-
-                match_str, score, index = output
-
-                ctx.obj['GAME_ID'] = shortcuts[index]['id']
-                game_id = ctx.obj['GAME_ID']
-                pfx_path = shortcuts[index]['prefix']
-                game_path = shortcuts[index]['path']
-
-        proton_ver = steam.get_compat_tool(game_id)
-        if 'steamlinuxruntime' in proton_ver:
-            click.secho('This app runs natively under the Steam Linux Runtime!', fg='bright_red')
-            return
-
-        proton_path = steam.get_proton_path(proton_ver)
-
-        ctx.obj['PROTON_VER'] = proton_ver
-        ctx.obj['PFX_PATH'] = pfx_path
-
-        if not game_path: game_path = steam.get_installdir(game_id)
-        ctx.obj['GAME_PATH'] = game_path
-
-        ctx.obj['BINARY_PATH'] = os.path.join(proton_path, 'proton')
-
+    if app_id in prefix_ids:
+        provider_idx = prefix_provider_map[prefix_ids.index(app_id)]
+        prefix = provider_objs[provider_idx].get_prefix(app_id)
     else:
-        click.secho('WARNING: NO_STEAM specified. Defaulting to global wine installation.', fg='bright_yellow')
+        name, certainty, index = process.extractOne(app_id, prefixes, score_cutoff=50) or ('', 0, 0)
+        if certainty == 0: raise NoPrefixError
+        provider_idx = prefix_provider_map[index]
+        local_index = index - sum(len(list(provider_objs[j].get_prefixes())) for j in range(provider_idx))
 
-        ctx.obj['PFX_PATH'] = os.path.expanduser('~/.wine')
-        ctx.obj['GAME_PATH'] = os.getcwd()
-        ctx.obj['BINARY_PATH'] = shutil.which('wine')
-
-    pfx_override = os.environ.get('PREFIX_PATH', '')
-    game_path_override = os.environ.get('PROGRAM_PATH', '')
-    binary_override = os.environ.get('WINE_BINARY', '')
-
-    if pfx_override != '':
-        ctx.obj['PFX_PATH'] = pfx_override
-    if game_path_override != '':
-        ctx.obj['GAME_PATH'] = game_path_override
-    if binary_override != '':
-        ctx.obj['BINARY_PATH'] = binary_override
-
-    game_id_styled = click.style(ctx.obj['GAME_ID'], fg='bright_blue')
+        prefix = provider_objs[provider_idx].get_prefix_by_index(local_index)
 
     if not quiet:
-        click.echo(f'Targeting => {game_id_styled}')
-        click.echo(f'Prefix Path => {click.style(ctx.obj['PFX_PATH'], fg='bright_blue')}')
-        click.echo(f'Game Path => {click.style(ctx.obj['GAME_PATH'], fg='bright_blue')}')
-        click.echo(f'Binary Location => {click.style(ctx.obj['BINARY_PATH'], fg='bright_blue')}')
+        click.echo(f'Targeting => {click.style(prefix.name, fg='bright_blue')}')
+        click.echo(f'Prefix Path => {click.style(prefix.pfx_path, fg='bright_blue')}')
+        click.echo(f'Game Path => {click.style(prefix.files_path, fg='bright_blue')}')
+        click.echo(f'Binary Location => {click.style(prefix.binary_path, fg='bright_blue')}')
 
-    if None in [ctx.obj['PFX_PATH'], ctx.obj['GAME_PATH'], ctx.obj['BINARY_PATH']]:
+    if None in [prefix.pfx_path, prefix.files_path, prefix.binary_path]:
         click.secho('ERROR: The game has to be launched at least once AND Steam has to be restarted for proper detection to work.', fg='bright_red')
         click.secho('This is due to a technical limitation in how Prefixer reads Steam files, we are currently not able to do anything about this.', fg='bright_red')
         sys.exit(1)

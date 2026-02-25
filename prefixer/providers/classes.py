@@ -4,10 +4,11 @@ from abc import ABC, abstractmethod
 provider_reg: dict[str, type['PrefixProvider']] = {}
 
 class Prefix(ABC):
-    def __init__(self, pfx_path: Path, files_path: Path, binary_path: Path):
+    def __init__(self, pfx_path: Path, files_path: Path, binary_path: Path, name: str):
         self.pfx_path:    Path = pfx_path
         self.files_path:  Path = files_path
         self.binary_path: Path = binary_path
+        self.name:        str  = name
 
     @abstractmethod
     def run(self, exe: Path, args: list[str] = None, silent: bool = False):
@@ -28,6 +29,15 @@ class PrefixProvider(ABC):
     def get_prefix(self, id: str) -> Prefix:
         """Returns a Prefix instance"""
         pass
+
+    @abstractmethod
+    def get_prefix_by_index(self, index: str) -> Prefix:
+        """Returns a Prefix by index"""
+        pass
+
+    def get_prefix_ids(self) -> list[str]:
+        """Returns all prefix IDs"""
+        return list(self.get_prefixes().values())
 
     def get_all_prefixes(self, name: str) -> list[Prefix]:
         """Returns a list of all prefix objects; very slow"""

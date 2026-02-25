@@ -9,8 +9,8 @@ STEAMPATH = Path('~/.steam/steam').expanduser()
 LIBMANIFEST_LOCATION = STEAMPATH / 'steamapps' / 'libraryfolders.vdf'
 
 class SteamPrefix(Prefix):
-    def __init__(self, pfx_path: Path, files_path: Path, binary_path: Path, proton_script_path: Path):
-        super().__init__(pfx_path, files_path, binary_path)
+    def __init__(self, pfx_path: Path, files_path: Path, binary_path: Path, proton_script_path: Path, name: str):
+        super().__init__(pfx_path, files_path, binary_path, name)
 
         self.proton_script_path = proton_script_path
 
@@ -188,7 +188,15 @@ class SteamPrefixProvider(PrefixProvider):
 
         return dict(sorted(prefixes.items()))
 
+    def get_prefix_by_index(self, index: int) -> SteamPrefix:
+        """Returns a Prefix by index."""
+        prefixes = self.get_prefixes()
+        id = list(prefixes.values())[index]
+        return self.get_prefix(id)
+
     def get_prefix(self, id: str) -> SteamPrefix:
+        name = next((k for k, v in self.get_prefixes().items() if v == id), None)
+
         pfx_path = self.get_prefix_path(id)
         if pfx_path:
             files_path = self.get_installdir(id)
@@ -198,8 +206,9 @@ class SteamPrefixProvider(PrefixProvider):
             return SteamPrefix(
                 pfx_path=pfx_path,
                 files_path=files_path,
-                binary_path=files_path,
-                proton_script_path=proton_root / 'proton'
+                binary_path=proton_root,
+                proton_script_path=proton_root / 'proton',
+                name=name
             )
 
         user_id, _ = self.get_last_user()
@@ -214,8 +223,9 @@ class SteamPrefixProvider(PrefixProvider):
                     return SteamPrefix(
                         pfx_path=Path(match['prefix']),
                         files_path=Path(match['path']),
-                        binary_path=Path(match['path']),
-                        proton_script_path=proton_root / 'proton'
+                        binary_path=proton_root,
+                        proton_script_path=proton_root / 'proton',
+                        name=name
                     )
             except (FileNotFoundError, KeyError):
                 pass
