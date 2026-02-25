@@ -3,23 +3,21 @@ from functools import wraps
 from typing import Optional, List, Dict
 from prefixer.core.exceptions import MalformedTaskError
 from inspect import signature
+from prefixer.providers.classes import Prefix
 
 @dataclass
 class RuntimeContext:
     """Dynamic runtime values for tasks"""
-    game_id: str
-    """SteamID of the game/app being targeted"""
-    pfx_path: str
-    """Wineprefix path"""
+    prefix: Prefix
+    """The Prefix"""
     operation_path: str
     """Temporary directory for performing operations"""
-    game_path: str
-    """Game path"""
-    runnable_path: str
-    """Path to the runnable/wrapper script for running the binary"""
-    compatdata_path: str
-    """Path to the compatdata folder (above pfx)"""
 
+    @property
+    def pfx_path(self): return str(self.prefix.pfx_path)
+
+    @property
+    def game_path(self): return str(self.prefix.files_path)
 
 @dataclass
 class ConditionContext:
