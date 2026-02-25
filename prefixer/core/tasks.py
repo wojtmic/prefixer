@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from prefixer.core.helpers import setup_env, run_tweak
 from prefixer.core.models import TaskContext, RuntimeContext, required_context
 from prefixer.core.registry import task
@@ -75,14 +77,8 @@ def download(ctx: TaskContext, runtime: RuntimeContext):
 @task
 @required_context('path', 'args')
 def run_exe(ctx: TaskContext, runtime: RuntimeContext):
-    env = setup_env(runtime)
-
     click.echo(f'Running {click.style(ctx.path, fg='bright_blue')} with args {click.style(ctx.args, fg='bright_blue')}')
-    if not SILENCE_EXTERNAL:
-        click.secho('Possible error message spam from external program!', fg='bright_black')
-        subprocess.run([runtime.runnable_path, 'run', ctx.path, *ctx.args], env=env)
-    else:
-        subprocess.run([runtime.runnable_path, 'run', ctx.path, *ctx.args], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    runtime.prefix.run(Path(ctx.path), ctx.args)
 
 @task
 @required_context('values', 'path', 'filename')
@@ -202,8 +198,6 @@ def pause(ctx: TaskContext, runtime: RuntimeContext):
 @task
 @required_context('action')
 def wineserver(ctx: TaskContext, runtime: RuntimeContext):
-    env = setup_env(runtime)
-
     flags = {'kill': '-k', 'wait': '-w'}
 
     if ctx.action not in flags:
@@ -214,9 +208,8 @@ def wineserver(ctx: TaskContext, runtime: RuntimeContext):
     elif ctx.action == 'kill':
         click.echo(f"Forcibly terminating prefix {click.style(runtime.pfx_path, fg='bright_blue')}...")
 
-    subprocess.run([runtime.runnable_path, 'run', 'wineserver', flags[ctx.action]], env=env)
+    runtime.prefix.run(Path('wineserver'), args=flags[ctx.action])
     click.secho('Done!', fg='bright_blue')
-
 
 @task
 @required_context('values', 'path', 'filename')
@@ -290,6 +283,7 @@ def register_dll(ctx: TaskContext, runtime: RuntimeContext):
 
     click.echo(f"Registering DLL: {click.style(ctx.path, fg='bright_blue')}")
 
-    subprocess.run([runtime.runnable_path, 'run', 'regsvr32', '/s', ctx.path], env=env)
+    # subprocess.run([runtime.runnable_path, 'run', 'regsvr32', '/s', ctx.path], env=env)
+    runtime.prefix.run(Path('regsvr32'), ['/s', ctx.path])
 
     click.secho('Registered!', fg='bright_blue')
