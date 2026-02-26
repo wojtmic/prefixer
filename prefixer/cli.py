@@ -241,10 +241,7 @@ def tweak(ctx, tweak_names: list[str]):
     """
     Apply a tweak
     """
-    pfx_path = ctx.obj['PFX_PATH']
-    runnable_path = ctx.obj['BINARY_PATH']
-    game_path = ctx.obj['GAME_PATH']
-    game_id = ctx.obj['GAME_ID']
+    prefix = ctx.obj['PREFIX']
 
     for tweak_name in tweak_names:
         target_tweak = tweaks.build_tweak(tweak_name)
@@ -252,7 +249,7 @@ def tweak(ctx, tweak_names: list[str]):
         click.echo(f'Target Tweak => {click.style(target_tweak.description)}')
 
         with tempfile.TemporaryDirectory(prefix='prefixer-') as tempdir:
-            runtime = RuntimeContext(game_id, pfx_path, tempdir, game_path, runnable_path, os.path.dirname(pfx_path))
+            runtime = RuntimeContext(prefix, tempdir)
             run_tweak(runtime, target_tweak, tweak_name)
 
         click.secho('All tasks completed successfully!', fg='bright_green')
