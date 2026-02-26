@@ -19,7 +19,7 @@
         },
         {
             description: "Kill wineserver",
-            type: "winserver",
+            type: "wineserver",
             action: "kill",
         },
     ],
