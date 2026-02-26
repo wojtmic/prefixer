@@ -5,21 +5,19 @@ from subprocess import run, DEVNULL
 from os import environ
 import vdf
 
-STEAMPATH = Path('~/.steam/steam').expanduser()
-LIBMANIFEST_LOCATION = STEAMPATH / 'steamapps' / 'libraryfolders.vdf'
-
 class SteamPrefix(Prefix):
-    def __init__(self, pfx_path: Path, files_path: Path, binary_path: Path, proton_script_path: Path, name: str):
+    def __init__(self, pfx_path: Path, files_path: Path, binary_path: Path, proton_script_path: Path, name: str, steampath: Path):
         super().__init__(pfx_path, files_path, binary_path, name)
 
         self.proton_script_path = proton_script_path
+        self.STEAMPATH = steampath
 
     def run(self, exe: Path, args: list[str] = None, silent: bool = False):
         env = environ.copy()
 
         env['WINEPREFIX'] = str(self.pfx_path)
         env['STEAM_COMPAT_DATA_PATH'] = str(self.pfx_path.parent)
-        env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = str(STEAMPATH)
+        env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = str(self.STEAMPATH)
 
         if not silent:
             run([str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env)
@@ -27,11 +25,16 @@ class SteamPrefix(Prefix):
             run([str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env, stdout=DEVNULL, stderr=DEVNULL)
 
 class SteamPrefixProvider(PrefixProvider):
+    def __init__(self):
+        super()
+        self.STEAMPATH = Path('~/.steam/steam').expanduser()
+        self.LIBMANIFEST_LOCATION = self.STEAMPATH / 'steamapps' / 'libraryfolders.vdf'
+
     def get_libraries(self):
-        if not LIBMANIFEST_LOCATION:
+        if not self.LIBMANIFEST_LOCATION:
             raise NoSteamError
 
-        with open(LIBMANIFEST_LOCATION, 'r') as f:
+        with open(self.LIBMANIFEST_LOCATION, 'r') as f:
             libmanifest = vdf.load(f)
 
         libs = []
@@ -109,7 +112,7 @@ class SteamPrefixProvider(PrefixProvider):
         return {game['name'].replace(' ', '_').lower(): game for game in self.build_game_manifest()}
 
     def get_steam_config(self):
-        with open(str(STEAMPATH / 'config' / 'config.vdf'), 'r') as f:
+        with open(str(self.STEAMPATH / 'config' / 'config.vdf'), 'r') as f:
             content = f.read()
             data = vdf.loads(content)
 
@@ -130,7 +133,7 @@ class SteamPrefixProvider(PrefixProvider):
             return 'proton_experimental'
 
     def get_proton_path(self, name: str):
-        custom_path = STEAMPATH / 'compatibilitytools.d' / name
+        custom_path = self.STEAMPATH / 'compatibilitytools.d' / name
         custom_sys_path = Path('/usr/share/steam/compatibilitytools.d') / name
 
         official = self.get_machine_games_dict().get(name)
@@ -143,7 +146,7 @@ class SteamPrefixProvider(PrefixProvider):
         else: raise NoProtonError
 
     def get_last_user(self):
-        with open(str(STEAMPATH / 'config' / 'loginusers.vdf'), 'r') as f:
+        with open(str(self.STEAMPATH / 'config' / 'loginusers.vdf'), 'r') as f:
             data = vdf.loads(f.read())
 
         for i in data['users']:
@@ -156,7 +159,7 @@ class SteamPrefixProvider(PrefixProvider):
 
     def get_shortcuts(self, user_id: str):
         account_id = int(user_id) & 0xFFFFFFFF
-        with open((STEAMPATH/'userdata' / str(account_id) / 'config' / 'shortcuts.vdf'), 'rb') as f:
+        with open((self.STEAMPATH/'userdata' / str(account_id) / 'config' / 'shortcuts.vdf'), 'rb') as f:
             data = vdf.binary_loads(f.read())
 
         return data
@@ -171,7 +174,7 @@ class SteamPrefixProvider(PrefixProvider):
                 'id': unsigned_id,
                 'name': obj['AppName'],
                 'path': obj['StartDir'],
-                'prefix': STEAMPATH / 'steamapps' / 'compatdata' / str(unsigned_id) / 'pfx'
+                'prefix': self.STEAMPATH / 'steamapps' / 'compatdata' / str(unsigned_id) / 'pfx'
             })
 
         return manifest
@@ -208,7 +211,8 @@ class SteamPrefixProvider(PrefixProvider):
                 files_path=files_path,
                 binary_path=proton_root,
                 proton_script_path=proton_root / 'proton',
-                name=name
+                name=name,
+                steampath=self.STEAMPATH
             )
 
         user_id, _ = self.get_last_user()
@@ -225,7 +229,8 @@ class SteamPrefixProvider(PrefixProvider):
                         files_path=Path(match['path']),
                         binary_path=proton_root,
                         proton_script_path=proton_root / 'proton',
-                        name=name
+                        name=name,
+                        steampath=self.STEAMPATH
                     )
             except (FileNotFoundError, KeyError):
                 pass
