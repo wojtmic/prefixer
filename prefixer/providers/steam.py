@@ -160,7 +160,7 @@ class SteamPrefixProvider(PrefixProvider):
     def get_shortcuts(self, user_id: str):
         account_id = int(user_id) & 0xFFFFFFFF
         shortcut_path = (self.STEAMPATH/'userdata' / str(account_id) / 'config' / 'shortcuts.vdf')
-        if not shortcut_path.exists: return {}
+        if not shortcut_path.exists(): return {}
 
         with open(shortcut_path, 'rb') as f:
             data = vdf.binary_loads(f.read())
