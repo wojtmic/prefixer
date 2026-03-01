@@ -1,0 +1,16 @@
+diff --git a/prefixer/providers/steam.py b/prefixer/providers/steam.py
+index d8631ab..ab0d0db 100644
+--- a/prefixer/providers/steam.py
++++ b/prefixer/providers/steam.py
+@@ -20,9 +20,9 @@ class SteamPrefix(Prefix):
+         env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = str(self.STEAMPATH)
+ 
+         if not silent:
+-            run([str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env)
++            run(["steam-run", str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env)
+         else:
+-            run([str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env, stdout=DEVNULL, stderr=DEVNULL)
++            run(["steam-run", str(self.proton_script_path), 'run', str(exe), *(args or [])], env=env, stdout=DEVNULL, stderr=DEVNULL)
+ 
+ class SteamPrefixProvider(PrefixProvider):
+     def __init__(self):
