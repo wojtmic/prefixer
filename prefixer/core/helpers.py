@@ -34,6 +34,7 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak, full_name: str='unkn
         click.echo(f'{click.style('==>', bold=True)} {task.description} {click.style(task.type, fg='bright_black')}')
         task_conditions = task.conditions
         if not task_conditions: task_conditions = []
+        passing = True
         for c in task_conditions:
             if 'invert' not in c: c['invert'] = False
 
@@ -45,8 +46,9 @@ def run_tweak(runtime: RuntimeContext, target_tweak: Tweak, full_name: str='unkn
 
             if not result:
                 click.secho('Skipping task due to conditions')
-                continue
+                passing = False
 
+        if not passing: continue
         task.resolve_paths(runtime)
         task_registry[task.type](ctx=task, runtime=runtime)
 
