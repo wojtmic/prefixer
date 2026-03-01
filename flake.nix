@@ -1,74 +1,50 @@
 {
   description = "Prefixer - Steam Proton Prefix management tool";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+  outputs = {
+    self,
+    nixpkgs,
+  }: let
+    inherit (nixpkgs) lib;
+
+    systems = ["x86_64-linux" "aarch64-linux"];
+    forAllSystems = f:
+      lib.genAttrs systems (system:
+        f {
+          inherit system;
+          pkgs = nixpkgs.legacyPackages.${system};
+        });
+  in {
+    packages = forAllSystems ({
+      system,
+      pkgs,
+    }: {
+      default = self.packages.${system}.prefixer;
+      prefixer = pkgs.python3Packages.callPackage ./nix {};
+    });
+
+    devShells = forAllSystems ({pkgs, ...}: {
+      default = pkgs.mkShell {
+        buildInputs = with pkgs; [
+          python3
+          python3Packages.pip
+          python3Packages.setuptools
+          python3Packages.build
+          python3Packages.pytest
+          python3Packages.black
+          python3Packages.ruff
+          wine64
+        ];
+      };
+    });
+
+    apps = forAllSystems ({system, ...}: {
+      default = {
+        type = "app";
+        program = lib.getExe self.packages.${system}.default;
+      };
+    });
   };
-
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
-      in
-      {
-        packages.default = pkgs.python3Packages.buildPythonApplication {
-          pname = "prefixer";
-          version = "1.3.5";
-          format = "pyproject";
-
-          src = ./.;
-
-          nativeBuildInputs = with pkgs.python3Packages; [
-            setuptools
-            wheel
-          ];
-
-          propagatedBuildInputs = with pkgs.python3Packages; [
-            vdf
-            json5
-            requests
-            click
-            rapidfuzz
-          ];
-
-          makeWrapperArgs = [
-            "--prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.wine64 ]}"
-          ];
-
-          doCheck = false;
-          dontCheckRuntimeDeps = true;
-
-          pythonImportsCheck = [ "prefixer" ];
-
-          meta = with pkgs.lib; {
-            description = "Steam Proton Prefix management tool with fuzzy name matching";
-            homepage = "https://github.com/wojtmic/prefixer";
-            changelog = "https://github.com/wojtmic/prefixer/blob/master/CHANGELOG.md";
-            license = licenses.gpl3Only;
-            platforms = platforms.linux;
-            mainProgram = "prefixer";
-            maintainers = [ ];
-          };
-        };
-
-        devShells.default = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            python3
-            python3Packages.pip
-            python3Packages.setuptools
-            python3Packages.build
-            python3Packages.pytest
-            python3Packages.black
-            python3Packages.ruff
-            wine64
-          ];
-        };
-
-        apps.default = {
-          type = "app";
-          program = "${self.packages.${system}.default}/bin/prefixer";
-        };
-      }
-    );
 }
