@@ -4,6 +4,7 @@ from typing import Optional, List, Dict
 from prefixer.core.exceptions import MalformedTaskError
 from inspect import signature
 from prefixer.providers.classes import Prefix
+import os
 
 @dataclass
 class RuntimeContext:
@@ -120,6 +121,7 @@ class TaskData:
 class TweakData:
     """Prefixer tweak in raw, unparsed form"""
     name: str
+    filename: os.PathLike
     description: str
     conditions: Optional[List[ConditionContext]]
     tasks: List[Dict[str, str]]
