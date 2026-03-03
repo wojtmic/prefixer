@@ -58,6 +58,24 @@ def list_tweaks(ctx, param, value):
 
     ctx.exit()
 
+def print_tweak(ctx, param, tweak_name: str):
+    all_tweaks: dict[str, TweakData] = get_tweaks()
+
+    try:
+        tweak_filename = all_tweaks[tweak_name].filename
+    except KeyError:
+        click.secho(f"Error looking for tweak named '{tweak_name}'. Check valid tweak names with '--list-tweaks'.", fg='bright_red')
+        sys.exit(1)
+
+    with open(tweak_filename, 'r') as f:
+        raw_tweak = f.read()
+
+    click.secho(f"Tweak '{tweak_name}' ({tweak_filename})", fg='bright_blue')
+    click.echo(f"{raw_tweak}")
+
+    ctx.exit()
+
+
 def search_tweaks(ctx, param, query):
     if not query or ctx.resilient_parsing: return
 
@@ -119,6 +137,7 @@ def validate_tweak(ctx, param, path: str):
 @click.group()
 @click.option('--version', '-v', is_flag=True, help='Print version', callback=print_version, expose_value=False, is_eager=True)
 @click.option('--list-tweaks', is_flag=True, help='Lists available tweaks', callback=list_tweaks, expose_value=False, is_eager=True)
+@click.option('--print-tweak', help='Print the contents of the tweak definition file', callback=print_tweak, expose_value=False, is_eager=True)
 @click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
 @click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True, help='Disable non-essential logging')
