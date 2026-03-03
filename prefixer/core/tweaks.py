@@ -3,6 +3,7 @@ from prefixer.core.paths import TWEAKS_DIR_USER, TWEAKS_DIR_SYSTEM, TWEAKS_DIR_P
 from prefixer.core.exceptions import NoTweakError
 import os
 import json5
+from pathlib import Path
 from typing import List
 
 class Tweak:
@@ -39,7 +40,7 @@ def index_tweak_folder(folder: str, layer: str = ''):
         if 'conditions' in obj: conditions = obj['conditions']
         else: conditions = []
 
-        tweaks[f'{layer}{tweak_name}'] = TweakData(tweak_name, desc, conditions, tasks)
+        tweaks[f'{layer}{tweak_name}'] = TweakData(tweak_name, Path(folder) / Path(tweak), desc, conditions, tasks)
 
     return tweaks
 
