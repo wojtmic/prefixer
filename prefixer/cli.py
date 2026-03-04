@@ -59,6 +59,9 @@ def list_tweaks(ctx, param, value):
     ctx.exit()
 
 def print_tweak(ctx, param, tweak_name: str):
+    if not tweak_name or ctx.resilient_parsing:
+        return
+
     all_tweaks: dict[str, TweakData] = get_tweaks()
 
     try:
