@@ -5,7 +5,6 @@ import os
 import json5
 import logging
 from pathlib import Path
-from typing import List
 
 # TODO: These do not belong here. Set root logger in centralized location.
 # TODO: Add verbose-option for command line invocation to set log-level.
@@ -14,7 +13,7 @@ logger.addHandler(logging.StreamHandler())
 logger.setLevel(logging.CRITICAL) # Silence for now
 
 class Tweak:
-    def __init__(self, name: str, description: str, tasks: List[TaskContext], conditions: List[ConditionContext]):
+    def __init__(self, name: str, description: str, tasks: list[TaskContext], conditions: list[ConditionContext]):
         self.name = name
         self.description = description
         self.tasks = tasks
