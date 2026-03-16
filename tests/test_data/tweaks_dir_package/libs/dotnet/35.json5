@@ -1,0 +1,23 @@
+{
+  description: "MS .NET Framework 3.5 SP1 (includes 2.0 & 3.0)",
+  tasks: [
+    {
+      description: "Download installer",
+      type: "download",
+      url: "https://download.microsoft.com/download/2/0/e/20e90413-712f-438c-988e-fdaa79a8ac3d/dotnetfx35.exe",
+      checksum: "0582515bde321e072f8673e829e175ed2e7a53e803127c50253af76528e66bc1",
+      filename: "dotnetfx35.exe"
+    },
+    {
+      description: "Install package",
+      type: "run_exe",
+      path: "dotnetfx35.exe",
+      args: ["/q", "/norestart"]
+    },
+    {
+      description: "Wait for installation",
+      type: "wineserver",
+      action: "wait"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  description: 'Microsoft Georgia Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/georgi32.exe",
+      checksum: "2c2c7dcda6606ea5cf08918fb7cd3f3359e9e84338dc690013f20cd42e930301",
+      filename: "georgi32.exe"
+    },
+    {
+      description: 'Run installer',
+      type: 'run_exe',
+      path: 'georgi32.exe',
+      args: ['/q', '/r:n']
+    },
+    {
+      description: 'Wait for wineserver',
+      type: 'wineserver',
+      action: 'wait'
+    }
+  ]
+}

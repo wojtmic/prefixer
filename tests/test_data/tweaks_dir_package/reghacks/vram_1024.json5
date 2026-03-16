@@ -1,0 +1,14 @@
+{
+  description: "Force 1024MB (1GB) Video Memory",
+  tasks: [
+    {
+      description: "Set video memory size to 1024MB",
+      type: "regedit",
+      path: "Software\\Wine\\Direct3D",
+      filename: 'user.reg',
+      values: {
+        VideoMemorySize: "1024"
+      }
+    }
+  ]
+}

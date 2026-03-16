@@ -12,11 +12,11 @@ import tempfile
 import sys
 from importlib.metadata import version
 from prefixer.coldpfx import resolve_path
-from prefixer.core.exceptions import BadTweakError, NoPrefixError
+from prefixer.core.exceptions import BadTweakError, NoPrefixError, NoTweakError
 from prefixer.core.models import RuntimeContext, TweakData, TaskContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.registry import task_registry, condition_registry
-from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
+from prefixer.core.tweaks import get_tweak, get_tweaks, get_tweak_names, Tweak
 from prefixer.coldpfx.regedit import parser, writer
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
@@ -62,18 +62,16 @@ def print_tweak(ctx, param, tweak_name: str):
     if not tweak_name or ctx.resilient_parsing:
         return
 
-    all_tweaks: dict[str, TweakData] = get_tweaks()
-
     try:
-        tweak_filename = all_tweaks[tweak_name].filename
-    except KeyError:
+        tweak = get_tweak(tweak_name)
+    except NoTweakError:
         click.secho(f"Error looking for tweak named '{tweak_name}'. Check valid tweak names with '--list-tweaks'.", fg='bright_red')
         sys.exit(1)
 
-    with open(tweak_filename, 'r') as f:
+    with open(tweak.filename, 'r') as f:
         raw_tweak = f.read()
 
-    click.secho(f"Tweak '{tweak_name}' ({tweak_filename})", fg='bright_blue')
+    click.secho(f"Tweak '{tweak_name}' ({tweak.filename})", fg='bright_blue')
     click.echo(f"{raw_tweak}")
 
     ctx.exit()
