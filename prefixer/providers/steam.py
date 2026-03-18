@@ -1,3 +1,5 @@
+from click import secho
+
 from prefixer.providers.classes import Prefix, PrefixProvider
 from prefixer.core.exceptions import NoSteamError, NoProtonError, ProviderError
 from pathlib import Path
@@ -171,12 +173,12 @@ class SteamPrefixProvider(PrefixProvider):
         manifest = []
         shortcuts = self.get_shortcuts(user_id)
         for shortcut in shortcuts:
-            obj = shortcuts[shortcut]['0']
-            unsigned_id = int(obj['appid']) & 0xFFFFFFFF  # we have to unsign the number for whatever reason
+            obj = {k.lower(): v for k, v in shortcuts[shortcut]['0'].items()}
+            unsigned_id = int(obj['appid']) & 0xFFFFFFFF
             manifest.append({
                 'id': unsigned_id,
-                'name': obj['AppName'],
-                'path': obj['StartDir'],
+                'name': obj['appname'],
+                'path': obj['startdir'],
                 'prefix': self.STEAMPATH / 'steamapps' / 'compatdata' / str(unsigned_id) / 'pfx'
             })
 
@@ -235,7 +237,7 @@ class SteamPrefixProvider(PrefixProvider):
                         name=name,
                         steampath=self.STEAMPATH
                     )
-            except (FileNotFoundError, KeyError):
-                pass
+            except:
+                secho('WARNING: Prefixer was unable to read your non-Steam shortcuts.', fg='bright_yellow')
 
         return None
