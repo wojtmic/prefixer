@@ -1,0 +1,23 @@
+{
+  description: 'Microsoft Courier New Font',
+  tasks: [
+    {
+      description: 'Download package',
+      type: "download",
+      url: "https://downloads.sourceforge.net/project/corefonts/the%20fonts/final/courie32.exe",
+      checksum: "bb511d861655dde879ae552eb86b134d6fae67cb58502e6ff73ec5d9151f3384",
+      filename: "courie32.exe"
+    },
+    {
+      description: 'Run installer',
+      type: 'run_exe',
+      path: 'courie32.exe',
+      args: ['/q', '/r:n']
+    },
+    {
+      description: 'Wait for wineserver',
+      type: 'wineserver',
+      action: 'wait'
+    }
+  ]
+}

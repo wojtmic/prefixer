@@ -12,11 +12,11 @@ import tempfile
 import sys
 from importlib.metadata import version
 from prefixer.coldpfx import resolve_path
-from prefixer.core.exceptions import BadTweakError, NoPrefixError
+from prefixer.core.exceptions import BadTweakError, NoPrefixError, NoTweakError
 from prefixer.core.models import RuntimeContext, TweakData, TaskContext
 from prefixer.core.helpers import run_tweak
 from prefixer.core.registry import task_registry, condition_registry
-from prefixer.core.tweaks import get_tweaks, get_tweak_names, Tweak
+from prefixer.core.tweaks import get_tweak, get_tweaks, get_tweak_names, Tweak
 from prefixer.coldpfx.regedit import parser, writer
 import prefixer.core.tasks # Import necessary to actually load tasks!
 import prefixer.core.conditions # same with conditions
@@ -57,6 +57,25 @@ def list_tweaks(ctx, param, value):
         click.echo(f"{name_styled}{padding} - {desc_styled}")
 
     ctx.exit()
+
+def print_tweak(ctx, param, tweak_name: str):
+    if not tweak_name or ctx.resilient_parsing:
+        return
+
+    try:
+        tweak = get_tweak(tweak_name)
+    except NoTweakError:
+        click.secho(f"Error looking for tweak named '{tweak_name}'. Check valid tweak names with '--list-tweaks'.", fg='bright_red')
+        sys.exit(1)
+
+    with open(tweak.filename, 'r') as f:
+        raw_tweak = f.read()
+
+    click.secho(f"Tweak '{tweak_name}' ({tweak.filename})", fg='bright_blue')
+    click.echo(f"{raw_tweak}")
+
+    ctx.exit()
+
 
 def search_tweaks(ctx, param, query):
     if not query or ctx.resilient_parsing: return
@@ -119,6 +138,7 @@ def validate_tweak(ctx, param, path: str):
 @click.group()
 @click.option('--version', '-v', is_flag=True, help='Print version', callback=print_version, expose_value=False, is_eager=True)
 @click.option('--list-tweaks', is_flag=True, help='Lists available tweaks', callback=list_tweaks, expose_value=False, is_eager=True)
+@click.option('--print-tweak', help='Print the contents of the tweak definition file', callback=print_tweak, expose_value=False, is_eager=True)
 @click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
 @click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
 @click.option('--quiet', '-q', is_flag=True, help='Disable non-essential logging')
