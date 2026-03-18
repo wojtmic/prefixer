@@ -267,7 +267,8 @@ def wipe(ctx):
 
     if not click.confirm('Are you sure you want to wipe the prefix?'): return
 
-    shutil.rmtree(ctx.obj['PFX_PATH'])
+    prefix: Prefix = ctx.obj['PREFIX']
+    shutil.rmtree(prefix.pfx_path)
 
 @prefixer.command()
 @click.argument('dll_names', nargs=-1)
@@ -277,7 +278,8 @@ def overridedll(ctx, dll_names: list[str]):
     Overrides one or multiple DLLs; do not duplicate names; will list if no args specified
     """
     dll_names = set(dll_names) # set for deduplication
-    reg = parser.parse_hive_file(os.path.join(ctx.obj['PFX_PATH'], 'user.reg'))
+    prefix: Prefix = ctx.obj['PREFIX']
+    reg = parser.parse_hive_file(os.path.join(prefix.pfx_path, 'user.reg'))
     override_node = reg.nodes['Software\\\\Wine\\\\DllOverrides']
     values = override_node.values
     if not dll_names:
