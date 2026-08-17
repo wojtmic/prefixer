@@ -1,6 +1,9 @@
 from pathlib import Path
 from abc import ABC, abstractmethod
 
+from prefixer.coldpfx.regedit.models import RegistryHive
+from prefixer.coldpfx.regedit.parser import parse_hive_file
+
 provider_reg: dict[str, type['PrefixProvider']] = {}
 
 class Prefix(ABC):
@@ -14,6 +17,11 @@ class Prefix(ABC):
     def run(self, exe: Path, args: list[str] = None, silent: bool = False):
         """Runs an exe file in the prefix"""
         pass
+
+    @property
+    def reg_user(self) -> RegistryHive:
+        """User registry hive of this prefix (user.reg)"""
+        return parse_hive_file(str(self.pfx_path / 'user.reg'))
 
 class PrefixProvider(ABC):
     def __init_subclass__(cls, **kwargs):

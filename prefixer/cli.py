@@ -299,7 +299,8 @@ def overridedll(ctx, dll_names: list[str]):
     """
     dll_names = set(dll_names) # set for deduplication
     prefix: Prefix = ctx.obj['PREFIX']
-    reg = parser.parse_hive_file(os.path.join(prefix.pfx_path, 'user.reg'))
+    # reg = parser.parse_hive_file(os.path.join(prefix.pfx_path, 'user.reg'))
+    reg = prefix.reg_user
     override_node = reg.nodes['Software\\\\Wine\\\\DllOverrides']
     values = override_node.values
     if not dll_names:
