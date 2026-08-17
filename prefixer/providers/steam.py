@@ -152,7 +152,7 @@ class SteamPrefixProvider(PrefixProvider):
             data = vdf.loads(f.read())
 
         for i in data['users']:
-            if data['users'][i]['MostRecent'] == '1': return i, data['users'][i]
+            if data['users'][i]['AutoLogin'] == '1': return i, data['users'][i]
 
         return 0, {
             'AccountName': 'NO LAST LOGIN',
