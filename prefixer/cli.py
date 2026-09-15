@@ -58,6 +58,49 @@ def list_tweaks(ctx, param, value):
 
     ctx.exit()
 
+def get_all_prefixes() -> dict[str, str]:
+    load_providers()
+    all_prefixes: dict[str, str] = {}
+    for cls in provider_reg.values():
+        all_prefixes |= cls().get_prefixes()
+
+    return all_prefixes
+
+def echo_prefixes(prefixes: list[tuple[str, str]]):
+    max_len = max(len(pfx_id) for name, pfx_id in prefixes)
+
+    for name, pfx_id in prefixes:
+        padding = " " * (max_len - len(pfx_id))
+        id_styled = click.style(pfx_id, fg='bright_blue')
+        name_styled = click.style(name, bold=True)
+
+        click.echo(f"{id_styled}{padding} - {name_styled}")
+
+def list_prefixes(ctx, param, value):
+    if not value or ctx.resilient_parsing: return
+    all_prefixes = get_all_prefixes()
+
+    if not all_prefixes:
+        click.secho("No prefixes found!", fg='bright_red')
+        ctx.exit()
+
+    echo_prefixes(list(all_prefixes.items()))
+    ctx.exit()
+
+def search_prefixes(ctx, param, query):
+    if not query or ctx.resilient_parsing: return
+    all_prefixes = get_all_prefixes()
+    names = list(all_prefixes.keys())
+
+    results = process.extract(query, names, limit=5, score_cutoff=30)
+
+    if not results:
+        click.secho(f"No prefixes matching '{query}' found!", fg='bright_red')
+        ctx.exit()
+
+    echo_prefixes([(name, all_prefixes[name]) for name, score, index in results])
+    ctx.exit()
+
 def print_tweak(ctx, param, tweak_name: str):
     if not tweak_name or ctx.resilient_parsing:
         return
@@ -91,6 +134,10 @@ def search_tweaks(ctx, param, query):
         limit=5,
         score_cutoff=30
     )
+
+    if not results:
+        click.secho(f"No tweaks matching '{query}' found!", fg='bright_red')
+        ctx.exit()
 
     max_len = max(len(ids[index]) for choice, score, index in results)
 
@@ -138,6 +185,8 @@ def validate_tweak(ctx, param, path: str):
 @click.group()
 @click.option('--version', '-v', is_flag=True, help='Print version', callback=print_version, expose_value=False, is_eager=True)
 @click.option('--list-tweaks', is_flag=True, help='Lists available tweaks', callback=list_tweaks, expose_value=False, is_eager=True)
+@click.option('--list-prefixes', is_flag=True, help='Lists available prefixes', callback=list_prefixes, expose_value=False, is_eager=True)
+@click.option('--search-prefix', callback=search_prefixes, help='Search for a prefix', expose_value=False, is_eager=True)
 @click.option('--print-tweak', help='Print the contents of the tweak definition file', callback=print_tweak, expose_value=False, is_eager=True)
 @click.option('--search', callback=search_tweaks, help='Search for a tweak', expose_value=False, is_eager=True)
 @click.option('--validate-tweak', callback=validate_tweak, help='Validate a tweak', expose_value=False, is_eager=True)
@@ -242,7 +291,7 @@ def resolve(ctx, path: str):
     """
     Resolves a path in the prefix
     """
-    click.echo(resolve_path(ctx.obj['PFX_PATH'], path))
+    click.echo(resolve_path(ctx.obj['PREFIX'].pfx_path, path))
 
 def complete_tweaks(ctx, param, incomplete):
     try:
@@ -325,7 +374,7 @@ def overridedll(ctx, dll_names: list[str]):
     click.secho('applying...', fg='bright_black')
 
     reg.nodes['Software\\\\Wine\\\\DllOverrides'] = override_node
-    writer.write_to_file(hive=reg, path=os.path.join(ctx.obj['PFX_PATH'], 'user.reg'))
+    writer.write_to_file(hive=reg, path=os.path.join(prefix.pfx_path, 'user.reg'))
 
     click.secho('Done!', fg='bright_green')
 
@@ -335,7 +384,7 @@ def info(ctx):
     """
     Prints (debug) information about the prefix
     """
-    click.echo('='*20)
+    pass
 
 # if __name__ == '__main__':
 def main():
