@@ -126,7 +126,7 @@ class SteamPrefixProvider(PrefixProvider):
 
     def get_compat_tool(self, target_id: str):
         override = self.get_compat_tool_mapping().get(target_id)
-        global_tool = self.get_compat_tool_mapping().get(0)
+        global_tool = self.get_compat_tool_mapping().get('0')
         if override:
             return override['name']
         elif global_tool:
@@ -134,12 +134,35 @@ class SteamPrefixProvider(PrefixProvider):
         else:
             return 'proton_experimental'
 
+    def find_custom_tool(self, name: str) -> Path | None:
+        """Finds a custom compat tool by its internal name, the way Steam does (via compatibilitytool.vdf manifests)"""
+        for tools_dir in (self.STEAMPATH / 'compatibilitytools.d', Path('/usr/share/steam/compatibilitytools.d')):
+            if not tools_dir.is_dir(): continue
+
+            manifests = [*tools_dir.glob('compatibilitytool.vdf'), *tools_dir.glob('*/compatibilitytool.vdf')]
+            for manifest in manifests:
+                try:
+                    with open(manifest, 'r') as f:
+                        tools = vdf.loads(f.read())['compatibilitytools']['compat_tools']
+                except (OSError, SyntaxError, KeyError, TypeError):
+                    continue
+
+                tool = tools.get(name)
+                if not isinstance(tool, dict): continue
+
+                tool_path = manifest.parent / tool.get('install_path', '.')
+                if tool_path.exists(): return tool_path.resolve()
+
+        return None
+
     def get_proton_path(self, name: str):
         custom_path = self.STEAMPATH / 'compatibilitytools.d' / name
         custom_sys_path = Path('/usr/share/steam/compatibilitytools.d') / name
 
         official = self.get_machine_games_dict().get(name)
-        if custom_path.exists(): return custom_path
+        manifest_path = self.find_custom_tool(name)
+        if manifest_path: return manifest_path
+        elif custom_path.exists(): return custom_path
         elif custom_sys_path.exists(): return custom_sys_path
         elif official:
             dir = self.get_installdir(official['appid'])
@@ -172,8 +195,8 @@ class SteamPrefixProvider(PrefixProvider):
     def build_shortcut_manifest(self, user_id: str):
         manifest = []
         shortcuts = self.get_shortcuts(user_id)
-        for shortcut in shortcuts:
-            obj = {k.lower(): v for k, v in shortcuts[shortcut]['0'].items()}
+        for shortcut in shortcuts.get('shortcuts', {}).values():
+            obj = {k.lower(): v for k, v in shortcut.items()}
             unsigned_id = int(obj['appid']) & 0xFFFFFFFF
             manifest.append({
                 'id': unsigned_id,
@@ -224,20 +247,22 @@ class SteamPrefixProvider(PrefixProvider):
         if user_id != 0:
             try:
                 shortcuts = self.build_shortcut_manifest(user_id)
-                match = next((s for s in shortcuts if str(s['id']) == id), None)
-                if match:
-                    tool_name = self.get_compat_tool(id)
-                    proton_root = self.get_proton_path(tool_name)
-
-                    return SteamPrefix(
-                        pfx_path=Path(match['prefix']),
-                        files_path=Path(match['path']),
-                        binary_path=proton_root,
-                        proton_script_path=proton_root / 'proton',
-                        name=name,
-                        steampath=self.STEAMPATH
-                    )
-            except:
+            except (OSError, SyntaxError, ValueError, KeyError, TypeError):
                 secho('WARNING: Prefixer was unable to read your non-Steam shortcuts.', fg='bright_yellow')
+                shortcuts = []
+
+            match = next((s for s in shortcuts if str(s['id']) == id), None)
+            if match:
+                tool_name = self.get_compat_tool(id)
+                proton_root = self.get_proton_path(tool_name)
+
+                return SteamPrefix(
+                    pfx_path=Path(match['prefix']),
+                    files_path=Path(match['path']),
+                    binary_path=proton_root,
+                    proton_script_path=proton_root / 'proton',
+                    name=name,
+                    steampath=self.STEAMPATH
+                )
 
         return None
