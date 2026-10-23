@@ -36,7 +36,10 @@ in
     ];
 
     makeWrapperArgs = [
-      "--prefix PATH : ${lib.makeBinPath [wine64 steam-run-free]}"
+      "--prefix"
+      "PATH"
+      ":"
+      (lib.makeBinPath [wine64 steam-run-free])
     ];
 
     doCheck = false;
